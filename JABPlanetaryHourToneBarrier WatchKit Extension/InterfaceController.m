@@ -7,7 +7,7 @@
 //
 
 #import "InterfaceController.h"
-
+#import "ExtensionDelegate.h"
 
 @interface InterfaceController ()
 
@@ -19,7 +19,7 @@
 - (void)awakeWithContext:(id)context {
     [super awakeWithContext:context];
 
-    // Configure interface objects here.
+    [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] setWatchConnectivityStatusInterfaceDelegate:(id<WatchConnectivityStatusInterfaceProtocol>)self];
 }
 
 - (void)willActivate {
@@ -30,6 +30,36 @@
 - (void)didDeactivate {
     // This method is called when watch view controller is no longer visible
     [super didDeactivate];
+}
+
+- (void)updateStatusInterfaceForActivationState:(WCSessionActivationState)activationState reachability:(BOOL)reachable
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (activationState) {
+            case WCSessionActivationStateInactive:
+            {
+                [self.activationImage setTintColor:[UIColor grayColor]];
+                break;
+            }
+                
+            case WCSessionActivationStateNotActivated:
+            {
+                [self.activationImage setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case WCSessionActivationStateActivated:
+            {
+                [self.activationImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+                break;
+        }
+        
+        [self.reachabilityImage setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];
+    });
 }
 
 @end

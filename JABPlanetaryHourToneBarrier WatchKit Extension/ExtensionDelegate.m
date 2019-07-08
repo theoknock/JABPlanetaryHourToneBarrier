@@ -8,14 +8,22 @@
 
 #import "ExtensionDelegate.h"
 
+@interface ExtensionDelegate ()
+{
+    WCSession *watchConnectivitySession;
+}
+
+@end
+
 @implementation ExtensionDelegate
 
 - (void)applicationDidFinishLaunching {
-    // Perform any final initialization of your application.
+    [self activateWatchConnectivitySession];
 }
 
 - (void)applicationDidBecomeActive {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [self activateWatchConnectivitySession];
 }
 
 - (void)applicationWillResignActive {
@@ -56,6 +64,24 @@
             [task setTaskCompletedWithSnapshot:NO];
         }
     }
+}
+
+- (void)activateWatchConnectivitySession
+{
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:watchConnectivitySession.activationState reachability:watchConnectivitySession.isReachable];
+    watchConnectivitySession = [WCSession defaultSession];
+    [watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
+    [watchConnectivitySession activateSession];
+}
+
+- (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error
+{
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:activationState reachability:session.isReachable];
+}
+
+- (void)sessionReachabilityDidChange:(WCSession *)session
+{
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
 }
 
 @end

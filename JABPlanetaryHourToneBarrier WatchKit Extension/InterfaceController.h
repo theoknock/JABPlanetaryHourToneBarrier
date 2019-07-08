@@ -8,7 +8,11 @@
 
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
 @interface InterfaceController : WKInterfaceController
+
+@property (weak, nonatomic) IBOutlet WKInterfaceImage *activationImage;
+@property (weak, nonatomic) IBOutlet WKInterfaceImage *reachabilityImage;
 
 @end

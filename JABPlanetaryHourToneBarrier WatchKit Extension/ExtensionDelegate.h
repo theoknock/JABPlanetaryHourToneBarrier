@@ -7,7 +7,16 @@
 //
 
 #import <WatchKit/WatchKit.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
-@interface ExtensionDelegate : NSObject <WKExtensionDelegate>
+@protocol WatchConnectivityStatusInterfaceProtocol <NSObject>
+
+- (void)updateStatusInterfaceForActivationState:(WCSessionActivationState)activationState reachability:(BOOL)reachable;
+
+@end
+
+@interface ExtensionDelegate : NSObject <WKExtensionDelegate, WCSessionDelegate>
+
+@property (nonatomic, weak) id<WatchConnectivityStatusInterfaceProtocol> watchConnectivityStatusInterfaceDelegate;
 
 @end
