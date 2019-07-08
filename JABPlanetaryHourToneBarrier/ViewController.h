@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <WCSessionDelegate>
 
 
 @end
