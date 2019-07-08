@@ -12,6 +12,7 @@
 @protocol WatchConnectivityStatusInterfaceProtocol <NSObject>
 
 - (void)updateStatusInterfaceForActivationState:(WCSessionActivationState)activationState reachability:(BOOL)reachable;
+- (void)updatePeerDeviceStatusInterface:(NSDictionary *)receivedApplicationContext;
 
 @end
 

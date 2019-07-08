@@ -15,6 +15,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *reachabilityImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *thermometerImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *batteryImageView;
 
 @end
 
@@ -69,14 +71,50 @@
 
 - (void)updateDeviceStatus
 {
-    NSDictionary<NSString *, NSNumber *> * thermalState = @{@"NSProcessInfoThermalStateDidChangeNotification" : @([[NSProcessInfo processInfo] thermalState])};
-    NSDictionary<NSString *, NSNumber *> * batteryLevel = @{@"UIDeviceBatteryLevelDidChangeNotification" : @([[UIDevice currentDevice] batteryLevel])};
-    NSDictionary<NSString *, NSNumber *> * batteryState = @{@"UIDeviceBatteryStateDidChangeNotification" : @([[UIDevice currentDevice] batteryState])};
-    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * deviceStatus = @{@"DeviceStatus" : @[thermalState, batteryLevel, batteryState]};
+    NSProcessInfoThermalState thermalState = [[NSProcessInfo processInfo] thermalState];
+    UIDeviceBatteryState batteryState = [[UIDevice currentDevice] batteryState];
+    float batteryLevel = [[UIDevice currentDevice] batteryLevel];
+    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * deviceStatus =
+  @{@"DeviceStatus" :
+  @[
+  @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState)},
+  @{@"UIDeviceBatteryLevelDidChangeNotification" : @(batteryLevel)},
+  @{@"UIDeviceBatteryStateDidChangeNotification" : @(batteryState)}]};
     
     __autoreleasing NSError *error;
     [watchConnectivitySession updateApplicationContext:deviceStatus error:&error];
     if (error) NSLog(@"Error updating application context: %@", error.description);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (thermalState) {
+            case NSProcessInfoThermalStateNominal:
+            {
+                [self.thermometerImageView setTintColor:[UIColor blueColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateFair:
+            {
+                [self.thermometerImageView setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateSerious:
+            {
+                [self.thermometerImageView setTintColor:[UIColor yellowColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateCritical:
+            {
+                [self.thermometerImageView setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            default:
+                break;
+        }
+    });
 }
 
 - (void)updateWatchConnectivityStatus

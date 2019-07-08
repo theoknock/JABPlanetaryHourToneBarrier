@@ -11,16 +11,19 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <group width="40" alignment="left" id="Dlo-Ie-faW">
+                        <group alignment="center" verticalAlignment="bottom" spacing="8" id="Dlo-Ie-faW">
                             <items>
                                 <imageView alignment="left" image="radiowaves.right" catalog="system" id="kr8-yM-26Q"/>
-                                <imageView alignment="right" image="radiowaves.left" catalog="system" id="p44-L6-Exl"/>
+                                <imageView alignment="left" image="radiowaves.left" catalog="system" id="p44-L6-Exl"/>
+                                <imageView alignment="left" image="thermometer" catalog="system" id="eCB-u2-8yT"/>
+                                <imageView alignment="left" image="battery.25" catalog="system" id="USO-Vt-HEJ"/>
                             </items>
                         </group>
                     </items>
                     <connections>
                         <outlet property="activationImage" destination="kr8-yM-26Q" id="tET-EI-v37"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
+                        <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
                     </connections>
                 </controller>
             </objects>
@@ -59,7 +62,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="battery.25" catalog="system" width="64" height="32"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
+        <image name="thermometer" catalog="system" width="42" height="64"/>
     </resources>
 </document>

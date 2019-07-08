@@ -14,5 +14,6 @@
 
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *activationImage;
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *reachabilityImage;
+@property (weak, nonatomic) IBOutlet WKInterfaceImage *thermalStateImage;
 
 @end

@@ -62,6 +62,46 @@
     });
 }
 
+- (void)updatePeerDeviceStatusInterface:(NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *)receivedApplicationContext
+{
+    [[receivedApplicationContext objectForKey:[receivedApplicationContext allKeys][0]] enumerateObjectsUsingBlock:^(NSDictionary<NSString *,NSNumber *> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[obj allKeys][0] isEqualToString:@"NSProcessInfoThermalStateDidChangeNotification"])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
+                    case 0:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor blueColor]];
+                        break;
+                    }
+                        
+                    case 1:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor greenColor]];
+                        break;
+                    }
+                        
+                    case 2:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor yellowColor]];
+                        break;
+                    }
+                        
+                    case 3:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor redColor]];
+                        break;
+                    }
+                        
+                    default:
+                        break;
+                }
+            });
+        }
+    }];
+    
+}
+
 @end
 
 
