@@ -20,5 +20,5 @@
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate, WCSessionDelegate>
 
 @property (nonatomic, weak) id<WatchConnectivityStatusInterfaceProtocol> watchConnectivityStatusInterfaceDelegate;
-@property (nonatomic, strong) WCSession *watchConnectivitySession;
+- (WCSession *)watchConnectivitySession;
 @end

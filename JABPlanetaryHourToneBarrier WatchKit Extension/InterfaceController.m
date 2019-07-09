@@ -61,7 +61,6 @@
         [self.reachabilityImage setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];
     });
 }
-
 - (void)updatePeerDeviceStatusInterface:(NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *)receivedApplicationContext
 {
     [[receivedApplicationContext objectForKey:[receivedApplicationContext allKeys][0]] enumerateObjectsUsingBlock:^(NSDictionary<NSString *,NSNumber *> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -69,31 +68,34 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
-                    case 0:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor blueColor]];
-                        break;
-                    }
-                        
-                    case 1:
+                    case NSProcessInfoThermalStateNominal:
                     {
                         [self.thermalStateImage setTintColor:[UIColor greenColor]];
                         break;
                     }
                         
-                    case 2:
+                    case NSProcessInfoThermalStateFair:
                     {
                         [self.thermalStateImage setTintColor:[UIColor yellowColor]];
                         break;
                     }
                         
-                    case 3:
+                    case NSProcessInfoThermalStateSerious:
                     {
                         [self.thermalStateImage setTintColor:[UIColor redColor]];
                         break;
                     }
                         
+                    case NSProcessInfoThermalStateCritical:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor whiteColor]];
+                        break;
+                    }
+                        
                     default:
+                    {
+                        [self.thermalStateImage setTintColor:[UIColor grayColor]];
+                    }
                         break;
                 }
             });
@@ -102,28 +104,28 @@
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
-                        case 0:
+                        case WKInterfaceDeviceBatteryStateUnknown:
                         {
                             [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
                             [self.batteryStateImage setTintColor:[UIColor grayColor]];
                             break;
                         }
                             
-                        case 1:
+                        case WKInterfaceDeviceBatteryStateUnplugged:
                         {
                             [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
                             [self.batteryStateImage setTintColor:[UIColor redColor]];
                             break;
                         }
                             
-                        case 2:
+                        case WKInterfaceDeviceBatteryStateCharging:
                         {
                             [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
-                            [self.batteryStateImage setTintColor:[UIColor blueColor]];
+                            [self.batteryStateImage setTintColor:[UIColor greenColor]];
                             break;
                         }
                             
-                        case 3:
+                        case WKInterfaceDeviceBatteryStateFull:
                         {
                             [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
                             [self.batteryStateImage setTintColor:[UIColor greenColor]];
@@ -131,9 +133,33 @@
                         }
                             
                         default:
+                        {
+                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                            [self.batteryStateImage setTintColor:[UIColor grayColor]];
                             break;
+                        }
                     }
                 });
+            } else
+                if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryLevelDidChangeNotification"])
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([[obj objectForKey:[obj allKeys][0]] floatValue] >= .9)
+                        {
+                            [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.100"]];
+                            [self.batteryLevelImage setTintColor:[UIColor greenColor]];
+                        } else
+                            if ([[obj objectForKey:[obj allKeys][0]] floatValue] < .9)
+                            {
+                                [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.25"]];
+                                [self.batteryLevelImage setTintColor:[UIColor yellowColor]];
+                            } else
+                                if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .25)
+                                {
+                                    [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.0"]];
+                                    [self.batteryLevelImage setTintColor:[UIColor redColor]];
+                                }
+                    });
             } else
                 if ([[obj allKeys][0] isEqualToString:@"ToneGeneratorPlaying"])
                 {

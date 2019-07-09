@@ -43,6 +43,7 @@
                     </items>
                     <connections>
                         <outlet property="activationImage" destination="kr8-yM-26Q" id="tET-EI-v37"/>
+                        <outlet property="batteryLevelImage" destination="Bvl-l2-fEU" id="sBY-en-KKc"/>
                         <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
                         <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>

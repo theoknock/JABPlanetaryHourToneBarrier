@@ -8,6 +8,13 @@
 
 #import "ExtensionDelegate.h"
 
+@interface ExtensionDelegate ()
+{
+    WCSession *watchConnectivitySession;
+}
+
+@end
+
 @implementation ExtensionDelegate
 
 - (void)applicationDidFinishLaunching {
@@ -59,26 +66,32 @@
     }
 }
 
+- (WCSession *)watchConnectivitySession
+{
+    return watchConnectivitySession;
+}
+
 - (void)activateWatchConnectivitySession
 {
-    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:self.watchConnectivitySession.activationState reachability:self.watchConnectivitySession.isReachable];
-    self.watchConnectivitySession = [WCSession defaultSession];
-    [self.watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
-    [self.watchConnectivitySession activateSession];
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:watchConnectivitySession.activationState reachability:watchConnectivitySession.isReachable];
+    watchConnectivitySession = [WCSession defaultSession];
+    [watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
+    [watchConnectivitySession activateSession];
 }
 
 - (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:activationState reachability:session.isReachable];
-    if (activationState != 2) [self activateWatchConnectivitySession];
+    if (activationState != WCSessionActivationStateActivated) [self activateWatchConnectivitySession];
     else
-        if (activationState == 2) [self requestPeerDeviceStatus];
+        if (activationState == WCSessionActivationStateActivated) [self requestPeerDeviceStatus];
 }
 
 - (void)sessionReachabilityDidChange:(WCSession *)session
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
     if (session.isReachable) [self requestPeerDeviceStatus];
+    else [self activateWatchConnectivitySession];
 }
 
 - (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *,id> *)applicationContext

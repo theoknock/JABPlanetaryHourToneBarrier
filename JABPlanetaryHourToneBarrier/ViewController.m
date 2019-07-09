@@ -239,9 +239,9 @@ float(^amplitude)(void) = ^(void)
 
 - (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError *)error
 {
+    if (activationState != WCSessionActivationStateActivated) [self activateWatchConnectivitySession];
     [self updateWatchConnectivityStatus];
-    if (activationState != 2) [self activateWatchConnectivitySession];
-    else if (activationState == 2) [self updateDeviceStatus];
+    [self updateDeviceStatus];
 }
 
 - (void)sessionReachabilityDidChange:(WCSession *)session
@@ -318,6 +318,9 @@ float(^amplitude)(void) = ^(void)
             }
                 
             default:
+            {
+                [self.thermometerImageView setTintColor:[UIColor grayColor]];
+            }
                 break;
         }
     });
@@ -416,16 +419,18 @@ float(^amplitude)(void) = ^(void)
 
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
-    if (toneUnit) {
-        [self stop];
-        [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
-    } else {
-        [self start];
-        [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
-    }
-    
-    [self updateDeviceStatus];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (toneUnit) {
+            [self stop];
+            [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
+        } else {
+            [self start];
+            [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
+        }
+        [self updateDeviceStatus];
+    });
 }
 
 @end
+
 
