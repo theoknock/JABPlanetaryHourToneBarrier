@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14835.7" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14790.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -16,50 +16,87 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fyC-xg-wPD">
-                                <rect key="frame" x="166" y="842" width="82.5" height="20"/>
+                                <rect key="frame" x="356.5" y="835" width="49.5" height="27"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="9FW-tx-enj" userLabel="Activation">
-                                        <rect key="frame" x="0.0" y="0.5" width="13.5" height="19.5"/>
+                                        <rect key="frame" x="0.0" y="0.5" width="0.0" height="19.5"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.left" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VGN-EX-ZUk" userLabel="Reachability">
-                                        <rect key="frame" x="21.5" y="0.5" width="13.5" height="19.5"/>
+                                        <rect key="frame" x="8" y="0.5" width="0.0" height="19.5"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iCb-DB-MZp">
-                                        <rect key="frame" x="43" y="0.5" width="14" height="21"/>
+                                        <rect key="frame" x="16" y="0.5" width="0.0" height="21"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bolt.slash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zlr-6A-bDq" userLabel="battery">
-                                        <rect key="frame" x="65" y="-1" width="17.5" height="22.5"/>
+                                        <rect key="frame" x="24" y="-1" width="0.0" height="22.5"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="battery.0" catalog="system" id="TOM-jN-uCC" userLabel="battery">
+                                        <rect key="frame" x="32" y="-2" width="17.5" height="22.5"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                 </subviews>
                             </stackView>
+                            <imageView opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" catalog="system" highlightedImage="play.fill" translatesAutoresizingMaskIntoConstraints="NO" id="KkQ-O9-7cw">
+                                <rect key="frame" x="165.5" y="373" width="83" height="160.5"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" image="YES"/>
+                                </accessibility>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="unspecified" scale="unspecified" weight="light"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="pU9-73-0hC" appends="YES" id="zRV-Sr-tW1"/>
+                                </connections>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="systemFillColor"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="fyC-xg-wPD" firstAttribute="width" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="width" multiplier="0.3" id="9hj-X8-UPo"/>
+                            <constraint firstItem="KkQ-O9-7cw" firstAttribute="centerX" secondItem="Uee-0j-aNJ" secondAttribute="centerX" id="3By-aO-7Sh"/>
+                            <constraint firstItem="fyC-xg-wPD" firstAttribute="width" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="width" id="9hj-X8-UPo"/>
+                            <constraint firstItem="fyC-xg-wPD" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" id="ObZ-7A-jOV">
+                                <variation key="heightClass=compact-widthClass=regular" constant="0.0"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="-8"/>
+                            </constraint>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="bottom" secondItem="Uee-0j-aNJ" secondAttribute="bottom" id="XqM-IZ-DKz"/>
+                            <constraint firstItem="KkQ-O9-7cw" firstAttribute="height" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.2" id="bE1-G2-aye"/>
+                            <constraint firstItem="KkQ-O9-7cw" firstAttribute="width" secondItem="Uee-0j-aNJ" secondAttribute="width" multiplier="0.2" id="dYk-3y-fa9"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="height" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.1" id="mOT-eK-xZa"/>
-                            <constraint firstItem="fyC-xg-wPD" firstAttribute="centerX" secondItem="Uee-0j-aNJ" secondAttribute="centerX" id="ywv-Vt-koj"/>
+                            <constraint firstItem="KkQ-O9-7cw" firstAttribute="centerY" secondItem="Uee-0j-aNJ" secondAttribute="centerY" id="v7E-Ch-Ktm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Uee-0j-aNJ"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="pU9-73-0hC" appends="YES" id="jDr-7i-4vV"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="activationImageView" destination="9FW-tx-enj" id="FMi-mN-XMg"/>
                         <outlet property="batteryImageView" destination="zlr-6A-bDq" id="irN-iy-5uM"/>
+                        <outlet property="batteryLevelImageView" destination="TOM-jN-uCC" id="zSL-Y1-F8e"/>
+                        <outlet property="playButton" destination="KkQ-O9-7cw" id="why-ps-U9Z"/>
                         <outlet property="reachabilityImageView" destination="VGN-EX-ZUk" id="7Ir-GJ-MOT"/>
                         <outlet property="thermometerImageView" destination="iCb-DB-MZp" id="Dv2-Yz-E2d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="pU9-73-0hC">
+                    <connections>
+                        <action selector="toggleToneGenerator:" destination="BYZ-38-t0r" id="5Tk-HU-MAA"/>
+                        <outlet property="delegate" destination="KkQ-O9-7cw" id="NKA-0N-s88"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="125.89285714285714"/>
         </scene>
     </scenes>
     <resources>
+        <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="48" height="64"/>
+        <image name="play" catalog="system" width="58" height="64"/>
+        <image name="play.fill" catalog="system" width="58" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>

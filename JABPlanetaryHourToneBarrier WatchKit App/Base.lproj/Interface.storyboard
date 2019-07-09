@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14835.7" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
-    <device id="watch38"/>
+    <device id="watch44"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14790.5"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14631.1"/>
@@ -11,7 +11,17 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <group alignment="center" verticalAlignment="bottom" spacing="8" id="Dlo-Ie-faW">
+                        <group width="0.59999999999999998" height="0.69999999999999996" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="7UP-qf-oZ1">
+                            <items>
+                                <button width="1" height="1" alignment="center" verticalAlignment="bottom" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <connections>
+                                        <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                        <group alignment="center" verticalAlignment="bottom" spacing="8" id="MzL-gs-Vkc">
                             <items>
                                 <imageView alignment="left" verticalAlignment="center" image="radiowaves.right" catalog="system" id="kr8-yM-26Q">
                                     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -25,18 +35,22 @@
                                 <imageView alignment="left" verticalAlignment="center" image="bolt.slash" catalog="system" id="USO-Vt-HEJ">
                                     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </imageView>
+                                <imageView alignment="left" verticalAlignment="center" image="battery.0" catalog="system" id="Bvl-l2-fEU">
+                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
                             </items>
                         </group>
                     </items>
                     <connections>
                         <outlet property="activationImage" destination="kr8-yM-26Q" id="tET-EI-v37"/>
                         <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
+                        <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="345"/>
+            <point key="canvasLocation" x="220" y="344.5"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
@@ -71,7 +85,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="50" height="64"/>
+        <image name="play" catalog="system" width="58" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>

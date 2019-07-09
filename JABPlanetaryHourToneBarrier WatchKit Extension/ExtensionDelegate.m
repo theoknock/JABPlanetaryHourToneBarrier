@@ -8,13 +8,6 @@
 
 #import "ExtensionDelegate.h"
 
-@interface ExtensionDelegate ()
-{
-    WCSession *watchConnectivitySession;
-}
-
-@end
-
 @implementation ExtensionDelegate
 
 - (void)applicationDidFinishLaunching {
@@ -68,10 +61,10 @@
 
 - (void)activateWatchConnectivitySession
 {
-    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:watchConnectivitySession.activationState reachability:watchConnectivitySession.isReachable];
-    watchConnectivitySession = [WCSession defaultSession];
-    [watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
-    [watchConnectivitySession activateSession];
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:self.watchConnectivitySession.activationState reachability:self.watchConnectivitySession.isReachable];
+    self.watchConnectivitySession = [WCSession defaultSession];
+    [self.watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
+    [self.watchConnectivitySession activateSession];
 }
 
 - (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error
@@ -95,7 +88,8 @@
 
 - (void)requestPeerDeviceStatus
 {
-    [watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
+    [self.watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
 }
+
 
 @end

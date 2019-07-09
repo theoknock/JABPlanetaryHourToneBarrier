@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *reachabilityImage;
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *thermalStateImage;
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *batteryStateImage;
+@property (weak, nonatomic) IBOutlet WKInterfaceButton *playButton;
 
 @end

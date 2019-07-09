@@ -18,7 +18,7 @@
 
 - (void)awakeWithContext:(id)context {
     [super awakeWithContext:context];
-
+    
     [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] setWatchConnectivityStatusInterfaceDelegate:(id<WatchConnectivityStatusInterfaceProtocol>)self];
 }
 
@@ -98,47 +98,71 @@
                 }
             });
         } else
-        if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryStateDidChangeNotification"])
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
-                    case 0:
-                    {
-                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
-                        [self.batteryStateImage setTintColor:[UIColor grayColor]];
-                        break;
+            if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryStateDidChangeNotification"])
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
+                        case 0:
+                        {
+                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                            [self.batteryStateImage setTintColor:[UIColor grayColor]];
+                            break;
+                        }
+                            
+                        case 1:
+                        {
+                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
+                            [self.batteryStateImage setTintColor:[UIColor redColor]];
+                            break;
+                        }
+                            
+                        case 2:
+                        {
+                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
+                            [self.batteryStateImage setTintColor:[UIColor blueColor]];
+                            break;
+                        }
+                            
+                        case 3:
+                        {
+                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
+                            [self.batteryStateImage setTintColor:[UIColor greenColor]];
+                            break;
+                        }
+                            
+                        default:
+                            break;
                     }
-                        
-                    case 1:
-                    {
-                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
-                        [self.batteryStateImage setTintColor:[UIColor redColor]];
-                        break;
-                    }
-                        
-                    case 2:
-                    {
-                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
-                        [self.batteryStateImage setTintColor:[UIColor blueColor]];
-                        break;
-                    }
-                        
-                    case 3:
-                    {
-                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
-                        [self.batteryStateImage setTintColor:[UIColor greenColor]];
-                        break;
-                    }
-                        
-                    default:
-                        break;
+                });
+            } else
+                if ([[obj allKeys][0] isEqualToString:@"ToneGeneratorPlaying"])
+                {
+                    [self.playButton setBackgroundImage:([[obj objectForKey:[obj allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
                 }
-            });
-        }
     }];
 }
 
+- (IBAction)toggleToneGenerator
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    WCSession *watchConnectivitySession = [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] watchConnectivitySession];
+    if (watchConnectivitySession.isReachable)
+    {
+        [watchConnectivitySession sendMessage:@{@"ToneGenerator" : @"Toggle"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"REPLY %lu", [[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]);
+                
+                [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
+            });
+        } errorHandler:^(NSError * _Nonnull error) {
+            
+        }];
+    }
+}
+
 @end
+
+
 
 
 
