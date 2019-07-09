@@ -13,15 +13,24 @@
                     <items>
                         <group alignment="center" verticalAlignment="bottom" spacing="8" id="Dlo-Ie-faW">
                             <items>
-                                <imageView alignment="left" image="radiowaves.right" catalog="system" id="kr8-yM-26Q"/>
-                                <imageView alignment="left" image="radiowaves.left" catalog="system" id="p44-L6-Exl"/>
-                                <imageView alignment="left" image="thermometer" catalog="system" id="eCB-u2-8yT"/>
-                                <imageView alignment="left" image="battery.25" catalog="system" id="USO-Vt-HEJ"/>
+                                <imageView alignment="left" verticalAlignment="center" image="radiowaves.right" catalog="system" id="kr8-yM-26Q">
+                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
+                                <imageView alignment="left" verticalAlignment="center" image="radiowaves.left" catalog="system" id="p44-L6-Exl">
+                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
+                                <imageView alignment="left" verticalAlignment="center" image="thermometer" catalog="system" id="eCB-u2-8yT">
+                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
+                                <imageView alignment="left" verticalAlignment="center" image="bolt.slash" catalog="system" id="USO-Vt-HEJ">
+                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
                             </items>
                         </group>
                     </items>
                     <connections>
                         <outlet property="activationImage" destination="kr8-yM-26Q" id="tET-EI-v37"/>
+                        <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
                     </connections>
@@ -62,7 +71,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="battery.25" catalog="system" width="64" height="32"/>
+        <image name="bolt.slash" catalog="system" width="50" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>

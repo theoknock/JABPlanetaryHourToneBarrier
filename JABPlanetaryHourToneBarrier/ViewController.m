@@ -11,6 +11,7 @@
 @interface ViewController ()
 {
     WCSession *watchConnectivitySession;
+    UIDevice *device;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -25,19 +26,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
+}
+
+- (void)setupDeviceMonitoring
+{
+    device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:TRUE];
+    [device setProximityMonitoringEnabled:TRUE];
+    [self updateDeviceStatus];
 }
 
 - (void)addStatusObservers
 {
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:NSProcessInfoThermalStateDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryLevelDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceProximityStateDidChangeNotification object:nil];
 }
 
 - (void)activateWatchConnectivitySession
 {
-    [self updateWatchConnectivityStatus];
     watchConnectivitySession = [WCSession defaultSession];
     [watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
     [watchConnectivitySession activateSession];
@@ -67,6 +78,11 @@
 {
     [self updateWatchConnectivityStatus];
     [self activateWatchConnectivitySession];
+}
+
+- (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *,id> *)applicationContext
+{
+    [self updateDeviceStatus];
 }
 
 - (void)updateDeviceStatus
@@ -115,6 +131,47 @@
                 break;
         }
     });
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (batteryState) {
+            case UIDeviceBatteryStateUnknown:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryImageView setTintColor:[UIColor grayColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateUnplugged:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
+                [self.batteryImageView setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateCharging:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt"]];
+                [self.batteryImageView setTintColor:[UIColor blueColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateFull:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.fill"]];
+                [self.batteryImageView setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryImageView setTintColor:[UIColor grayColor]];
+                break;
+            }
+        }
+    });
+    
+    NSLog(@"%lu %f", batteryState, batteryLevel);
 }
 
 - (void)updateWatchConnectivityStatus

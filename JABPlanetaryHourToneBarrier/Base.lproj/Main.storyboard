@@ -16,24 +16,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fyC-xg-wPD">
-                                <rect key="frame" x="159.5" y="842" width="95.5" height="20"/>
+                                <rect key="frame" x="166" y="842" width="82.5" height="20"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="9FW-tx-enj" userLabel="Activation">
                                         <rect key="frame" x="0.0" y="0.5" width="13.5" height="19.5"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.left" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VGN-EX-ZUk" userLabel="Reachability">
                                         <rect key="frame" x="21.5" y="0.5" width="13.5" height="19.5"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iCb-DB-MZp">
                                         <rect key="frame" x="43" y="0.5" width="14" height="21"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="battery.25" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zlr-6A-bDq" userLabel="battery">
-                                        <rect key="frame" x="65" y="2" width="30.5" height="15.5"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bolt.slash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zlr-6A-bDq" userLabel="battery">
+                                        <rect key="frame" x="65" y="-1" width="17.5" height="22.5"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="systemFillColor"/>
                         <constraints>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="width" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="width" multiplier="0.3" id="9hj-X8-UPo"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="bottom" secondItem="Uee-0j-aNJ" secondAttribute="bottom" id="XqM-IZ-DKz"/>
@@ -55,7 +59,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="battery.25" catalog="system" width="64" height="32"/>
+        <image name="bolt.slash" catalog="system" width="48" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>

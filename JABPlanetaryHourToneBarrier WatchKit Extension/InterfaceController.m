@@ -97,9 +97,45 @@
                         break;
                 }
             });
+        } else
+        if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryStateDidChangeNotification"])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
+                    case 0:
+                    {
+                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                        [self.batteryStateImage setTintColor:[UIColor grayColor]];
+                        break;
+                    }
+                        
+                    case 1:
+                    {
+                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
+                        [self.batteryStateImage setTintColor:[UIColor redColor]];
+                        break;
+                    }
+                        
+                    case 2:
+                    {
+                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
+                        [self.batteryStateImage setTintColor:[UIColor blueColor]];
+                        break;
+                    }
+                        
+                    case 3:
+                    {
+                        [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
+                        [self.batteryStateImage setTintColor:[UIColor greenColor]];
+                        break;
+                    }
+                        
+                    default:
+                        break;
+                }
+            });
         }
     }];
-    
 }
 
 @end

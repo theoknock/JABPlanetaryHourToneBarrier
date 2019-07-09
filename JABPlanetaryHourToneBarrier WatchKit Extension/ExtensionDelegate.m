@@ -77,16 +77,25 @@
 - (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:activationState reachability:session.isReachable];
+    if (activationState != 2) [self activateWatchConnectivitySession];
+    else
+        if (activationState == 2) [self requestPeerDeviceStatus];
 }
 
 - (void)sessionReachabilityDidChange:(WCSession *)session
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
+    if (session.isReachable) [self requestPeerDeviceStatus];
 }
 
 - (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *,id> *)applicationContext
 {
     [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:applicationContext];
+}
+
+- (void)requestPeerDeviceStatus
+{
+    [watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
 }
 
 @end
