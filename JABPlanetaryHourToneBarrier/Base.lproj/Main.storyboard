@@ -68,9 +68,6 @@
                             <constraint firstItem="KkQ-O9-7cw" firstAttribute="centerY" secondItem="Uee-0j-aNJ" secondAttribute="centerY" id="v7E-Ch-Ktm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Uee-0j-aNJ"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="pU9-73-0hC" appends="YES" id="jDr-7i-4vV"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="activationImageView" destination="9FW-tx-enj" id="FMi-mN-XMg"/>

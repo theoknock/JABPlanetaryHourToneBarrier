@@ -13,8 +13,8 @@
                     <items>
                         <group width="0.59999999999999998" height="0.69999999999999996" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="7UP-qf-oZ1">
                             <items>
-                                <button width="1" height="1" alignment="center" verticalAlignment="bottom" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
-                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <button width="0.5" height="0.5" alignment="center" verticalAlignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                    <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <connections>
                                         <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>
                                     </connections>

@@ -28,6 +28,7 @@
 
     @public
         double frequency;
+        double amplitude;
         double sampleRate;
         double theta;
 }

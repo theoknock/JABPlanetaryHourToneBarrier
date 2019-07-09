@@ -55,7 +55,10 @@
             }
                 
             default:
+            {
+                [self.activationImage setTintColor:[UIColor grayColor]];
                 break;
+            }
         }
         
         [self.reachabilityImage setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];

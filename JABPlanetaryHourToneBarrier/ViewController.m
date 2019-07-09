@@ -30,6 +30,7 @@
     [super viewDidLoad];
     
     sampleRate = 44100;
+    amplitude = 1.0;
     
     __autoreleasing NSError *categorySessionError;
     [[AVAudioSession sharedInstance] setActive:YES error:&categorySessionError];
@@ -43,21 +44,29 @@
     if (activateSessionError)
         NSLog(@"Error activating audio session: %@", activateSessionError.description);
     
-    timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
-    dispatch_source_set_event_handler(timer, ^{
-        float duration = (((float)arc4random() / 0x100000000) * (max_duration - min_duration) + min_duration);
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self->frequency = (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
-        });
-        self->frequency = (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
-    });
-    
-    dispatch_resume(timer);
-    
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
 }
+
+float(^sine)(float(^)(void), float(^)(void), float(^)(void)) = ^float(float(^frequency)(void), float(^duration)(void), float(^amplitude)(void))
+{
+    return amplitude() * sin(2.0 * M_PI * frequency() * duration());
+};
+
+float(^frequency)(void) = ^(void)
+{
+    return (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
+};
+
+float(^duration)(void) = ^(void)
+{
+    return (((float)arc4random() / 0x100000000) * (max_duration - min_duration) + min_duration);
+};
+
+float(^amplitude)(void) = ^(void)
+{
+    return (((float)arc4random() / 0x100000000) * (max_amplitude - min_amplitude) + min_amplitude);
+};
 
 OSStatus RenderTone(
                     void                        *inRefCon,
@@ -69,7 +78,7 @@ OSStatus RenderTone(
 
 {
     // Fixed amplitude is good enough for our purposes
-    const double amplitude = 1.0;
+    //    const double amplitude = 1.0;
     
     // Get the tone parameters out of the view controller
     ViewController *viewController = (__bridge ViewController *)inRefCon;
@@ -83,7 +92,7 @@ OSStatus RenderTone(
     // Generate the samples
     for (UInt32 frame = 0; frame < inNumberFrames; frame++)
     {
-        buffer[frame] = sin(theta) * amplitude;
+        buffer[frame] = sin(theta) * viewController->amplitude;
         
         theta += theta_increment;
         if (theta > 2.0 * M_PI)
@@ -159,43 +168,48 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 
 - (void)start
 {
-    [self createToneUnit];
-    // Stop changing parameters on the unit
-    OSErr err = AudioUnitInitialize(toneUnit);
-    NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
-    
-    // Start playback
-    err = AudioOutputUnitStart(toneUnit);
-    NSAssert1(err == noErr, @"Error starting unit: %hd", err);
+    if (!toneUnit)
+    {
+        [self createToneUnit];
+        // Stop changing parameters on the unit
+        OSErr err = AudioUnitInitialize(toneUnit);
+        NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
+        
+        // Start playback
+        err = AudioOutputUnitStart(toneUnit);
+        NSAssert1(err == noErr, @"Error starting unit: %hd", err);
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+            dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
+            dispatch_source_set_event_handler(timer, ^{
+                float duration = (((float)arc4random() / 0x100000000) * (max_duration - min_duration) + min_duration);
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self->frequency = (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
+                    
+                });
+                self->frequency = (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
+                
+            });
+        });
+        
+        dispatch_resume(timer);
+    } else {
+        [self stop];
+        [self start];
+    }
 }
 
 - (void)stop
 {
+    dispatch_suspend(timer);
+    
     AudioOutputUnitStop(toneUnit);
     AudioUnitUninitialize(toneUnit);
     AudioComponentInstanceDispose(toneUnit);
     toneUnit = nil;
 }
-
-float(^sine)(float(^)(void), float(^)(void), float(^)(void)) = ^float(float(^frequency)(void), float(^duration)(void), float(^amplitude)(void))
-{
-    return amplitude() * sin(2.0 * M_PI * frequency() * duration());
-};
-
-float(^frequency)(void) = ^(void)
-{
-    return (((float)arc4random() / 0x100000000) * (high_bound - low_bound) + low_bound);
-};
-
-float(^duration)(void) = ^(void)
-{
-    return (((float)arc4random() / 0x100000000) * (max_duration - min_duration) + min_duration);
-};
-
-float(^amplitude)(void) = ^(void)
-{
-    return (((float)arc4random() / 0x100000000) * (max_amplitude - min_amplitude) + min_amplitude);
-};
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -265,6 +279,7 @@ float(^amplitude)(void) = ^(void)
 
 - (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *,id> *)applicationContext
 {
+    [self toggleToneGenerator:nil];
     [self updateDeviceStatus];
 }
 
@@ -381,8 +396,6 @@ float(^amplitude)(void) = ^(void)
                     [self.batteryLevelImageView setTintColor:[UIColor redColor]];
                 }
     });
-    
-    NSLog(@"%lu %f", batteryState, batteryLevel);
 }
 
 - (void)updateWatchConnectivityStatus
@@ -410,7 +423,10 @@ float(^amplitude)(void) = ^(void)
             }
                 
             default:
+            {
+                [self.activationImageView setTintColor:[UIColor grayColor]];
                 break;
+            }
         }
         
         [self.reachabilityImageView setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];
@@ -420,7 +436,7 @@ float(^amplitude)(void) = ^(void)
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (toneUnit) {
+        if (toneUnit != nil) {
             [self stop];
             [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
         } else {
@@ -432,5 +448,8 @@ float(^amplitude)(void) = ^(void)
 }
 
 @end
+
+
+
 
 
