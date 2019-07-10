@@ -185,6 +185,7 @@ static NSDictionary *dtmfFrequencies = nil;
     
     NSError *error = nil;
     [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     
     if (self.audioEngine.isRunning == NO)
     {
