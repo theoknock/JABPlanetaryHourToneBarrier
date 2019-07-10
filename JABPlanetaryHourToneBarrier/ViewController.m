@@ -36,28 +36,6 @@
     [self activateWatchConnectivitySession];
 }
 
-- (void)start
-{
-    [[_key1DTMFToneGenerator audioEngine] startAndReturnError:nil];
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
-        dispatch_source_set_event_handler(timer, ^{
-            _key1DTMFToneGenerator = [[ToneGenerator alloc] initWithFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)];
-            [_key1DTMFToneGenerator playForDuration:1.0];
-        });
-    });
-    
-    dispatch_resume(timer);
-}
-
-- (void)stop
-{
-    [[_key1DTMFToneGenerator audioEngine] stop];
-    dispatch_suspend(timer);
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -128,7 +106,7 @@
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
 {
     [self toggleToneGenerator:nil];
-//    replyHandler(@{@"" : @((toneUnit == nil))});
+    replyHandler(@{@"" : @((timer == nil))});
 }
 
 - (void)updateDeviceStatus
@@ -141,8 +119,8 @@
           @[
               @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState)},
               @{@"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel)},
-              @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState)}]};
-//              @{@"ToneGeneratorPlaying"                           : @((toneUnit != nil))}]};
+              @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState)},
+              @{@"ToneGeneratorPlaying"                           : @((timer != nil))}]};
     
     __autoreleasing NSError *error;
     [watchConnectivitySession updateApplicationContext:deviceStatus error:&error];
@@ -278,7 +256,7 @@
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (_key1DTMFToneGenerator.audioEngine.isRunning) {
+        if (timer != nil) {
             [self stop];
             [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
         } else {
@@ -289,7 +267,34 @@
     });
 }
 
+- (void)start
+{
+//    [[_key1DTMFToneGenerator audioEngine] startAndReturnError:nil];
+    if (timer != nil)
+        dispatch_source_cancel(timer);
+    
+        timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
+        dispatch_source_set_event_handler(timer, ^{
+            //            if (_key1DTMFToneGenerator.audioEngine.isRunning)
+            //            {
+            ToneGenerator *toneGenerator = [[ToneGenerator alloc] initWithFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)];
+            [toneGenerator playForDuration:1.0];
+            //            }
+        });
+    dispatch_resume(timer);
+}
+
+- (void)stop
+{
+    dispatch_source_cancel(timer);
+    timer = nil;
+//    dispatch_suspend(timer);
+//    [[_key1DTMFToneGenerator audioEngine] stop];
+}
+
 @end
+
 
 
 
