@@ -22,16 +22,6 @@
 #define max_amplitude 1.0f
 
 @interface ViewController : UIViewController <WCSessionDelegate>
-{
-    AudioComponentInstance toneUnit;
-    dispatch_source_t timer;
-
-    @public
-        double frequency;
-        double amplitude;
-        double sampleRate;
-        double theta;
-}
 
 @end
 
