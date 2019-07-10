@@ -95,6 +95,43 @@ static NSDictionary *dtmfFrequencies = nil;
     return self;
 }
 
+-(instancetype)initWithFrequency1:(NSUInteger)frequency frequency2:(NSUInteger)frequency2
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _audioEngine = [[AVAudioEngine alloc] init];
+        
+        _mixerNode = _audioEngine.mainMixerNode;
+        
+        _playerOneNode = [[AVAudioPlayerNode alloc] init];
+        [_audioEngine attachNode:_playerOneNode];
+        
+        [_audioEngine connect:_playerOneNode to:_mixerNode format:[_playerOneNode outputFormatForBus:0]];
+        
+        _pcmBufferOne = [self createAudioBufferWithLoopableSineWaveFrequency:frequency];
+        
+        if (frequency2 > 0)
+        {
+            _playerTwoNode = [[AVAudioPlayerNode alloc] init];
+            [_audioEngine attachNode:_playerTwoNode];
+            
+            [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
+            
+            _pcmBufferTwo = [self createAudioBufferWithLoopableSineWaveFrequency:frequency2];
+        }
+    
+        
+        NSError *error = nil;
+        [_audioEngine startAndReturnError:&error];
+        //        NSLog(@"error: %@", error);
+    }
+    
+    return self;
+}
+
+
 -(instancetype)initWithDTMFfrequency1:(NSUInteger)frequency1 frequency2:(NSUInteger)frequency2
 {
     self = [super init];
@@ -180,7 +217,7 @@ static NSDictionary *dtmfFrequencies = nil;
     return pcmBuffer;
 }
 
--(void)play
+- (void)playForDuration:(NSTimeInterval)duration
 {
     
     NSError *error = nil;
@@ -215,12 +252,12 @@ static NSDictionary *dtmfFrequencies = nil;
     
 }
 
--(void)playForDuration:(NSTimeInterval)duration
-{
-    [self play];
-    
-    _timer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(stop) userInfo:nil repeats:NO];
-}
+//-(void)playForDuration:(NSTimeInterval)duration
+//{
+//    [self play];
+//
+//    _timer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(stop) userInfo:nil repeats:NO];
+//}
 
 -(void)stop
 {

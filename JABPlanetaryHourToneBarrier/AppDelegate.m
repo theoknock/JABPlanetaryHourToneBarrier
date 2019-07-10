@@ -28,7 +28,7 @@
 - (void)scheduleAppRefresh
 {
     BGAppRefreshTaskRequest *request = [[BGAppRefreshTaskRequest alloc] initWithIdentifier:@"com.blogspot.demonicactivity.bush.alan.james.JABPlanetaryHourToneBarrier.receiveApplicationContext"];
-    [request setEarliestBeginDate:[NSDate dateWithTimeIntervalSinceNow:100.0]];
+    [request setEarliestBeginDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
     
     __autoreleasing NSError *error;
     @try {
@@ -53,7 +53,7 @@
     [task setExpirationHandler:^{
         NSLog(@"\n\nExpired task: %@", task_desc);
     }];
-    
+    [self.deviceStatusInterfaceDelegate updateDeviceStatus];
     [task setTaskCompletedWithSuccess:TRUE];
     NSLog(@"Completed task: %@", task.description);
 }

@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "ToneGenerator.h"
+#import "AppDelegate.h"
 
 @interface ViewController ()
 {
@@ -31,6 +32,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] setDeviceStatusInterfaceDelegate:(id<DeviceStatusInterfaceDelegate>)self];
     
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
@@ -269,36 +272,39 @@
 
 - (void)start
 {
-//    [[_key1DTMFToneGenerator audioEngine] startAndReturnError:nil];
     if (timer != nil)
         dispatch_source_cancel(timer);
     
-        timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
-        dispatch_source_set_event_handler(timer, ^{
-            //            if (_key1DTMFToneGenerator.audioEngine.isRunning)
-            //            {
-            ToneGenerator *toneGenerator = [[ToneGenerator alloc] initWithFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)];
-            [toneGenerator playForDuration:1.0];
-            //            }
+    timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(timer, ^{
+        double duration = (((double)arc4random() / 0x100000000) * (2.0 - 0.0) + 0.0);
+        __block ToneGenerator *toneGenerator = [[ToneGenerator alloc] initWithFrequency1:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)
+                                                                      frequency2:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)];
+        [toneGenerator playForDuration:2.0 - duration];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2.0 - duration) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [toneGenerator stop];
+            
+            toneGenerator = [[ToneGenerator alloc] initWithFrequency1:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)
+                                                                           frequency2:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)];
+            [toneGenerator playForDuration:duration];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2.0 - duration) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//
+//                [toneGenerator2 stop];
+//            });
         });
+    });
     dispatch_resume(timer);
+    
 }
 
 - (void)stop
 {
     dispatch_source_cancel(timer);
     timer = nil;
-//    dispatch_suspend(timer);
-//    [[_key1DTMFToneGenerator audioEngine] stop];
+    //    dispatch_suspend(timer);
+    //    [[_key1DTMFToneGenerator audioEngine] stop];
 }
 
 @end
-
-
-
-
-
-
-
-

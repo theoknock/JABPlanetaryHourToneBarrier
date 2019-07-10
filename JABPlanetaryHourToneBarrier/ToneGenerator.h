@@ -32,6 +32,7 @@
 + (instancetype)dtmfToneGeneratorForKey:(NSString *)key;
 
 - (instancetype)initWithFrequency:(NSUInteger)frequency;
+-(instancetype)initWithFrequency1:(NSUInteger)frequency frequency2:(NSUInteger)frequency2;
 - (instancetype)initWithDTMFfrequency1:(NSUInteger)frequency1 frequency2:(NSUInteger)frequency2;
 
 - (void)play;
