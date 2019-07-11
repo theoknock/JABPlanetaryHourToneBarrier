@@ -14,7 +14,6 @@
 {
     WCSession *watchConnectivitySession;
     UIDevice *device;
-    dispatch_source_t timer;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -105,7 +104,7 @@
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
 {
     [self toggleToneGenerator:nil];
-    replyHandler(@{@"" : @((timer == nil))});
+    replyHandler(@{@"" : @((ToneGenerator.sharedGenerator.timer == nil))});
 }
 
 - (void)updateDeviceStatus
@@ -119,7 +118,7 @@
               @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState)},
               @{@"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel)},
               @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState)},
-              @{@"ToneGeneratorPlaying"                           : @((timer != nil))}]};
+              @{@"ToneGeneratorPlaying"                           : @((ToneGenerator.sharedGenerator.timer != nil))}]};
     
     __autoreleasing NSError *error;
     [watchConnectivitySession updateApplicationContext:deviceStatus error:&error];
@@ -264,18 +263,6 @@
         }
         [self updateDeviceStatus];
     });
-}
-
-- (void)start
-{
-    
-}
-
-- (void)stop
-{
-    dispatch_source_cancel(timer);
-    timer = nil;
-    [ToneGenerator.sharedGenerator stop];
 }
 
 @end
