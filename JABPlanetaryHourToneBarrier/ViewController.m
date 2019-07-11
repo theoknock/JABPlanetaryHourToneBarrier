@@ -29,7 +29,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] setDeviceStatusInterfaceDelegate:(id<DeviceStatusInterfaceDelegate>)self];
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
@@ -254,15 +254,26 @@
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (ToneGenerator.sharedGenerator.timer != nil) {
-            [ToneGenerator.sharedGenerator stop];
-            [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
-        } else {
-            [ToneGenerator.sharedGenerator start];
-            [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
-        }
-        [self updateDeviceStatus];
+        [UIView animateWithDuration:2.0 animations:^{
+            UIImage *bold_symbol = [[self.playButton image] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold]];
+            [self.playButton setImage:bold_symbol];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:2.0 animations:^{
+                UIImage *regular_symbol = [[self.playButton image] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular]];
+                [self.playButton setImage:regular_symbol];
+            } completion:^(BOOL finished) {
+                if ([ToneGenerator.sharedGenerator timer] == nil) {
+                    [ToneGenerator.sharedGenerator start];
+                    [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
+                } else if ([ToneGenerator.sharedGenerator timer] != nil) {
+                    [ToneGenerator.sharedGenerator stop];
+                    [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
+                }
+            }];
+        }];
     });
 }
 
 @end
+
+

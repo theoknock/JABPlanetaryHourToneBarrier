@@ -154,7 +154,7 @@ static ToneGenerator *sharedGenerator = NULL;
     return pcmBuffer;
 }
 
-- (void)start
+- (BOOL)start
 {
     if (self.audioEngine.isRunning == NO)
     {
@@ -163,7 +163,6 @@ static ToneGenerator *sharedGenerator = NULL;
         NSLog(@"error: %@", error);
     }
     
-    NSLog(@"Start");
     if (self->_timer != nil) [self stop];
     
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
@@ -195,16 +194,19 @@ static ToneGenerator *sharedGenerator = NULL;
     });
     dispatch_resume(self.timer);
     
+    return (self.timer != nil);
     
 //    _timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(stop) userInfo:nil repeats:NO];
 }
 
--(void)stop
+-(BOOL)stop
 {
     dispatch_source_cancel(self->_timer);
     self->_timer = nil;
     [_playerOneNode stop];
     [_playerTwoNode stop];
+    
+    return (self.timer == nil);
 }
 
 @end
