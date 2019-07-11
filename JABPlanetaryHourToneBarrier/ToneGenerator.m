@@ -37,8 +37,6 @@ static const AVAudioFrameCount kSamplesPerBuffer = 1024;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferOne;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferTwo;
 
-@property (nonatomic, readonly) NSTimer *timer;
-
 @end
 
 static NSDictionary *dtmfFrequencies = nil;
@@ -70,32 +68,22 @@ static NSDictionary *dtmfFrequencies = nil;
     return firstValue;
 }
 
--(instancetype)initWithFrequency:(NSUInteger)frequency;
+static ToneGenerator *sharedGenerator = NULL;
++ (nonnull ToneGenerator *)sharedGenerator
 {
-    self = [super init];
+    static dispatch_once_t onceSecurePredicate;
+    dispatch_once(&onceSecurePredicate,^
+                  {
+        if (!sharedGenerator)
+        {
+            sharedGenerator = [[self alloc] init];
+        }
+    });
     
-    if (self)
-    {
-        _audioEngine = [[AVAudioEngine alloc] init];
-        
-        _mixerNode = _audioEngine.mainMixerNode;
-        
-        _playerOneNode = [[AVAudioPlayerNode alloc] init];
-        [_audioEngine attachNode:_playerOneNode];
-        
-        [_audioEngine connect:_playerOneNode to:_mixerNode format:[_playerOneNode outputFormatForBus:0]];
-        
-        _pcmBufferOne = [self createAudioBufferWithLoopableSineWaveFrequency:frequency];
-        
-        NSError *error = nil;
-        [_audioEngine startAndReturnError:&error];
-//        NSLog(@"error: %@", error);
-    }
-    
-    return self;
+    return sharedGenerator;
 }
 
--(instancetype)initWithFrequency1:(NSUInteger)frequency frequency2:(NSUInteger)frequency2
+- (instancetype)init
 {
     self = [super init];
     
@@ -110,76 +98,25 @@ static NSDictionary *dtmfFrequencies = nil;
         
         [_audioEngine connect:_playerOneNode to:_mixerNode format:[_playerOneNode outputFormatForBus:0]];
         
-        _pcmBufferOne = [self createAudioBufferWithLoopableSineWaveFrequency:frequency];
+        _playerTwoNode = [[AVAudioPlayerNode alloc] init];
+        [_audioEngine attachNode:_playerTwoNode];
         
-        if (frequency2 > 0)
-        {
-            _playerTwoNode = [[AVAudioPlayerNode alloc] init];
-            [_audioEngine attachNode:_playerTwoNode];
-            
-            [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
-            
-            _pcmBufferTwo = [self createAudioBufferWithLoopableSineWaveFrequency:frequency2];
-        }
-    
-        
-        NSError *error = nil;
-        [_audioEngine startAndReturnError:&error];
-        //        NSLog(@"error: %@", error);
-    }
-    
-    return self;
-}
-
-
--(instancetype)initWithDTMFfrequency1:(NSUInteger)frequency1 frequency2:(NSUInteger)frequency2
-{
-    self = [super init];
-    
-    if (self)
-    {
-        _audioEngine = [[AVAudioEngine alloc] init];
-        
-        _mixerNode = _audioEngine.mainMixerNode;
-        
-        _playerOneNode = [[AVAudioPlayerNode alloc] init];
-        [_audioEngine attachNode:_playerOneNode];
-        
-        [_audioEngine connect:_playerOneNode to:_mixerNode format:[_playerOneNode outputFormatForBus:0]];
-        
-        _pcmBufferOne = [self createAudioBufferWithLoopableSineWaveFrequency:frequency1];
-        if (frequency2 > 0)
-        {
-            _playerTwoNode = [[AVAudioPlayerNode alloc] init];
-            [_audioEngine attachNode:_playerTwoNode];
-            
-            [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
-            
-            _pcmBufferTwo = [self createAudioBufferWithLoopableSineWaveFrequency:frequency2];
-        }
+        [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
         
         NSError *error = nil;
         [_audioEngine startAndReturnError:&error];
         NSLog(@"error: %@", error);
+        
+        [[AVAudioSession sharedInstance] setActive:YES error:&error];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     }
     
     return self;
 }
 
-+(instancetype)dtmfToneGeneratorForKey:(NSString*)key
-{
-    NSNumber *frequency1 = dtmfFrequencies[key][0];
-    NSNumber *frequency2 = dtmfFrequencies[key][1];
-
-    ToneGenerator *dtmfToneGenerator = [[ToneGenerator alloc] initWithDTMFfrequency1:[frequency1 integerValue]
-                                                                                      frequency2:[frequency2 integerValue]];
-    
-    return dtmfToneGenerator;
-}
-
 -(AVAudioPCMBuffer*)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
 {
-     AVAudioFormat *mixerFormat = [_mixerNode outputFormatForBus:0];
+    AVAudioFormat *mixerFormat = [_mixerNode outputFormatForBus:0];
     
     double sampleRate = mixerFormat.sampleRate;
     double frameLength = kSamplesPerBuffer;
@@ -217,53 +154,59 @@ static NSDictionary *dtmfFrequencies = nil;
     return pcmBuffer;
 }
 
-- (void)playForDuration:(NSTimeInterval)duration
+- (void)start
 {
-    
-    NSError *error = nil;
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    
     if (self.audioEngine.isRunning == NO)
     {
         NSError *error = nil;
         [_audioEngine startAndReturnError:&error];
-        NSLog(@"error: %@", error);   
+        NSLog(@"error: %@", error);
     }
     
-    if (_playerOneNode && _pcmBufferOne)
-    {
-        [_playerOneNode scheduleBuffer:_pcmBufferOne atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-            
-        }];
-        
-        [_playerOneNode play];
-    }
+    NSLog(@"Start");
+    if (self->_timer != nil) [self stop];
+    
+    self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    dispatch_source_set_timer(self->_timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(self->_timer, ^{
+        if ([_playerOneNode isPlaying] || [_playerTwoNode isPlaying])
+        {
+            [_playerOneNode stop];
+            [_playerTwoNode stop];
+        }
 
-    if (_playerTwoNode && _pcmBufferTwo)
-    {
-        [_playerTwoNode scheduleBuffer:_pcmBufferTwo atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+        if (_playerOneNode)
+        {
+            [_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+                
+            }];
             
-        }];
+            [_playerOneNode play];
+        }
         
-        [_playerTwoNode play];
-    }
+        if (_playerTwoNode)
+        {
+            [_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+                
+            }];
+            
+            [_playerTwoNode play];
+        }
+    });
+    dispatch_resume(self.timer);
     
     
+//    _timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(stop) userInfo:nil repeats:NO];
 }
-
-//-(void)playForDuration:(NSTimeInterval)duration
-//{
-//    [self play];
-//
-//    _timer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(stop) userInfo:nil repeats:NO];
-//}
 
 -(void)stop
 {
+    dispatch_source_cancel(self->_timer);
+    self->_timer = nil;
     [_playerOneNode stop];
     [_playerTwoNode stop];
 }
 
 @end
+
 

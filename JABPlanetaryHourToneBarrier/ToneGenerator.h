@@ -29,15 +29,11 @@
 
 @property (nonatomic, readonly) AVAudioEngine *audioEngine;
 
-+ (instancetype)dtmfToneGeneratorForKey:(NSString *)key;
++ (nonnull ToneGenerator *)sharedGenerator;
 
-- (instancetype)initWithFrequency:(NSUInteger)frequency;
--(instancetype)initWithFrequency1:(NSUInteger)frequency frequency2:(NSUInteger)frequency2;
-- (instancetype)initWithDTMFfrequency1:(NSUInteger)frequency1 frequency2:(NSUInteger)frequency2;
+@property (nonatomic, strong) dispatch_source_t timer;
 
-- (void)play;
-- (void)playForDuration:(NSTimeInterval)duration;
-
+- (void)start;
 - (void)stop;
 
 @end
