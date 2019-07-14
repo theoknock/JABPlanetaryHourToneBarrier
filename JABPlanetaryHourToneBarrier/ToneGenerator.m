@@ -26,10 +26,10 @@ static const float low_frequency = 1000.0f;
 
 @implementation ToneGenerator
 
--(NSUInteger)greatestCommonDivisor:(NSUInteger)firstValue secondValue:(NSUInteger)secondValue
+- (NSUInteger)greatestCommonDivisor:(NSUInteger)firstValue secondValue:(NSUInteger)secondValue
 {
     if (firstValue == 0 && secondValue == 0)
-        return 0;
+        return 1;
     
     NSUInteger r;
     while(secondValue)

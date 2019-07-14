@@ -51,7 +51,6 @@
     device = [UIDevice currentDevice];
     [device setBatteryMonitoringEnabled:TRUE];
     [device setProximityMonitoringEnabled:TRUE];
-    [self updateDeviceStatus];
 }
 
 - (void)addStatusObservers
@@ -132,7 +131,7 @@ static float(^batteryLevel)(void) = ^float(void)
 
 static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(^deviceStatus)(void) = ^NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(void)
 {
-    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * deviceStatus =
+    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * status =
     @{@"DeviceStatus" :
           @[
               @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState())},
@@ -140,7 +139,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
               @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState())},
               @{@"ToneGeneratorPlaying"                           : @((ToneGenerator.sharedGenerator.timer != nil))}]};
     
-    return deviceStatus;
+    return status;
 };
 
 - (void)updateDeviceStatus

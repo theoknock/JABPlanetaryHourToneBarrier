@@ -11,9 +11,10 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <group width="0.59999999999999998" height="0.69999999999999996" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="7UP-qf-oZ1">
+                        <volumeControlView alignment="center" controlsLocalVolume="NO" id="yOm-X9-hP2"/>
+                        <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="7UP-qf-oZ1">
                             <items>
-                                <button width="0.5" height="0.5" alignment="center" verticalAlignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                <button width="0.59999999999999998" height="0.80000000000000004" alignment="center" verticalAlignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
                                     <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <connections>
                                         <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>

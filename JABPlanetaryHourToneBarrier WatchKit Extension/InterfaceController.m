@@ -179,8 +179,6 @@
     {
         [watchConnectivitySession sendMessage:@{@"ToneGenerator" : @"Toggle"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"REPLY %lu", [[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]);
-                
                 [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
             });
         } errorHandler:^(NSError * _Nonnull error) {
