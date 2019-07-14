@@ -151,12 +151,12 @@
 		B904CDB922D3CA340086CAF8 /* JABPlanetaryHourToneBarrier */ = {
 			isa = PBXGroup;
 			children = (
-				B98CF2C822D583CB00661419 /* ToneGenerator.h */,
-				B98CF2C722D583CB00661419 /* ToneGenerator.m */,
 				B904CDBA22D3CA340086CAF8 /* AppDelegate.h */,
 				B904CDBB22D3CA340086CAF8 /* AppDelegate.m */,
 				B98CF29922D5739900661419 /* ViewController.h */,
 				B904CDBE22D3CA340086CAF8 /* ViewController.m */,
+				B98CF2C822D583CB00661419 /* ToneGenerator.h */,
+				B98CF2C722D583CB00661419 /* ToneGenerator.m */,
 				B904CDC022D3CA340086CAF8 /* Main.storyboard */,
 				B904CDC322D3CA350086CAF8 /* Assets.xcassets */,
 				B904CDC522D3CA350086CAF8 /* LaunchScreen.storyboard */,

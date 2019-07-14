@@ -66,6 +66,11 @@
     }
 }
 
+//- (WKWatchConnectivityRefreshBackgroundTask *)updatePeerDeviceStatus
+//{
+//    WKWatchConnectivityRefreshBackgroundTask *backgroundTask = [
+//}
+
 - (WCSession *)watchConnectivitySession
 {
     return watchConnectivitySession;
@@ -96,6 +101,7 @@
 
 - (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *,id> *)applicationContext
 {
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
     [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:applicationContext];
 }
 
