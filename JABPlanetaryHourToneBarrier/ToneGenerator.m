@@ -1,26 +1,9 @@
 //
-//  JSDTMFToneGenerator.h
-//  JSDTMFToneGenerator
+//  ToneGenerator.m
+//  JABPlanetaryHourToneBarrier
 //
-//  Created on 11/04/2015.
-//
-//  Copyright (c) 2015 Jalamanta
-//
-//  This software is provided 'as-is', without any express or implied
-//  warranty. In no event will the authors be held liable for any damages
-//  arising from the use of this software.
-//
-//  Permission is granted to anyone to use this software for any purpose,
-//  including commercial applications, and to alter it and redistribute it
-//  freely, subject to the following restrictions:
-//
-//  1. The origin of this software must not be misrepresented; you must not
-//     claim that you wrote the original software. If you use this software
-//     in a product, an acknowledgement in the product documentation would be
-//     appreciated but is not required.
-//  2. Altered source versions must be plainly marked as such, and must not be
-//     misrepresented as being the original software.
-//  3. This notice may not be removed or altered from any source distribution.
+//  Created by Xcode Developer on 7/8/19.
+//  Copyright © 2019 The Life of a Demoniac. All rights reserved.
 //
 
 #import <AVFoundation/AVFoundation.h>
@@ -41,19 +24,7 @@ static const float low_frequency = 1000.0f;
 
 @end
 
-static NSDictionary *dtmfFrequencies = nil;
-
 @implementation ToneGenerator
-
-+(void)initialize
-{
-    if (dtmfFrequencies == nil)
-        dtmfFrequencies = @{ @"1" : @[ @(1209), @(697)], @"2": @[ @(1336), @(697)], @"3" : @[ @(1477), @(697)],
-                             @"4" : @[ @(1209), @(770)], @"5": @[ @(1336), @(770)], @"6" : @[ @(1477), @(770)],
-                             @"7" : @[ @(1209), @(852)], @"8": @[ @(1336), @(852)], @"9" : @[ @(1477), @(852)],
-                             @"*" : @[ @(1209), @(941)], @"0": @[ @(1336), @(941)], @"#" : @[ @(1477), @(941)]};
-    
-}
 
 -(NSUInteger)greatestCommonDivisor:(NSUInteger)firstValue secondValue:(NSUInteger)secondValue
 {
