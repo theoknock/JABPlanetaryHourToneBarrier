@@ -28,6 +28,8 @@
 #import "ToneGenerator.h"
 
 static const AVAudioFrameCount kSamplesPerBuffer = 1024;
+static const float high_frequency = 4000.0f;
+static const float low_frequency = 1000.0f;
 
 @interface ToneGenerator ()
 
@@ -141,7 +143,7 @@ static ToneGenerator *sharedGenerator = NULL;
     double theta = 0.0f;
     for (NSUInteger i_sample=0; i_sample < pcmBuffer.frameLength; i_sample++)
     {
-        CGFloat value = sinf( theta);
+        CGFloat value = sinf(theta);
         
         theta += increment;
         
@@ -154,7 +156,7 @@ static ToneGenerator *sharedGenerator = NULL;
     return pcmBuffer;
 }
 
-- (BOOL)start
+- (void)start
 {
     if (self.audioEngine.isRunning == NO)
     {
@@ -168,45 +170,39 @@ static ToneGenerator *sharedGenerator = NULL;
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
     dispatch_source_set_timer(self->_timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(self->_timer, ^{
-        if ([_playerOneNode isPlaying] || [_playerTwoNode isPlaying])
+        if ([self->_playerOneNode isPlaying] || [self->_playerTwoNode isPlaying])
         {
-            [_playerOneNode stop];
-            [_playerTwoNode stop];
+            [self->_playerOneNode stop];
+            [self->_playerTwoNode stop];
         }
 
-        if (_playerOneNode)
+        if (self->_playerOneNode)
         {
-            [_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+            [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
                 
             }];
             
-            [_playerOneNode play];
+            [self->_playerOneNode play];
         }
         
-        if (_playerTwoNode)
+        if (self->_playerTwoNode)
         {
-            [_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (4000.0 - 300.0) + 300.0)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+            [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:nil options:AVAudioPlayerNodeBufferLoops completionHandler:^{
                 
             }];
             
-            [_playerTwoNode play];
+            [self->_playerTwoNode play];
         }
     });
     dispatch_resume(self.timer);
-    
-    return (self.timer != nil);
-    
-//    _timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(stop) userInfo:nil repeats:NO];
 }
 
--(BOOL)stop
+-(void)stop
 {
     dispatch_source_cancel(self->_timer);
     self->_timer = nil;
     [_playerOneNode stop];
     [_playerTwoNode stop];
-    
-    return (self.timer == nil);
 }
 
 @end
