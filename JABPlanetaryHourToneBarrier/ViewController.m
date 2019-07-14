@@ -33,6 +33,7 @@
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] setDeviceStatusInterfaceDelegate:(id<DeviceStatusInterfaceDelegate>)self];
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
+    [self addStatusObservers];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -55,8 +56,8 @@
 
 - (void)addStatusObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption) name:AVAudioSessionInterruptionNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruptionEnd) name:AVCaptureSessionInterruptionEndedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVCaptureSessionInterruptionEndedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:NSProcessInfoThermalStateDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryLevelDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryStateDidChangeNotification object:nil];
@@ -309,6 +310,9 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
 
 - (void)handleInterruption:(NSNotification *)notification
 {
+    [self updateWatchConnectivityStatus];
+    [self updateDeviceStatus];
+    
     BOOL wasPlaying = FALSE;
     NSDictionary *userInfo = [notification userInfo];
     NSInteger typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
