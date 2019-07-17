@@ -12,7 +12,7 @@
 
 static const AVAudioFrameCount kSamplesPerBuffer = 1024;
 static const float high_frequency = 4000.0f;
-static const float low_frequency = 1000.0f;
+static const float low_frequency = 500.0f;
 
 @interface ToneGenerator ()
 

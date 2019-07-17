@@ -117,26 +117,26 @@ static NSProcessInfoThermalState(^thermalState)(void) = ^NSProcessInfoThermalSta
     return thermalState;
 };
 
-static UIDeviceBatteryState(^batteryState)(void) = ^UIDeviceBatteryState(void)
+static UIDeviceBatteryState(^batteryState)(UIDevice *) = ^UIDeviceBatteryState(UIDevice * device)
 {
-    UIDeviceBatteryState batteryState = [[UIDevice currentDevice] batteryState];
+    UIDeviceBatteryState batteryState = [device batteryState];
     return batteryState;
 };
 
-static float(^batteryLevel)(void) = ^float(void)
+static float(^batteryLevel)(UIDevice *) = ^float(UIDevice * device)
 {
-    float batteryLevel = [[UIDevice currentDevice] batteryLevel];
+    float batteryLevel = [device batteryLevel];
     return batteryLevel;
 };
 
-static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(^deviceStatus)(void) = ^NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(void)
+static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(^deviceStatus)(UIDevice *) = ^NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(UIDevice * device)
 {
     NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * status =
     @{@"DeviceStatus" :
           @[
               @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState())},
-              @{@"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel())},
-              @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState())},
+              @{@"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device))},
+              @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device))},
               @{@"ToneGeneratorPlaying"                           : @((ToneGenerator.sharedGenerator.timer != nil))}]};
     
     return status;
@@ -144,15 +144,17 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
 
 - (void)updateDeviceStatus
 {
+    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * status = deviceStatus(device);
+    
     __autoreleasing NSError *error;
-    [watchConnectivitySession updateApplicationContext:deviceStatus() error:&error];
+    [watchConnectivitySession updateApplicationContext:status error:&error];
     
     if (error)
     {
         NSLog(@"Error updating application context: %@", error.description);
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            switch (thermalState()) {
+            switch ([(NSNumber *)[status objectForKey:@"NSProcessInfoThermalStateDidChangeNotification"] integerValue]) {
                 case NSProcessInfoThermalStateNominal:
                 {
                     [self.thermometerImageView setTintColor:[UIColor greenColor]];
@@ -186,7 +188,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
         });
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            switch (batteryState()) {
+            switch (batteryState(self->device)) {
                 case UIDeviceBatteryStateUnknown:
                 {
                     [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
@@ -224,8 +226,8 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
             }
         });
         
-        float level = batteryLevel();
         dispatch_async(dispatch_get_main_queue(), ^{
+            float level = batteryLevel(self->device);
             if (level <= 1.0 || level > .66)
             {
                 [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.100"]];

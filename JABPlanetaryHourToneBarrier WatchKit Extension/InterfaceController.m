@@ -147,17 +147,19 @@
                 if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryLevelDidChangeNotification"])
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([[obj objectForKey:[obj allKeys][0]] floatValue] >= .9)
+                        if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= 1.0 &&
+                            [[obj objectForKey:[obj allKeys][0]] floatValue] > .66)
                         {
                             [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.100"]];
                             [self.batteryLevelImage setTintColor:[UIColor greenColor]];
                         } else
-                            if ([[obj objectForKey:[obj allKeys][0]] floatValue] < .9)
+                            if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .66 &&
+                                [[obj objectForKey:[obj allKeys][0]] floatValue] > .33)
                             {
                                 [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.25"]];
                                 [self.batteryLevelImage setTintColor:[UIColor yellowColor]];
                             } else
-                                if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .25)
+                                if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .33)
                                 {
                                     [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.0"]];
                                     [self.batteryLevelImage setTintColor:[UIColor redColor]];

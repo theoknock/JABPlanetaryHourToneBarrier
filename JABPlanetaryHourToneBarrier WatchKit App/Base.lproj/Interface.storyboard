@@ -6,39 +6,43 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14631.1"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--ToneBarrier Remote-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController">
+                <controller title="ToneBarrier Remote" fullBounds="YES" fullScreen="YES" id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <volumeControlView alignment="center" controlsLocalVolume="NO" id="yOm-X9-hP2"/>
-                        <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="7UP-qf-oZ1">
+                        <group width="1" height="1" alignment="left" layout="vertical" id="mA2-QY-Gjx">
                             <items>
-                                <button width="0.59999999999999998" height="0.80000000000000004" alignment="center" verticalAlignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
-                                    <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <connections>
-                                        <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>
-                                    </connections>
-                                </button>
-                            </items>
-                        </group>
-                        <group alignment="center" verticalAlignment="bottom" spacing="8" id="MzL-gs-Vkc">
-                            <items>
-                                <imageView alignment="left" verticalAlignment="center" image="radiowaves.right" catalog="system" id="kr8-yM-26Q">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
-                                <imageView alignment="left" verticalAlignment="center" image="radiowaves.left" catalog="system" id="p44-L6-Exl">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
-                                <imageView alignment="left" verticalAlignment="center" image="thermometer" catalog="system" id="eCB-u2-8yT">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
-                                <imageView alignment="left" verticalAlignment="center" image="bolt.slash" catalog="system" id="USO-Vt-HEJ">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
-                                <imageView alignment="left" verticalAlignment="center" image="battery.0" catalog="system" id="Bvl-l2-fEU">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
+                                <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="overlap" id="7UP-qf-oZ1">
+                                    <items>
+                                        <button width="1" height="0.90000000000000002" alignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                            <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <connections>
+                                                <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>
+                                            </connections>
+                                        </button>
+                                    </items>
+                                </group>
+                                <group alignment="center" verticalAlignment="center" spacing="8" id="MzL-gs-Vkc">
+                                    <items>
+                                        <imageView alignment="center" verticalAlignment="center" image="radiowaves.right" catalog="system" id="kr8-yM-26Q">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                        <imageView alignment="center" verticalAlignment="center" image="radiowaves.left" catalog="system" id="p44-L6-Exl">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                        <imageView alignment="center" verticalAlignment="center" image="thermometer" catalog="system" id="eCB-u2-8yT">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                        <imageView alignment="center" verticalAlignment="center" image="bolt.slash" catalog="system" id="USO-Vt-HEJ">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                        <imageView alignment="center" verticalAlignment="center" image="battery.0" catalog="system" id="Bvl-l2-fEU">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                        <volumeControlView alignment="center" verticalAlignment="center" controlsLocalVolume="NO" id="yOm-X9-hP2"/>
+                                    </items>
+                                </group>
                             </items>
                         </group>
                     </items>
@@ -49,6 +53,7 @@
                         <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
+                        <outlet property="volume" destination="yOm-X9-hP2" id="s00-tv-tl1"/>
                     </connections>
                 </controller>
             </objects>

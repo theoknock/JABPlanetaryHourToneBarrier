@@ -23,6 +23,12 @@
 		B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDEB22D3CA350086CAF8 /* ComplicationController.m */; };
 		B904CDEE22D3CA360086CAF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B904CDED22D3CA360086CAF8 /* Assets.xcassets */; };
 		B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98CF2C722D583CB00661419 /* ToneGenerator.m */; };
+		B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426022DD1A5A00406201 /* IntentHandler.m */; };
+		B9AB426922DD1A5A00406201 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AB426822DD1A5A00406201 /* IntentsUI.framework */; };
+		B9AB426D22DD1A5A00406201 /* IntentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426C22DD1A5A00406201 /* IntentViewController.m */; };
+		B9AB427022DD1A5A00406201 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9AB426E22DD1A5A00406201 /* MainInterface.storyboard */; };
+		B9AB427422DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AB426722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B9AB427722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +45,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = B904CDDB22D3CA350086CAF8;
 			remoteInfo = "JABPlanetaryHourToneBarrier WatchKit Extension";
+		};
+		B9AB427222DD1A5A00406201 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B904CDAF22D3CA340086CAF8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9AB426622DD1A5A00406201;
+			remoteInfo = JABPlanetaryHourToneBarrierIntentsExtensionUI;
+		};
+		B9AB427522DD1A5A00406201 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B904CDAF22D3CA340086CAF8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9AB425C22DD1A5900406201;
+			remoteInfo = JABPlanetaryHourToneBarrierIntentsExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -71,6 +91,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				B9AB427422DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex in Embed App Extensions */,
+				B9AB427722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,6 +129,17 @@
 		B98CF29922D5739900661419 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B98CF2C722D583CB00661419 /* ToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToneGenerator.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF2C822D583CB00661419 /* ToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToneGenerator.h; sourceTree = "<group>"; };
+		B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JABPlanetaryHourToneBarrierIntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AB425F22DD1A5A00406201 /* IntentHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentHandler.h; sourceTree = "<group>"; };
+		B9AB426022DD1A5A00406201 /* IntentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentHandler.m; sourceTree = "<group>"; };
+		B9AB426222DD1A5A00406201 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B9AB426722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JABPlanetaryHourToneBarrierIntentsExtensionUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AB426822DD1A5A00406201 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		B9AB426B22DD1A5A00406201 /* IntentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentViewController.h; sourceTree = "<group>"; };
+		B9AB426C22DD1A5A00406201 /* IntentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentViewController.m; sourceTree = "<group>"; };
+		B9AB426F22DD1A5A00406201 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		B9AB427122DD1A5A00406201 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +157,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B9AB425A22DD1A5900406201 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9AB426422DD1A5A00406201 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AB426922DD1A5A00406201 /* IntentsUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -133,6 +181,8 @@
 				B904CDB922D3CA340086CAF8 /* JABPlanetaryHourToneBarrier */,
 				B904CDD122D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit App */,
 				B904CDE022D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */,
+				B9AB425E22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */,
+				B9AB426A22DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */,
 				B954D8CF22D4A42C001AF97D /* Frameworks */,
 				B904CDB822D3CA340086CAF8 /* Products */,
 			);
@@ -144,6 +194,8 @@
 				B904CDB722D3CA340086CAF8 /* JABPlanetaryHourToneBarrier.app */,
 				B904CDCD22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit App.app */,
 				B904CDDC22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension.appex */,
+				B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */,
+				B9AB426722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -179,6 +231,7 @@
 		B904CDE022D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */,
 				B904CDE122D3CA350086CAF8 /* InterfaceController.h */,
 				B904CDE222D3CA350086CAF8 /* InterfaceController.m */,
 				B904CDE422D3CA350086CAF8 /* ExtensionDelegate.h */,
@@ -198,8 +251,30 @@
 			isa = PBXGroup;
 			children = (
 				B954D8D022D4A42C001AF97D /* NotificationCenter.framework */,
+				B9AB426822DD1A5A00406201 /* IntentsUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9AB425E22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */ = {
+			isa = PBXGroup;
+			children = (
+				B9AB425F22DD1A5A00406201 /* IntentHandler.h */,
+				B9AB426022DD1A5A00406201 /* IntentHandler.m */,
+				B9AB426222DD1A5A00406201 /* Info.plist */,
+			);
+			path = JABPlanetaryHourToneBarrierIntentsExtension;
+			sourceTree = "<group>";
+		};
+		B9AB426A22DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */ = {
+			isa = PBXGroup;
+			children = (
+				B9AB426B22DD1A5A00406201 /* IntentViewController.h */,
+				B9AB426C22DD1A5A00406201 /* IntentViewController.m */,
+				B9AB426E22DD1A5A00406201 /* MainInterface.storyboard */,
+				B9AB427122DD1A5A00406201 /* Info.plist */,
+			);
+			path = JABPlanetaryHourToneBarrierIntentsExtensionUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,6 +294,8 @@
 			);
 			dependencies = (
 				B904CDD022D3CA350086CAF8 /* PBXTargetDependency */,
+				B9AB427322DD1A5A00406201 /* PBXTargetDependency */,
+				B9AB427622DD1A5A00406201 /* PBXTargetDependency */,
 			);
 			name = JABPlanetaryHourToneBarrier;
 			productName = JABPlanetaryHourToneBarrier;
@@ -259,6 +336,40 @@
 			productReference = B904CDDC22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
+		B9AB425C22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AB427B22DD1A5A00406201 /* Build configuration list for PBXNativeTarget "JABPlanetaryHourToneBarrierIntentsExtension" */;
+			buildPhases = (
+				B9AB425922DD1A5900406201 /* Sources */,
+				B9AB425A22DD1A5900406201 /* Frameworks */,
+				B9AB425B22DD1A5900406201 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JABPlanetaryHourToneBarrierIntentsExtension;
+			productName = JABPlanetaryHourToneBarrierIntentsExtension;
+			productReference = B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		B9AB426622DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AB427822DD1A5A00406201 /* Build configuration list for PBXNativeTarget "JABPlanetaryHourToneBarrierIntentsExtensionUI" */;
+			buildPhases = (
+				B9AB426322DD1A5A00406201 /* Sources */,
+				B9AB426422DD1A5A00406201 /* Frameworks */,
+				B9AB426522DD1A5A00406201 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JABPlanetaryHourToneBarrierIntentsExtensionUI;
+			productName = JABPlanetaryHourToneBarrierIntentsExtensionUI;
+			productReference = B9AB426722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -275,6 +386,12 @@
 						CreatedOnToolsVersion = 11.0;
 					};
 					B904CDDB22D3CA350086CAF8 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					B9AB425C22DD1A5900406201 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					B9AB426622DD1A5A00406201 = {
 						CreatedOnToolsVersion = 11.0;
 					};
 				};
@@ -295,6 +412,8 @@
 				B904CDB622D3CA340086CAF8 /* JABPlanetaryHourToneBarrier */,
 				B904CDCC22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit App */,
 				B904CDDB22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */,
+				B9AB425C22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */,
+				B9AB426622DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */,
 			);
 		};
 /* End PBXProject section */
@@ -327,6 +446,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B9AB425B22DD1A5900406201 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9AB426522DD1A5A00406201 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AB427022DD1A5A00406201 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -352,6 +486,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B9AB425922DD1A5900406201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9AB426322DD1A5A00406201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AB426D22DD1A5A00406201 /* IntentViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -364,6 +514,16 @@
 			isa = PBXTargetDependency;
 			target = B904CDDB22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */;
 			targetProxy = B904CDDE22D3CA350086CAF8 /* PBXContainerItemProxy */;
+		};
+		B9AB427322DD1A5A00406201 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9AB426622DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */;
+			targetProxy = B9AB427222DD1A5A00406201 /* PBXContainerItemProxy */;
+		};
+		B9AB427622DD1A5A00406201 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9AB425C22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */;
+			targetProxy = B9AB427522DD1A5A00406201 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -390,6 +550,14 @@
 				B904CDD322D3CA350086CAF8 /* Base */,
 			);
 			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		B9AB426E22DD1A5A00406201 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AB426F22DD1A5A00406201 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -530,6 +698,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "JABPlanetaryHourToneBarrier WatchKit Extension/JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N9987K9442;
 				INFOPLIST_FILE = "JABPlanetaryHourToneBarrier WatchKit Extension/Info.plist";
@@ -615,6 +784,80 @@
 			};
 			name = Release;
 		};
+		B9AB427922DD1A5A00406201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = JABPlanetaryHourToneBarrierIntentsExtensionUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blogspot.demonicactivity.bush.alan.james.JABPlanetaryHourToneBarrier.JABPlanetaryHourToneBarrierIntentsExtensionUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9AB427A22DD1A5A00406201 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				INFOPLIST_FILE = JABPlanetaryHourToneBarrierIntentsExtensionUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blogspot.demonicactivity.bush.alan.james.JABPlanetaryHourToneBarrier.JABPlanetaryHourToneBarrierIntentsExtensionUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B9AB427C22DD1A5A00406201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = JABPlanetaryHourToneBarrierIntentsExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blogspot.demonicactivity.bush.alan.james.JABPlanetaryHourToneBarrier.JABPlanetaryHourToneBarrierIntentsExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9AB427D22DD1A5A00406201 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				INFOPLIST_FILE = JABPlanetaryHourToneBarrierIntentsExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blogspot.demonicactivity.bush.alan.james.JABPlanetaryHourToneBarrier.JABPlanetaryHourToneBarrierIntentsExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -650,6 +893,24 @@
 			buildConfigurations = (
 				B904CDFC22D3CA360086CAF8 /* Debug */,
 				B904CDFD22D3CA360086CAF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9AB427822DD1A5A00406201 /* Build configuration list for PBXNativeTarget "JABPlanetaryHourToneBarrierIntentsExtensionUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AB427922DD1A5A00406201 /* Debug */,
+				B9AB427A22DD1A5A00406201 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9AB427B22DD1A5A00406201 /* Build configuration list for PBXNativeTarget "JABPlanetaryHourToneBarrierIntentsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AB427C22DD1A5A00406201 /* Debug */,
+				B9AB427D22DD1A5A00406201 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
