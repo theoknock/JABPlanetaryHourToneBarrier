@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14835.7" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14845" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch44"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14790.5"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14631.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14799.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14638"/>
     </dependencies>
     <scenes>
         <!--ToneBarrier Remote-->
@@ -16,6 +16,7 @@
                                 <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="overlap" id="7UP-qf-oZ1">
                                     <items>
                                         <button width="1" height="0.90000000000000002" alignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                            <color key="titleColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
                                                 <action selector="toggleToneGenerator" destination="AgC-eL-Hgc" id="MoW-Q0-JOa"/>
@@ -40,7 +41,9 @@
                                         <imageView alignment="center" verticalAlignment="center" image="battery.0" catalog="system" id="Bvl-l2-fEU">
                                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </imageView>
-                                        <volumeControlView alignment="center" verticalAlignment="center" controlsLocalVolume="NO" id="yOm-X9-hP2"/>
+                                        <volumeControlView alignment="center" verticalAlignment="center" controlsLocalVolume="NO" id="yOm-X9-hP2">
+                                            <color key="tintColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </volumeControlView>
                                     </items>
                                 </group>
                             </items>

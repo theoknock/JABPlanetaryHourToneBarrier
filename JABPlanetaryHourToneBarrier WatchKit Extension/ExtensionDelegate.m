@@ -19,16 +19,22 @@
 
 - (void)applicationDidFinishLaunching {
     [self activateWatchConnectivitySession];
+    [self requestPeerDeviceStatus]; // EXTRANEOUS?
 }
 
 - (void)applicationDidBecomeActive {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self activateWatchConnectivitySession];
+    [self requestPeerDeviceStatus]; // EXTRANEOUS?
 }
 
 - (void)applicationWillResignActive {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, etc.
+    [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0] userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
+                    NSLog(@"Background refresh task error:\t%@", error.description);
+                    [self requestPeerDeviceStatus];
+                }];
 }
 
 - (void)handleBackgroundTasks:(NSSet<WKRefreshBackgroundTask *> *)backgroundTasks {
@@ -46,7 +52,14 @@
         } else if ([task isKindOfClass:[WKWatchConnectivityRefreshBackgroundTask class]]) {
             // Be sure to complete the background task once you’re done.
             WKWatchConnectivityRefreshBackgroundTask *backgroundTask = (WKWatchConnectivityRefreshBackgroundTask*)task;
-            [backgroundTask setTaskCompletedWithSnapshot:NO];
+            
+            [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0]userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
+                NSLog(@"Background refresh task error:\t%@", error.description);
+                [self requestPeerDeviceStatus];
+            }];
+
+            [backgroundTask setTaskCompletedWithSnapshot:YES];
+            
         } else if ([task isKindOfClass:[WKURLSessionRefreshBackgroundTask class]]) {
             // Be sure to complete the background task once you’re done.
             WKURLSessionRefreshBackgroundTask *backgroundTask = (WKURLSessionRefreshBackgroundTask*)task;
@@ -112,3 +125,5 @@
 
 
 @end
+
+
