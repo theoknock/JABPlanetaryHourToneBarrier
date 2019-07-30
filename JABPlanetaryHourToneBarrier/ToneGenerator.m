@@ -113,8 +113,10 @@ static ToneGenerator *sharedGenerator = NULL;
     double increment = 2.0f * M_PI * frequency/sampleRate;
     double theta = 0.0f;
     NSUInteger r = arc4random_uniform(2);
-    double amplitude_step  = pcmBuffer.frameLength / 1.0;
+    double amplitude_step  = 1.0 / pcmBuffer.frameLength;
     double amplitude_value = 0.0;
+    float randomNum = ((float)rand() / RAND_MAX) * 4;
+    if (randomNum < 1.0) randomNum = 1.0;
     for (NSUInteger i_sample=0; i_sample < pcmBuffer.frameLength; i_sample++)
     {
         CGFloat value = sinf(theta);
@@ -125,8 +127,8 @@ static ToneGenerator *sharedGenerator = NULL;
         
         amplitude_value += amplitude_step;
         
-        if (leftChannel)  leftChannel[i_sample] = value * ((r == 1) ? amplitude_value : 1.0 - amplitude_value);
-        if (rightChannel) rightChannel[i_sample] = value * ((r == 1) ? 1.0 - amplitude_value : amplitude_value);
+        if (leftChannel)  leftChannel[i_sample]  = value * pow(((r == 1) ? ((amplitude_value < 1.0) ? amplitude_value : 1.0) : ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0)), 1.0/randomNum);
+        if (rightChannel) rightChannel[i_sample] = value * pow(((r == 1) ? ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0) : ((amplitude_value < 1.0) ? amplitude_value : 1.0)), 1.0/randomNum);
     }
     
     return pcmBuffer;
