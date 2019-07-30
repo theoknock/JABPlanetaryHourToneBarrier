@@ -112,6 +112,8 @@ static ToneGenerator *sharedGenerator = NULL;
     
     double increment = 2.0f * M_PI * frequency/sampleRate;
     double theta = 0.0f;
+    NSUInteger r = arc4random_uniform(2);
+    NSLog(@"r = %lu | %d", r, ((r == 1) ? 0 : 1));
     for (NSUInteger i_sample=0; i_sample < pcmBuffer.frameLength; i_sample++)
     {
         CGFloat value = sinf(theta);
@@ -120,8 +122,9 @@ static ToneGenerator *sharedGenerator = NULL;
         
         if (theta > 2.0f * M_PI) theta -= (2.0f * M_PI);
         
-        if (leftChannel)  leftChannel[i_sample] = value * .5f;
-        if (rightChannel) rightChannel[i_sample] = value * .5f;
+        
+        if (leftChannel)  leftChannel[i_sample] = value * ((r == 1) ? 0.0 : 1.0);
+        if (rightChannel) rightChannel[i_sample] = value * ((r == 1) ? 1.0 : 0.0);
     }
     
     return pcmBuffer;
@@ -186,7 +189,6 @@ static ToneGenerator *sharedGenerator = NULL;
          }
 
          AVAudioTime *start_time_one = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(CMClockGetTime(CMClockGetHostTimeClock()))];
-         
          if (self->_playerOneNode && self->_playerTwoNode)
          {
              [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
@@ -197,6 +199,20 @@ static ToneGenerator *sharedGenerator = NULL;
                  
              }];
          }
+         
+         float randomNum = ((float)rand() / RAND_MAX) * 1;
+         CMTime current_cmtime = CMTimeAdd(CMClockGetTime(CMClockGetHostTimeClock()), CMTimeMakeWithSeconds(randomNum, NSEC_PER_SEC));
+         AVAudioTime *start_time_two = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(current_cmtime)];
+          if (self->_playerOneNode && self->_playerTwoNode)
+          {
+              [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+                  
+              }];
+              
+              [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+                  
+              }];
+          }
      });
      dispatch_resume(self.timer);
  }
@@ -210,5 +226,6 @@ static ToneGenerator *sharedGenerator = NULL;
 }
 
 @end
+
 
 

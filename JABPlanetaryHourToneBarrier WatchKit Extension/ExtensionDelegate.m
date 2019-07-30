@@ -44,6 +44,12 @@
         if ([task isKindOfClass:[WKApplicationRefreshBackgroundTask class]]) {
             // Be sure to complete the background task once you’re done.
             WKApplicationRefreshBackgroundTask *backgroundTask = (WKApplicationRefreshBackgroundTask*)task;
+            
+            [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0]userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
+                            NSLog(@"Background refresh task error:\t%@", error.description);
+                            [self requestPeerDeviceStatus];
+                        }];
+            
             [backgroundTask setTaskCompletedWithSnapshot:NO];
         } else if ([task isKindOfClass:[WKSnapshotRefreshBackgroundTask class]]) {
             // Snapshot tasks have a unique completion call, make sure to set your expiration date
@@ -78,11 +84,6 @@
         }
     }
 }
-
-//- (WKWatchConnectivityRefreshBackgroundTask *)updatePeerDeviceStatus
-//{
-//    WKWatchConnectivityRefreshBackgroundTask *backgroundTask = [
-//}
 
 - (WCSession *)watchConnectivitySession
 {
