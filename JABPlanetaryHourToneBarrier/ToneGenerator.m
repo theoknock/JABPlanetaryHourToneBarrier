@@ -127,8 +127,9 @@ static ToneGenerator *sharedGenerator = NULL;
         
         amplitude_value += amplitude_step;
         
-        if (leftChannel)  leftChannel[i_sample]  = value * pow(((r == 1) ? ((amplitude_value < 1.0) ? amplitude_value : 1.0) : ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0)), 1.0/randomNum);
-        if (rightChannel) rightChannel[i_sample] = value * pow(((r == 1) ? ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0) : ((amplitude_value < 1.0) ? amplitude_value : 1.0)), 1.0/randomNum);
+        // ...alternating between channels...alternative between cycles...alternating between tones...
+        if (leftChannel)  leftChannel[i_sample]  = value * pow(((r == 1) ? ((amplitude_value < 1.0) ? amplitude_value : 1.0) : ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0)), ((r == 1) ? randomNum : 1.0/randomNum));
+        if (rightChannel) rightChannel[i_sample] = value * pow(((r == 1) ? ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0) : ((amplitude_value < 1.0) ? amplitude_value : 1.0)), ((r == 1) ? randomNum : 1.0/randomNum));
     }
     
     return pcmBuffer;
