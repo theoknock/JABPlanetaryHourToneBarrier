@@ -22,6 +22,7 @@
 		B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDE822D3CA350086CAF8 /* NotificationController.m */; };
 		B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDEB22D3CA350086CAF8 /* ComplicationController.m */; };
 		B904CDEE22D3CA360086CAF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B904CDED22D3CA360086CAF8 /* Assets.xcassets */; };
+		B98013E122F28F2900F3F258 /* WatchToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98013E022F28F2900F3F258 /* WatchToneGenerator.m */; };
 		B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98CF2C722D583CB00661419 /* ToneGenerator.m */; };
 		B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426022DD1A5A00406201 /* IntentHandler.m */; };
 		B9AB426922DD1A5A00406201 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AB426822DD1A5A00406201 /* IntentsUI.framework */; };
@@ -126,6 +127,8 @@
 		B904CDEF22D3CA360086CAF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B904CDF022D3CA360086CAF8 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		B954D8D022D4A42C001AF97D /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		B98013DF22F28F2900F3F258 /* WatchToneGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WatchToneGenerator.h; sourceTree = "<group>"; };
+		B98013E022F28F2900F3F258 /* WatchToneGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WatchToneGenerator.m; sourceTree = "<group>"; };
 		B98CF29922D5739900661419 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B98CF2C722D583CB00661419 /* ToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToneGenerator.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF2C822D583CB00661419 /* ToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToneGenerator.h; sourceTree = "<group>"; };
@@ -243,6 +246,8 @@
 				B904CDED22D3CA360086CAF8 /* Assets.xcassets */,
 				B904CDEF22D3CA360086CAF8 /* Info.plist */,
 				B904CDF022D3CA360086CAF8 /* PushNotificationPayload.apns */,
+				B98013DF22F28F2900F3F258 /* WatchToneGenerator.h */,
+				B98013E022F28F2900F3F258 /* WatchToneGenerator.m */,
 			);
 			path = "JABPlanetaryHourToneBarrier WatchKit Extension";
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 			files = (
 				B904CDE622D3CA350086CAF8 /* ExtensionDelegate.m in Sources */,
 				B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */,
+				B98013E122F28F2900F3F258 /* WatchToneGenerator.m in Sources */,
 				B904CDE322D3CA350086CAF8 /* InterfaceController.m in Sources */,
 				B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */,
 			);

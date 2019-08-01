@@ -8,6 +8,8 @@
 
 #import "InterfaceController.h"
 #import "ExtensionDelegate.h"
+#import "WatchToneGenerator.h"
+
 
 @interface InterfaceController ()
 
@@ -175,7 +177,15 @@
 
 - (IBAction)toggleToneGenerator
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if ([WatchToneGenerator.sharedGenerator timer] == nil) {
+//            [WatchToneGenerator.sharedGenerator start];
+//            [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
+//        } else if ([WatchToneGenerator.sharedGenerator timer] != nil) {
+//            [WatchToneGenerator.sharedGenerator stop];
+//            [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
+//        }
+//    });
     WCSession *watchConnectivitySession = [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] watchConnectivitySession];
     if (watchConnectivitySession.isReachable)
     {
@@ -184,12 +194,13 @@
                 [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
             });
         } errorHandler:^(NSError * _Nonnull error) {
-            
+
         }];
     }
 }
 
 @end
+
 
 
 
