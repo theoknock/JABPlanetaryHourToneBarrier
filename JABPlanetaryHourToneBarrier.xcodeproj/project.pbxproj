@@ -6,8 +6,20 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		B96BC2D622F677F4005EF185 /* JABPlanetaryHourFrameworks */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = B96BC2D722F677F4005EF185 /* Build configuration list for PBXAggregateTarget "JABPlanetaryHourFrameworks" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = JABPlanetaryHourFrameworks;
+			productName = JABPlanetaryHourFrameworks;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		8A6DF89422F65F160094B36A /* WatchToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A6DF89222F65F160094B36A /* WatchToneGenerator.m */; };
 		B904CDBC22D3CA340086CAF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDBB22D3CA340086CAF8 /* AppDelegate.m */; };
 		B904CDBF22D3CA340086CAF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDBE22D3CA340086CAF8 /* ViewController.m */; };
 		B904CDC222D3CA340086CAF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B904CDC022D3CA340086CAF8 /* Main.storyboard */; };
@@ -23,6 +35,9 @@
 		B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDE822D3CA350086CAF8 /* NotificationController.m */; };
 		B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDEB22D3CA350086CAF8 /* ComplicationController.m */; };
 		B904CDEE22D3CA360086CAF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B904CDED22D3CA360086CAF8 /* Assets.xcassets */; };
+		B969248F22F6923A002440CE /* WatchToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B969248E22F6923A002440CE /* WatchToneGenerator.m */; };
+		B969249122F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */; };
+		B969249222F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98CF2C722D583CB00661419 /* ToneGenerator.m */; };
 		B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426022DD1A5A00406201 /* IntentHandler.m */; };
 		B9AB426922DD1A5A00406201 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AB426822DD1A5A00406201 /* IntentsUI.framework */; };
@@ -98,11 +113,20 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B969249322F696B3002440CE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B969249222F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8A6DF89222F65F160094B36A /* WatchToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchToneGenerator.m; sourceTree = "<group>"; };
-		8A6DF89322F65F160094B36A /* WatchToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchToneGenerator.h; sourceTree = "<group>"; };
 		B904CDB722D3CA340086CAF8 /* JABPlanetaryHourToneBarrier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JABPlanetaryHourToneBarrier.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B904CDBA22D3CA340086CAF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B904CDBB22D3CA340086CAF8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; wrapsLines = 0; };
@@ -129,6 +153,9 @@
 		B904CDEF22D3CA360086CAF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B904CDF022D3CA360086CAF8 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		B954D8D022D4A42C001AF97D /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		B969248D22F6923A002440CE /* WatchToneGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WatchToneGenerator.h; sourceTree = "<group>"; };
+		B969248E22F6923A002440CE /* WatchToneGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WatchToneGenerator.m; sourceTree = "<group>"; };
+		B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourWatchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B98CF29922D5739900661419 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B98CF2C722D583CB00661419 /* ToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToneGenerator.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF2C822D583CB00661419 /* ToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToneGenerator.h; sourceTree = "<group>"; };
@@ -157,6 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B969249122F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,8 +262,8 @@
 		B904CDE022D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
-				8A6DF89322F65F160094B36A /* WatchToneGenerator.h */,
-				8A6DF89222F65F160094B36A /* WatchToneGenerator.m */,
+				B969248D22F6923A002440CE /* WatchToneGenerator.h */,
+				B969248E22F6923A002440CE /* WatchToneGenerator.m */,
 				B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */,
 				B904CDE122D3CA350086CAF8 /* InterfaceController.h */,
 				B904CDE222D3CA350086CAF8 /* InterfaceController.m */,
@@ -255,6 +283,7 @@
 		B954D8CF22D4A42C001AF97D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */,
 				B954D8D022D4A42C001AF97D /* NotificationCenter.framework */,
 				B9AB426822DD1A5A00406201 /* IntentsUI.framework */,
 			);
@@ -331,6 +360,7 @@
 				B904CDD822D3CA350086CAF8 /* Sources */,
 				B904CDD922D3CA350086CAF8 /* Frameworks */,
 				B904CDDA22D3CA350086CAF8 /* Resources */,
+				B969249322F696B3002440CE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -393,6 +423,9 @@
 					B904CDDB22D3CA350086CAF8 = {
 						CreatedOnToolsVersion = 11.0;
 					};
+					B96BC2D622F677F4005EF185 = {
+						CreatedOnToolsVersion = 11.0;
+					};
 					B9AB425C22DD1A5900406201 = {
 						CreatedOnToolsVersion = 11.0;
 					};
@@ -419,6 +452,7 @@
 				B904CDDB22D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */,
 				B9AB425C22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */,
 				B9AB426622DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */,
+				B96BC2D622F677F4005EF185 /* JABPlanetaryHourFrameworks */,
 			);
 		};
 /* End PBXProject section */
@@ -486,8 +520,8 @@
 			files = (
 				B904CDE622D3CA350086CAF8 /* ExtensionDelegate.m in Sources */,
 				B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */,
-				8A6DF89422F65F160094B36A /* WatchToneGenerator.m in Sources */,
 				B904CDE322D3CA350086CAF8 /* InterfaceController.m in Sources */,
+				B969248F22F6923A002440CE /* WatchToneGenerator.m in Sources */,
 				B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -790,6 +824,24 @@
 			};
 			name = Release;
 		};
+		B96BC2D822F677F4005EF185 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B96BC2D922F677F4005EF185 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N9987K9442;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		B9AB427922DD1A5A00406201 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -899,6 +951,15 @@
 			buildConfigurations = (
 				B904CDFC22D3CA360086CAF8 /* Debug */,
 				B904CDFD22D3CA360086CAF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B96BC2D722F677F4005EF185 /* Build configuration list for PBXAggregateTarget "JABPlanetaryHourFrameworks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B96BC2D822F677F4005EF185 /* Debug */,
+				B96BC2D922F677F4005EF185 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

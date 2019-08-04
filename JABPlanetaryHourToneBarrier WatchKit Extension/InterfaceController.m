@@ -194,10 +194,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([WatchToneGenerator.sharedGenerator timer] == nil) {
                 [WatchToneGenerator.sharedGenerator start];
-                [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
+                [self.playOnWatchButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
             } else if ([WatchToneGenerator.sharedGenerator timer] != nil) {
                 [WatchToneGenerator.sharedGenerator stop];
-                [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
+                [self.playOnWatchButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
             }
         });
 }

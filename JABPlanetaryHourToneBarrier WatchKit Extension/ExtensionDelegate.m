@@ -7,6 +7,8 @@
 //
 
 #import "ExtensionDelegate.h"
+#import <JABPlanetaryHourWatchFramework/JABPlanetaryHourWatchFramework.h>
+#import "WatchToneGenerator.h"
 
 @interface ExtensionDelegate ()
 {
@@ -20,6 +22,35 @@
 - (void)applicationDidFinishLaunching {
     [self activateWatchConnectivitySession];
     [self requestPeerDeviceStatus]; // EXTRANEOUS?
+    NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 1)];
+       NSIndexSet *dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 2)];
+       NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(20, 1)];
+       
+       [[PlanetaryHourDataSource data] solarCyclesForDays:daysIndices
+                                        planetaryHourData:dataIndices
+                                           planetaryHours:hoursIndices
+              planetaryHourDataSourceStartCompletionBlock:^{
+           NSLog(@"%s", __PRETTY_FUNCTION__);
+       }
+                                solarCycleCompletionBlock:^(NSDictionary<NSNumber *,NSDate *> * _Nonnull solarCycle) {
+           NSLog(@"%s", __PRETTY_FUNCTION__);
+       }
+                             planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
+           NSLog(@"%s", __PRETTY_FUNCTION__);
+           
+           NSTimeInterval startDelay = [[planetaryHour objectForKey:@(StartDate)] timeIntervalSinceDate:[NSDate date]];
+           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(startDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+               [WatchToneGenerator.sharedGenerator start];
+           });
+           NSTimeInterval stopDelay = [[planetaryHour objectForKey:@(EndDate)] timeIntervalSinceDate:[NSDate date]];
+           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(stopDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+               [WatchToneGenerator.sharedGenerator stop];
+           });
+           NSLog(@"\nStart:\t%f\nEnd:\t%f", startDelay, stopDelay);
+       }
+                            planetaryHoursCompletionBlock:nil
+                planetaryHoursCalculationsCompletionBlock:nil
+                   planetaryHourDataSourceCompletionBlock:nil];
 }
 
 - (void)applicationDidBecomeActive {
