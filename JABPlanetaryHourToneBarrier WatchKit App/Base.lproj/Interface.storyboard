@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14845" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14854.2" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch44"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14799.2"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14638"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14806.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14640.1"/>
     </dependencies>
     <scenes>
         <!--ToneBarrier Remote-->
@@ -13,6 +13,11 @@
                     <items>
                         <group width="1" height="1" alignment="left" layout="vertical" id="mA2-QY-Gjx">
                             <items>
+                                <button width="35" height="35" alignment="left" backgroundImage="play.fill" catalog="system" id="J4I-Dg-Ch7">
+                                    <connections>
+                                        <action selector="playOnWatch" destination="AgC-eL-Hgc" id="WCS-00-a31"/>
+                                    </connections>
+                                </button>
                                 <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="overlap" id="7UP-qf-oZ1">
                                     <items>
                                         <button width="1" height="0.90000000000000002" alignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
@@ -54,6 +59,7 @@
                         <outlet property="batteryLevelImage" destination="Bvl-l2-fEU" id="sBY-en-KKc"/>
                         <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
                         <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
+                        <outlet property="playOnWatchButton" destination="J4I-Dg-Ch7" id="TAf-9z-n8w"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
                         <outlet property="volume" destination="yOm-X9-hP2" id="s00-tv-tl1"/>
@@ -98,6 +104,7 @@
         <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="50" height="64"/>
         <image name="play" catalog="system" width="58" height="64"/>
+        <image name="play.fill" catalog="system" width="58" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>

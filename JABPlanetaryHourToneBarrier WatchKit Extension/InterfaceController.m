@@ -177,15 +177,6 @@
 
 - (IBAction)toggleToneGenerator
 {
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        if ([WatchToneGenerator.sharedGenerator timer] == nil) {
-//            [WatchToneGenerator.sharedGenerator start];
-//            [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
-//        } else if ([WatchToneGenerator.sharedGenerator timer] != nil) {
-//            [WatchToneGenerator.sharedGenerator stop];
-//            [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
-//        }
-//    });
     WCSession *watchConnectivitySession = [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] watchConnectivitySession];
     if (watchConnectivitySession.isReachable)
     {
@@ -197,6 +188,18 @@
 
         }];
     }
+}
+
+- (IBAction)playOnWatch {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([WatchToneGenerator.sharedGenerator timer] == nil) {
+                [WatchToneGenerator.sharedGenerator start];
+                [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
+            } else if ([WatchToneGenerator.sharedGenerator timer] != nil) {
+                [WatchToneGenerator.sharedGenerator stop];
+                [self.playButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
+            }
+        });
 }
 
 @end

@@ -19,5 +19,6 @@
 @property (weak, nonatomic) IBOutlet WKInterfaceButton *playButton;
 @property (weak, nonatomic) IBOutlet WKInterfaceImage *batteryLevelImage;
 @property (weak, nonatomic) IBOutlet WKInterfaceVolumeControl *volume;
+@property (weak, nonatomic) IBOutlet WKInterfaceButton *playOnWatchButton;
 
 @end
