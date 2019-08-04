@@ -6,6 +6,35 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14640.1"/>
     </dependencies>
     <scenes>
+        <!--Secondary Interface Controller-->
+        <scene sceneID="eta-x2-qBx">
+            <objects>
+                <controller fullBounds="YES" fullScreen="YES" id="YRH-ud-mX6" customClass="SecondaryInterfaceController">
+                    <items>
+                        <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" id="xWP-Te-aSH">
+                            <items>
+                                <button width="0.90000000000000002" height="0.90000000000000002" alignment="center" verticalAlignment="center" backgroundImage="play.fill" catalog="system" id="J4I-Dg-Ch7">
+                                    <fontDescription key="font" type="system" pointSize="15"/>
+                                    <connections>
+                                        <action selector="toggleToneGenerator" destination="YRH-ud-mX6" id="EPU-md-xKH"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                        <group width="100" height="100" alignment="center" verticalAlignment="center" contentMode="center" layout="vertical" id="bRe-hs-Lcl">
+                            <items>
+                                <volumeControlView alignment="center" verticalAlignment="center" id="paC-cK-4i8"/>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="playButton" destination="J4I-Dg-Ch7" id="6uA-C8-GMG"/>
+                        <outlet property="volume" destination="paC-cK-4i8" id="wON-E4-I6o"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="136" y="17"/>
+        </scene>
         <!--ToneBarrier Remote-->
         <scene sceneID="aou-V4-d1y">
             <objects>
@@ -13,14 +42,9 @@
                     <items>
                         <group width="1" height="1" alignment="left" layout="vertical" id="mA2-QY-Gjx">
                             <items>
-                                <button width="35" height="35" alignment="left" backgroundImage="play.fill" catalog="system" id="J4I-Dg-Ch7">
-                                    <connections>
-                                        <action selector="playOnWatch" destination="AgC-eL-Hgc" id="WCS-00-a31"/>
-                                    </connections>
-                                </button>
                                 <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="overlap" id="7UP-qf-oZ1">
                                     <items>
-                                        <button width="1" height="0.90000000000000002" alignment="center" backgroundImage="play" catalog="system" id="MW2-FC-E7u">
+                                        <button width="0.90000000000000002" height="0.90000000000000002" alignment="center" backgroundImage="play.fill" catalog="system" id="MW2-FC-E7u">
                                             <color key="titleColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
@@ -59,10 +83,10 @@
                         <outlet property="batteryLevelImage" destination="Bvl-l2-fEU" id="sBY-en-KKc"/>
                         <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
                         <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
-                        <outlet property="playOnWatchButton" destination="J4I-Dg-Ch7" id="TAf-9z-n8w"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
                         <outlet property="volume" destination="yOm-X9-hP2" id="s00-tv-tl1"/>
+                        <segue destination="YRH-ud-mX6" kind="relationship" relationship="nextPage" id="Gnh-VH-YhU"/>
                     </connections>
                 </controller>
             </objects>
@@ -103,7 +127,6 @@
     <resources>
         <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="50" height="64"/>
-        <image name="play" catalog="system" width="58" height="64"/>
         <image name="play.fill" catalog="system" width="58" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>

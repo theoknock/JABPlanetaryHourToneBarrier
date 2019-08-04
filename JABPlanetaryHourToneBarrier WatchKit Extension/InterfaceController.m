@@ -170,7 +170,7 @@
             } else
                 if ([[obj allKeys][0] isEqualToString:@"ToneGeneratorPlaying"])
                 {
-                    [self.playButton setBackgroundImage:([[obj objectForKey:[obj allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
+                    [self.playButton setBackgroundImage:([[obj objectForKey:[obj allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
                 }
     }];
 }
@@ -182,24 +182,12 @@
     {
         [watchConnectivitySession sendMessage:@{@"ToneGenerator" : @"Toggle"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
+                [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
             });
         } errorHandler:^(NSError * _Nonnull error) {
 
         }];
     }
-}
-
-- (IBAction)playOnWatch {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([WatchToneGenerator.sharedGenerator timer] == nil) {
-                [WatchToneGenerator.sharedGenerator start];
-                [self.playOnWatchButton setBackgroundImage:[UIImage systemImageNamed:@"stop"]];
-            } else if ([WatchToneGenerator.sharedGenerator timer] != nil) {
-                [WatchToneGenerator.sharedGenerator stop];
-                [self.playOnWatchButton setBackgroundImage:[UIImage systemImageNamed:@"play"]];
-            }
-        });
 }
 
 @end

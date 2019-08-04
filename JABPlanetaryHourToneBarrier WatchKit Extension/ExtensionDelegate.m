@@ -23,26 +23,28 @@
     [self activateWatchConnectivitySession];
     [self requestPeerDeviceStatus]; // EXTRANEOUS?
     NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 1)];
-       NSIndexSet *dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 2)];
-       NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(20, 1)];
-       
+    NSIndexSet *dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 2)];
+    NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(20, 1)];
+ 
        [[PlanetaryHourDataSource data] solarCyclesForDays:daysIndices
                                         planetaryHourData:dataIndices
                                            planetaryHours:hoursIndices
               planetaryHourDataSourceStartCompletionBlock:^{
-           NSLog(@"%s", __PRETTY_FUNCTION__);
+           NSLog(@"planetaryHourDataSourceStartCompletionBlock\t%s", __PRETTY_FUNCTION__);
        }
                                 solarCycleCompletionBlock:^(NSDictionary<NSNumber *,NSDate *> * _Nonnull solarCycle) {
-           NSLog(@"%s", __PRETTY_FUNCTION__);
+           NSLog(@"solarCycleCompletionBlock\t%s", __PRETTY_FUNCTION__);
        }
                              planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
-           NSLog(@"%s", __PRETTY_FUNCTION__);
+           NSLog(@"planetaryHourCompletionBlock\t%s", __PRETTY_FUNCTION__);
            
            NSTimeInterval startDelay = [[planetaryHour objectForKey:@(StartDate)] timeIntervalSinceDate:[NSDate date]];
+           NSLog(@"Start date:\t%@", [planetaryHour objectForKey:@(StartDate)]);
            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(startDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                [WatchToneGenerator.sharedGenerator start];
            });
            NSTimeInterval stopDelay = [[planetaryHour objectForKey:@(EndDate)] timeIntervalSinceDate:[NSDate date]];
+           NSLog(@"End date:\t%@", [planetaryHour objectForKey:@(EndDate)]);
            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(stopDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                [WatchToneGenerator.sharedGenerator stop];
            });
@@ -157,5 +159,6 @@
 
 
 @end
+
 
 

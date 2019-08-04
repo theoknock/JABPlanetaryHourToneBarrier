@@ -45,6 +45,7 @@
 		B9AB427022DD1A5A00406201 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9AB426E22DD1A5A00406201 /* MainInterface.storyboard */; };
 		B9AB427422DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AB426722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B9AB427722DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B9E2D03F22F720F90035B8BA /* SecondaryInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E2D03D22F720F90035B8BA /* SecondaryInterfaceController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +171,8 @@
 		B9AB426F22DD1A5A00406201 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		B9AB427122DD1A5A00406201 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements"; sourceTree = "<group>"; };
+		B9E2D03D22F720F90035B8BA /* SecondaryInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SecondaryInterfaceController.m; path = "/Users/xcodedeveloper/Desktop/JABPlanetaryHourToneBarrier/JABPlanetaryHourToneBarrier WatchKit Extension/SecondaryInterfaceController.m"; sourceTree = "<absolute>"; };
+		B9E2D03E22F720F90035B8BA /* SecondaryInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SecondaryInterfaceController.h; path = "/Users/xcodedeveloper/Desktop/JABPlanetaryHourToneBarrier/JABPlanetaryHourToneBarrier WatchKit Extension/SecondaryInterfaceController.h"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,8 +217,8 @@
 				B904CDE022D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit Extension */,
 				B9AB425E22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension */,
 				B9AB426A22DD1A5A00406201 /* JABPlanetaryHourToneBarrierIntentsExtensionUI */,
-				B954D8CF22D4A42C001AF97D /* Frameworks */,
 				B904CDB822D3CA340086CAF8 /* Products */,
+				B954D8CF22D4A42C001AF97D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -264,6 +267,8 @@
 			children = (
 				B969248D22F6923A002440CE /* WatchToneGenerator.h */,
 				B969248E22F6923A002440CE /* WatchToneGenerator.m */,
+				B9E2D03E22F720F90035B8BA /* SecondaryInterfaceController.h */,
+				B9E2D03D22F720F90035B8BA /* SecondaryInterfaceController.m */,
 				B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */,
 				B904CDE122D3CA350086CAF8 /* InterfaceController.h */,
 				B904CDE222D3CA350086CAF8 /* InterfaceController.m */,
@@ -520,6 +525,7 @@
 			files = (
 				B904CDE622D3CA350086CAF8 /* ExtensionDelegate.m in Sources */,
 				B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */,
+				B9E2D03F22F720F90035B8BA /* SecondaryInterfaceController.m in Sources */,
 				B904CDE322D3CA350086CAF8 /* InterfaceController.m in Sources */,
 				B969248F22F6923A002440CE /* WatchToneGenerator.m in Sources */,
 				B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */,
