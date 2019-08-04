@@ -154,7 +154,10 @@
 
 - (void)requestPeerDeviceStatus
 {
-    [self.watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
+    if (self.watchConnectivitySession.activationState == WCSessionActivationStateActivated)
+        [self.watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
+    else
+        [self.watchConnectivitySession activateSession];
 }
 
 
