@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:JABPlanetaryHourToneBarrier.xcodeproj">
+      location = "group:../JABPlanetaryHourFrameworks/JABPlanetaryHourFrameworks.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:JABPlanetaryHourFrameworks/JABPlanetaryHourFrameworks.xcodeproj">
+      location = "group:JABPlanetaryHourToneBarrier.xcodeproj">
    </FileRef>
 </Workspace>

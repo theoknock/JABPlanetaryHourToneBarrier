@@ -44,6 +44,8 @@ static const float low_frequency = 500.0f;
 @property (nonatomic, readonly) AVAudioPlayerNode *playerTwoNode;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferOne;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferTwo;
+@property (nonatomic, readonly) AVAudioSession *audioSession;
+
 
 @end
 
@@ -99,12 +101,20 @@ static WatchToneGenerator *sharedGenerator = NULL;
         
         [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
         
-        NSError *error = nil;
-        [_audioEngine startAndReturnError:&error];
-        NSLog(@"error: %@", error);
+        _audioSession = [AVAudioSession sharedInstance];
         
-        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+        NSError *error = nil;
+        if ([_audioEngine startAndReturnError:&error])
+        {
+            NSLog(@"error: %@", error);
+        
+        
+        [_audioSession setActive:YES error:&error];
+        [_audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [_audioSession activateWithOptions:AVAudioSessionActivationOptionNone completionHandler:^(BOOL activated, NSError * _Nullable error) {
+            
+        }];
+    }
     }
     
     return self;
@@ -254,3 +264,4 @@ static WatchToneGenerator *sharedGenerator = NULL;
 }
 
 @end
+
