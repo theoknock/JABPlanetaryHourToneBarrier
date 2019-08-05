@@ -21,40 +21,38 @@
 
 - (void)applicationDidFinishLaunching {
     
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-       completionHandler:^(BOOL granted, NSError * _Nullable error) {
-          // Enable or disable features based on authorization.
-    }];
-    
-    UNNotificationCategory* generalCategory = [UNNotificationCategory
-         categoryWithIdentifier:@"GENERAL"
-         actions:@[]
-         intentIdentifiers:@[]
-         options:UNNotificationCategoryOptionCustomDismissAction];
-     
-    // Register the notification categories.
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center setNotificationCategories:[NSSet setWithObjects:generalCategory, nil]];
-    
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
-    content.body = [NSString localizedUserNotificationStringForKey:@"Time to be lucid."
-            arguments:nil];
-     
-    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:TRUE];
-     
-    // Create the request object.
-    UNNotificationRequest* request = [UNNotificationRequest
-           requestWithIdentifier:@"ToneBarrierAlarm" content:content trigger:trigger];
-
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-       if (error != nil) {
-           NSLog(@"%@", error.localizedDescription);
-       }
-    }];
-    
+//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+//       completionHandler:^(BOOL granted, NSError * _Nullable error) {
+//          // Enable or disable features based on authorization.
+//    }];
+//    
+//    UNNotificationCategory* generalCategory = [UNNotificationCategory
+//         categoryWithIdentifier:@"GENERAL"
+//         actions:@[]
+//         intentIdentifiers:@[]
+//         options:UNNotificationCategoryOptionCustomDismissAction];
+//     
+//    // Register the notification categories.
+//    [center setNotificationCategories:[NSSet setWithObjects:generalCategory, nil]];
+//    
+//    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+//    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
+//    content.body = [NSString localizedUserNotificationStringForKey:@"Time to be lucid."
+//            arguments:nil];
+//     
+//    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:FALSE];
+//     
+//    // Create the request object.
+//    UNNotificationRequest* request = [UNNotificationRequest
+//           requestWithIdentifier:@"ToneBarrierAlarm" content:content trigger:trigger];
+//
+//    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+//       if (error != nil) {
+//           NSLog(@"%@", error.localizedDescription);
+//       }
+//    }];
+//    
 
     [self activateWatchConnectivitySession];
     [self requestPeerDeviceStatus]; // EXTRANEOUS?

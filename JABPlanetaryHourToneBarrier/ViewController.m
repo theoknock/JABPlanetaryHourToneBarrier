@@ -14,6 +14,7 @@
 {
     WCSession *watchConnectivitySession;
     UIDevice *device;
+    CAShapeLayer *pathLayer;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -30,10 +31,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    pathLayer = [CAShapeLayer new];
+    [pathLayer setFrame:self.view.layer.frame];
+    [self.view.layer addSublayer:pathLayer];
+    
+    ToneGenerator.sharedGenerator.toneWaveRendererDelegate = self;
+    
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] setDeviceStatusInterfaceDelegate:(id<DeviceStatusInterfaceDelegate>)self];
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
     [self addStatusObservers];
+}
+
+- (void)drawFrequency:(double)frequency amplitude:(double)amplitude
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+    // Draw a sine curve with a fill
+    CGFloat centerY = CGRectGetHeight(self.view.frame) / 2.0;                 // find the vertical center
+    CGFloat steps = frequency;                                                    // Divide the curve into steps
+    CGFloat stepX = CGRectGetWidth(self.view.frame) / steps;                  // find the horizontal step distance
+    // Make a path
+    UIBezierPath *path = [UIBezierPath new];
+    CGPoint left_center = CGPointMake(0, centerY);
+    [path moveToPoint:left_center];
+    // Loop and draw steps in straingt line segments
+    for (int i = 0; i < steps; i++)
+    {
+        CGFloat x = i * stepX;
+        CGFloat y = (sin(i * 0.1) * 40) + centerY;
+        CGPoint point = CGPointMake(x, y);
+        [path addLineToPoint:point];
+    }
+    
+    pathLayer.path = path.CGPath;
+    pathLayer.lineWidth = 3;
+    pathLayer.fillColor = [UIColor clearColor].CGColor;
+    pathLayer.strokeColor = [UIColor redColor].CGColor;
+    pathLayer.strokeStart = 0;
+    pathLayer.strokeEnd = 0; // <<
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    animation.fromValue = 0;
+    animation.toValue = @1;
+    animation.duration = 3;
+    [pathLayer addAnimation:animation forKey:@"strokeEnd"];
+        });
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -341,6 +383,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
 }
 
 @end
+
 
 
 

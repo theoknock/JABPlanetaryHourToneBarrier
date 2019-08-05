@@ -11,8 +11,10 @@
 #import <AudioUnit/AudioUnit.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #import "AppDelegate.h"
+#import "ToneGenerator.h"
 
 #define low_bound   300.0f
 #define high_bound 4000.0f
@@ -23,7 +25,7 @@
 #define min_amplitude 0.5f
 #define max_amplitude 1.0f
 
-@interface ViewController : UIViewController <WCSessionDelegate, DeviceStatusInterfaceDelegate>
+@interface ViewController : UIViewController <WCSessionDelegate, DeviceStatusInterfaceDelegate, ToneWaveRendererDelegate>
 
 @end
 
