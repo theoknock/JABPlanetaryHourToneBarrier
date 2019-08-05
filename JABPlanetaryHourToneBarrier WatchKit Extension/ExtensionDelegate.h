@@ -8,6 +8,7 @@
 
 #import <WatchKit/WatchKit.h>
 #import <WatchConnectivity/WatchConnectivity.h>
+#import <UserNotifications/UserNotifications.h>
 
 @protocol WatchConnectivityStatusInterfaceProtocol <NSObject>
 
