@@ -87,6 +87,8 @@ static ToneGenerator *sharedGenerator = NULL;
     return self;
 }
 
+
+
 -(AVAudioPCMBuffer*)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
 {
     AVAudioFormat *mixerFormat = [_mixerNode outputFormatForBus:0];
@@ -197,13 +199,14 @@ static ToneGenerator *sharedGenerator = NULL;
          if (self->_playerOneNode && self->_playerTwoNode)
          {
              double frequencyOne = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
+              double frequencyTwo = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
              [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyOne] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                 [self.toneWaveRendererDelegate drawFrequency:frequencyOne amplitude:1.0];
+                 [self.toneWaveRendererDelegate drawFrequency:frequencyOne amplitude:1.0 channel:StereoChannelR];
              }];
              
-             double frequencyTwo = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
+
              [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyTwo] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                 [self.toneWaveRendererDelegate drawFrequency:frequencyTwo amplitude:1.0];
+                 [self.toneWaveRendererDelegate drawFrequency:frequencyTwo amplitude:1.0 channel:StereoChannelL];
              }];
          }
          
@@ -214,12 +217,12 @@ static ToneGenerator *sharedGenerator = NULL;
           {
               double frequencyOne = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
               [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyOne] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                  [self.toneWaveRendererDelegate drawFrequency:frequencyOne amplitude:1.0];
+                  [self.toneWaveRendererDelegate drawFrequency:frequencyOne amplitude:1.0 channel:StereoChannelR];
               }];
               
               double frequencyTwo = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
               [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyTwo] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                  [self.toneWaveRendererDelegate drawFrequency:frequencyTwo amplitude:1.0];
+                  [self.toneWaveRendererDelegate drawFrequency:frequencyTwo amplitude:1.0 channel:StereoChannelL];
               }];
           }
      });

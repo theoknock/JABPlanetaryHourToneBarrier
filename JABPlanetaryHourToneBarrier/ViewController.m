@@ -14,7 +14,8 @@
 {
     WCSession *watchConnectivitySession;
     UIDevice *device;
-    CAShapeLayer *pathLayer;
+    CAShapeLayer *pathLayerChannelR;
+    CAShapeLayer *pathLayerChannelL;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -32,9 +33,12 @@
     [super viewDidLoad];
     
     
-    pathLayer = [CAShapeLayer new];
-    [pathLayer setFrame:self.view.layer.frame];
-    [self.view.layer addSublayer:pathLayer];
+    pathLayerChannelR = [CAShapeLayer new];
+    [pathLayerChannelR setFrame:self.view.layer.frame];
+    [self.view.layer addSublayer:pathLayerChannelR];
+    pathLayerChannelL = [CAShapeLayer new];
+    [pathLayerChannelL setFrame:self.view.layer.frame];
+    [self.view.layer addSublayer:pathLayerChannelL];
     
     ToneGenerator.sharedGenerator.toneWaveRendererDelegate = self;
     
@@ -44,18 +48,41 @@
     [self addStatusObservers];
 }
 
-- (void)drawFrequency:(double)frequency amplitude:(double)amplitude
+float scaleBetween(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
+    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
+}
+
+static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColor *) = ^(CAShapeLayer *channelPathLayer, UIBezierPath *path, UIColor *hue)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        channelPathLayer.path = path.CGPath;
+        channelPathLayer.lineWidth = 3;
+        channelPathLayer.fillColor = [UIColor clearColor].CGColor;
+//        float hue = scaleBetween(frequency, 0.0, 1.0, 500, 4000);
+        channelPathLayer.strokeColor = hue.CGColor;
+        channelPathLayer.strokeStart = 0;
+        channelPathLayer.strokeEnd = 0; // <<
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+        animation.fromValue = 0;
+        animation.toValue = @1;
+        animation.duration = 2;
+        [channelPathLayer addAnimation:animation forKey:@"strokeEnd"];
+    });
+};
+
+- (void)drawFrequency:(double)frequency amplitude:(double)amplitude channel:(StereoChannels)channel
 {
     dispatch_async(dispatch_get_main_queue(), ^{
     // Draw a sine curve with a fill
-    CGFloat centerY = CGRectGetHeight(self.view.frame) / 2.0;                 // find the vertical center
+        CGFloat centerY = (channel == StereoChannelR) ? CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0 : CGRectGetMidY(self->pathLayerChannelL.frame) + (CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0);                 // find the vertical center
     CGFloat steps = frequency;                                                    // Divide the curve into steps
-    CGFloat stepX = CGRectGetWidth(self.view.frame) / steps;                  // find the horizontal step distance
+    CGFloat stepX = (CGRectGetWidth(self.view.frame) / steps) * 2.0;                  // find the horizontal step distance
     // Make a path
     UIBezierPath *path = [UIBezierPath new];
+        CGFloat offset_x = (steps * stepX) / 2.0;
     CGPoint left_center = CGPointMake(0, centerY);
     [path moveToPoint:left_center];
-    // Loop and draw steps in straingt line segments
+    // Loop and draw steps in straight line segments
     for (int i = 0; i < steps; i++)
     {
         CGFloat x = i * stepX;
@@ -64,18 +91,8 @@
         [path addLineToPoint:point];
     }
     
-    pathLayer.path = path.CGPath;
-    pathLayer.lineWidth = 3;
-    pathLayer.fillColor = [UIColor clearColor].CGColor;
-    pathLayer.strokeColor = [UIColor redColor].CGColor;
-    pathLayer.strokeStart = 0;
-    pathLayer.strokeEnd = 0; // <<
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    animation.fromValue = 0;
-    animation.toValue = @1;
-    animation.duration = 3;
-    [pathLayer addAnimation:animation forKey:@"strokeEnd"];
-        });
+        drawPathToChannelPathLayer((channel == StereoChannelR) ? self->pathLayerChannelR : self->pathLayerChannelL, path, [UIColor colorWithHue:scaleBetween(frequency, 0.0, 1.0, 500, 4000) saturation:1.0 brightness:1.0 alpha:1.0]);
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
