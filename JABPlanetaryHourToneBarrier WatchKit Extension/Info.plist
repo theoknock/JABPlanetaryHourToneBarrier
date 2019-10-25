@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Heart rate data is used to improve the efficacy of the tone barrier</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Heart rate data is shared to improve the efficacy of the tone barrier</string>
+	<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+	<string>Heart rate data is recorded to increase the quality of improvements to the efficacy of the tone barrier</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

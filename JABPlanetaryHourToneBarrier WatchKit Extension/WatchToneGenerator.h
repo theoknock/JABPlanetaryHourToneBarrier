@@ -19,8 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) dispatch_source_t timer;
 
+@property (nonatomic, readonly) AVAudioPlayerNode * _Nullable playerOneNode;
+@property (nonatomic, readonly) AVAudioPlayerNode * _Nullable playerTwoNode;
+
 - (void)start;
-//- (void)scheduleStart:(NSDate *)start duration:(NSTimeInterval)duration;
 - (void)stop;
 
 @end

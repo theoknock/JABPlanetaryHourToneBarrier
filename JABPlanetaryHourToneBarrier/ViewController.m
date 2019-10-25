@@ -9,6 +9,10 @@
 #import "ViewController.h"
 #import "ToneGenerator.h"
 #import "AppDelegate.h"
+#import "GraphView.h"
+
+@import QuartzCore;
+@import CoreGraphics;
 
 @interface ViewController ()
 {
@@ -24,6 +28,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *batteryImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *batteryLevelImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *playButton;
+@property (weak, nonatomic) IBOutlet UIImageView *heartRateImage;
+@property (weak, nonatomic) IBOutlet GraphView *graphView;
 
 @end
 
@@ -32,13 +38,41 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    pathLayerChannelR = [CAShapeLayer new];
-    [pathLayerChannelR setFrame:self.view.layer.frame];
-    [self.view.layer addSublayer:pathLayerChannelR];
-    pathLayerChannelL = [CAShapeLayer new];
-    [pathLayerChannelL setFrame:self.view.layer.frame];
-    [self.view.layer addSublayer:pathLayerChannelL];
+    // HealthKit
+//        if ([HKHealthStore isHealthDataAvailable]) {
+//            [self updateHeartRateMonitorStatus:HeartRateMonitorDataAvailable];
+//            HKHealthStore *healthStore = [HKHealthStore new];
+//            NSSet *objectTypes = [NSSet setWithArray:@[[HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate]]];
+//            [healthStore requestAuthorizationToShareTypes:objectTypes readTypes:objectTypes completion:^(BOOL success, NSError * _Nullable error) {
+//                if (!success) {
+//                    [self updateHeartRateMonitorStatus:HeartRateMonitorPermissionGranted];
+//                    NSLog(@"Unable to access healthkit data: %@", error.description);
+//                } else {
+//                    [self updateHeartRateMonitorStatus:HeartRateMonitorPermissionDenied];
+//                    HKHeartbeatSeriesBuilder *heartRateSeriesBuilder = [[HKHeartbeatSeriesBuilder alloc] initWithHealthStore:healthStore device:[HKDevice localDevice] startDate:[NSDate date]];
+//                    [heartRateSeriesBuilder addHeartbeatWithTimeIntervalSinceSeriesStartDate:180 precededByGap:FALSE completion:^(BOOL success, NSError * _Nullable error) {
+//
+//                    }];
+//                    [heartRateSeriesBuilder finishSeriesWithCompletion:^(HKHeartbeatSeriesSample * _Nullable heartbeatSeries, NSError * _Nullable error) {
+//    //                    NSLog(@"%@", [heartbeatSeries );
+//                    }];
+//
+//                }
+//            }];
+//        } else {
+//            [self updateHeartRateMonitorStatus:HeartRateMonitorDataUnavailable];
+//        }
+//
+//    pathLayerChannelR = [CAShapeLayer new];
+//    [pathLayerChannelR setFrame:self.view.layer.frame];
+//    [pathLayerChannelR setBorderColor:[UIColor redColor].CGColor];
+//    [pathLayerChannelR setBorderWidth:0.25];
+//    [self.view.layer addSublayer:pathLayerChannelR];
+//    pathLayerChannelL = [CAShapeLayer new];
+//    [pathLayerChannelL setFrame:self.view.layer.frame];
+//    [pathLayerChannelL setBorderColor:[UIColor redColor].CGColor];
+//    [pathLayerChannelL setBorderWidth:0.25];
+//    [self.view.layer addSublayer:pathLayerChannelL];
     
     ToneGenerator.sharedGenerator.toneWaveRendererDelegate = self;
     
@@ -46,11 +80,59 @@
     [self setupDeviceMonitoring];
     [self activateWatchConnectivitySession];
     [self addStatusObservers];
+
+}
+
+typedef NS_ENUM(NSUInteger, HeartRateMonitorStatus) {
+    HeartRateMonitorPermissionDenied,
+    HeartRateMonitorPermissionGranted,
+    HeartRateMonitorDataUnavailable,
+    HeartRateMonitorDataAvailable
+    
+};
+
+- (void)updateHeartRateMonitorStatus:(HeartRateMonitorStatus)heartRateMonitorStatus
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (heartRateMonitorStatus) {
+            case HeartRateMonitorPermissionDenied:
+            {
+                [self.heartRateImage setImage:[UIImage imageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor darkGrayColor]];
+                break;
+            }
+            
+            case HeartRateMonitorPermissionGranted:
+            {
+                [self.heartRateImage setImage:[UIImage imageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case HeartRateMonitorDataUnavailable:
+            {
+                [self.heartRateImage setImage:[UIImage imageNamed:@"heart.slash"]];
+                [self.heartRateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            case HeartRateMonitorDataAvailable:
+            {
+                [self.heartRateImage setImage:[UIImage imageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+                break;
+        }
+    });
 }
 
 float scaleBetween(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
     return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
 }
+
 
 static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColor *) = ^(CAShapeLayer *channelPathLayer, UIBezierPath *path, UIColor *hue)
 {
@@ -65,35 +147,80 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         animation.fromValue = 0;
         animation.toValue = @1;
-        animation.duration = 2;
+        animation.duration = 3;
         [channelPathLayer addAnimation:animation forKey:@"strokeEnd"];
     });
 };
 
+
 - (void)drawFrequency:(double)frequency amplitude:(double)amplitude channel:(StereoChannels)channel
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-    // Draw a sine curve with a fill
-        CGFloat centerY = (channel == StereoChannelR) ? CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0 : CGRectGetMidY(self->pathLayerChannelL.frame) + (CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0);                 // find the vertical center
-    CGFloat steps = frequency;                                                    // Divide the curve into steps
-    CGFloat stepX = (CGRectGetWidth(self.view.frame) / steps) * 2.0;                  // find the horizontal step distance
-    // Make a path
-    UIBezierPath *path = [UIBezierPath new];
-        CGFloat offset_x = (steps * stepX) / 2.0;
-    CGPoint left_center = CGPointMake(0, centerY);
-    [path moveToPoint:left_center];
-    // Loop and draw steps in straight line segments
-    for (int i = 0; i < steps; i++)
-    {
-        CGFloat x = i * stepX;
-        CGFloat y = (sin(i * 0.1) * 40) + centerY;
-        CGPoint point = CGPointMake(x, y);
-        [path addLineToPoint:point];
-    }
-    
-        drawPathToChannelPathLayer((channel == StereoChannelR) ? self->pathLayerChannelR : self->pathLayerChannelL, path, [UIColor colorWithHue:scaleBetween(frequency, 0.0, 1.0, 500, 4000) saturation:1.0 brightness:1.0 alpha:1.0]);
+        [self.graphView drawFrequency:frequency amplitude:amplitude];
+        [self.graphView setNeedsDisplay];
     });
 }
+
+//- (void)drawFrequency:(double)frequency amplitude:(double)amplitude channel:(StereoChannels)channel
+//{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        CGFloat centerY = (channel == StereoChannelR)
+//        ? CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0
+//        : CGRectGetMidY(self->pathLayerChannelL.frame) + (CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0);
+//        CGFloat step  = frequency / CGRectGetWidth((channel == StereoChannelR) ? self->pathLayerChannelR.frame : self->pathLayerChannelL.frame);
+//        CGFloat point = CGRectGetMinX((channel == StereoChannelR) ? self->pathLayerChannelR.frame : self->pathLayerChannelL.frame);
+//
+//        UIBezierPath *path = [UIBezierPath new];
+//        CGPoint left_center = CGPointMake(0, centerY);
+//        [path moveToPoint:left_center]; //CGPointMake(CGRectGetMinX(self->pathLayerChannelR.frame), CGRectGetMidY(self->pathLayerChannelR.frame))];
+//
+////        do
+////        {
+////            CGFloat pixel = pow(scaleBetween(point, 0.0, 1.0, CGRectGetMinX((channel == StereoChannelR) ? self->pathLayerChannelR.frame : self->pathLayerChannelL.frame), CGRectGetWidth((channel == StereoChannelR) ? self->pathLayerChannelR.frame : self->pathLayerChannelL.frame)), amplitude);
+////            CGFloat x = point * pixel;
+////            CGFloat y = point;
+//        NSUInteger x = 0;
+//        do {
+//            UIBezierPath *subpath = [UIBezierPath new];
+//            [subpath moveToPoint:CGPointMake(x, pow(x, 2.0))];
+//            [subpath addLineToPoint:CGPointMake(x, pow(x, 2.0))];
+//            [path appendPath:subpath];
+//            x++;
+//        } while (x < CGRectGetWidth(self->pathLayerChannelR.frame));// (int x = 0 /*CGRectGetMinX(self->pathLayerChannelR.frame)*/; x < CGRectGetWidth(self->pathLayerChannelR.frame); x++)
+////        {
+////
+////        }
+////            point += step;
+////        } while (point < CGRectGetWidth((channel == StereoChannelR) ? self->pathLayerChannelR.frame : self->pathLayerChannelL.frame));
+//
+//        drawPathToChannelPathLayer((channel == StereoChannelR) ? self->pathLayerChannelR : self->pathLayerChannelL, path, [UIColor colorWithHue:scaleBetween(frequency, 0.0, 1.0, 500, 4000) saturation:1.0 brightness:1.0 alpha:1.0]);
+//    });
+//}
+
+//- (void)drawFrequency:(double)frequency amplitude:(double)amplitude channel:(StereoChannels)channel
+//{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//    // Draw a sine curve with a fill
+//    CGFloat centerY = (channel == StereoChannelR) ? CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0 : CGRectGetMidY(self->pathLayerChannelL.frame) + (CGRectGetMidY(self->pathLayerChannelR.frame) / 2.0);                 // find the vertical center
+//    CGFloat steps = frequency;                                                    // Divide the curve into steps
+//    CGFloat stepX = (CGRectGetWidth(self.view.frame) / steps) * 2.0;                  // find the horizontal step distance
+//    // Make a path
+//    UIBezierPath *path = [UIBezierPath new];
+//        CGFloat offset_x = (steps * stepX) / 2.0;
+//    CGPoint left_center = CGPointMake(0, centerY);
+//    [path moveToPoint:left_center];
+//    // Loop and draw steps in straight line segments
+//    for (int i = 0; i < steps; i++)
+//    {
+//        CGFloat x = i * stepX;
+//        CGFloat y = (sin(i * 0.1) * 40) + centerY;
+//        CGPoint point = CGPointMake(x, y);
+//        [path addLineToPoint:point];
+//    }
+//
+//        drawPathToChannelPathLayer((channel == StereoChannelR) ? self->pathLayerChannelR : self->pathLayerChannelL, path, [UIColor colorWithHue:scaleBetween(frequency, 0.0, 1.0, 500, 4000) saturation:1.0 brightness:1.0 alpha:1.0]);
+//    });
+//}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -142,8 +269,8 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
 - (void)sessionReachabilityDidChange:(WCSession *)session
 {
     [self updateWatchConnectivityStatus];
+    [self updateDeviceStatus];
     if (!session.isReachable) [self activateWatchConnectivitySession];
-    else [self updateDeviceStatus];
 }
 
 - (void)sessionDidBecomeInactive:(WCSession *)session
@@ -167,7 +294,8 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
 {
     [self toggleToneGenerator:nil];
-    replyHandler(@{@"" : @((ToneGenerator.sharedGenerator.timer == nil))});
+    [self updateDeviceStatus];
+    replyHandler(deviceStatus(device));
 }
 
 static NSProcessInfoThermalState(^thermalState)(void) = ^NSProcessInfoThermalState(void)
@@ -188,32 +316,36 @@ static float(^batteryLevel)(UIDevice *) = ^float(UIDevice * device)
     return batteryLevel;
 };
 
-static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(^deviceStatus)(UIDevice *) = ^NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *(UIDevice * device)
+static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionary<NSString *, id> * (UIDevice * device)
 {
-    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * status =
-    @{@"DeviceStatus" :
-          @[
-              @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState())},
-              @{@"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device))},
-              @{@"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device))},
-              @{@"ToneGeneratorPlaying"                           : @((ToneGenerator.sharedGenerator.timer != nil))}]};
+    NSDictionary<NSString *, id> * status =
+    @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState()),
+      @"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device)),
+      @"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device)),
+      @"ToneGeneratorDidPlay"                           : [NSString stringWithFormat:@"%@", ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) ? @"TRUE" : @"FALSE"]};
     
     return status;
 };
 
 - (void)updateDeviceStatus
 {
-    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> * status = deviceStatus(device);
-    
-    __autoreleasing NSError *error;
-    [watchConnectivitySession updateApplicationContext:status error:&error];
-    
-    if (error)
-    {
-        NSLog(@"Error updating application context: %@", error.description);
+    NSDictionary<NSString *, id> * status = deviceStatus(device);
+    if (watchConnectivitySession.reachable) {
+        [watchConnectivitySession sendMessage:status replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+        } errorHandler:^(NSError * _Nonnull error) {
+            NSLog(@"Error sending message: %@", error.description);
+        }];
     } else {
+        if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
+        {
+            __autoreleasing NSError *error;
+            [watchConnectivitySession updateApplicationContext:status error:&error];
+        } else {
+            [watchConnectivitySession activateSession];
+        }
+    }
         dispatch_async(dispatch_get_main_queue(), ^{
-            switch ([(NSNumber *)[status objectForKey:@"NSProcessInfoThermalStateDidChangeNotification"] integerValue]) {
+            switch (thermalState()) {
                 case NSProcessInfoThermalStateNominal:
                 {
                     [self.thermometerImageView setTintColor:[UIColor greenColor]];
@@ -244,9 +376,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
                 }
                     break;
             }
-        });
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+    
             switch (batteryState(self->device)) {
                 case UIDeviceBatteryStateUnknown:
                 {
@@ -283,9 +413,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
                     break;
                 }
             }
-        });
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+    
             float level = batteryLevel(self->device);
             if (level <= 1.0 || level > .66)
             {
@@ -301,16 +429,21 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
                     {
                         [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
                         [self.batteryLevelImageView setTintColor:[UIColor redColor]];
-                    }
-        });
-    }
+                    } else
+                        if (level <= .125)
+                        {
+                            [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
+                            [self.batteryLevelImageView setTintColor:[UIColor redColor]];
+                            [ToneGenerator.sharedGenerator alarm];
+                        }
+            });
 }
 
 - (void)updateWatchConnectivityStatus
 {
-    WCSessionActivationState activationState = watchConnectivitySession.activationState;
-    BOOL reachable = watchConnectivitySession.isReachable;
     dispatch_async(dispatch_get_main_queue(), ^{
+        WCSessionActivationState activationState = watchConnectivitySession.activationState;
+        BOOL reachable = watchConnectivitySession.isReachable;
         switch (activationState) {
             case WCSessionActivationStateInactive:
             {
@@ -345,27 +478,20 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
     });
 }
 
+// TO-DO: Only send isPlaying after calling start or stop; do not "test" for it
+
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:2.0 animations:^{
-            UIImage *bold_symbol = [[self.playButton image] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold]];
-            [self.playButton setImage:bold_symbol];
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:2.0 animations:^{
-                UIImage *regular_symbol = [[self.playButton image] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular]];
-                [self.playButton setImage:regular_symbol];
-            } completion:^(BOOL finished) {
-                if ([ToneGenerator.sharedGenerator timer] == nil) {
-                    [ToneGenerator.sharedGenerator start];
-                    [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
-                } else if ([ToneGenerator.sharedGenerator timer] != nil) {
-                    [ToneGenerator.sharedGenerator stop];
-                    [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
-                }
-            }];
-        }];
+        if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+                [ToneGenerator.sharedGenerator start];
+                [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
+        } else if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+            [ToneGenerator.sharedGenerator stop];
+                [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
+        }
     });
+    [self updateDeviceStatus];
 }
 
 - (void)handleInterruption:(NSNotification *)notification
@@ -381,7 +507,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
     {
         if (type == AVAudioSessionInterruptionTypeBegan)
         {
-            if (ToneGenerator.sharedGenerator.timer != nil)
+            if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying])
             {
                 [self toggleToneGenerator:nil];
                 wasPlaying = TRUE;
@@ -400,6 +526,7 @@ static NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> 
 }
 
 @end
+
 
 
 

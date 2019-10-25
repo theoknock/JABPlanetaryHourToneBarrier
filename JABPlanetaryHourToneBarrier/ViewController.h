@@ -12,6 +12,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <HealthKit/HealthKit.h>
 
 #import "AppDelegate.h"
 #import "ToneGenerator.h"

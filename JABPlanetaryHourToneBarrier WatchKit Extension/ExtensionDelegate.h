@@ -9,12 +9,23 @@
 #import <WatchKit/WatchKit.h>
 #import <WatchConnectivity/WatchConnectivity.h>
 #import <UserNotifications/UserNotifications.h>
+#import <HealthKit/HealthKit.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+typedef NS_ENUM(NSUInteger, HeartRateMonitorStatus) {
+    HeartRateMonitorPermissionDenied,
+    HeartRateMonitorPermissionGranted,
+    HeartRateMonitorDataUnavailable,
+    HeartRateMonitorDataAvailable
+    
+};
 
 @protocol WatchConnectivityStatusInterfaceProtocol <NSObject>
 
 - (void)updateStatusInterfaceForActivationState:(WCSessionActivationState)activationState reachability:(BOOL)reachable;
 - (void)updatePeerDeviceStatusInterface:(NSDictionary *)receivedApplicationContext;
 - (void)updateToneGeneratorStatus:(BOOL)playing;
+- (void)updateHeartRateMonitorStatus:(HeartRateMonitorStatus)heartRateMonitorStatus;
 
 @end
 

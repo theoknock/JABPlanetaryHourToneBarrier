@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <BackgroundTasks/BackgroundTasks.h>
+#import "ToneGenerator.h"
 
 @interface AppDelegate ()
 {
@@ -77,6 +78,19 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     NSLog(@"%s", __PRETTY_FUNCTION__);
 //    [self scheduleAppRefresh];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
+    MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [[remoteCommandCenter togglePlayPauseCommand] addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+                    [ToneGenerator.sharedGenerator start];
+            } else if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+                [ToneGenerator.sharedGenerator stop];
+            }
+        });
+        return MPRemoteCommandHandlerStatusSuccess;
+    }];
 }
 
 

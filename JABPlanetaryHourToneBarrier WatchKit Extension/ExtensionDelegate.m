@@ -26,23 +26,23 @@
 //       completionHandler:^(BOOL granted, NSError * _Nullable error) {
 //          // Enable or disable features based on authorization.
 //    }];
-//    
+//
 //    UNNotificationCategory* generalCategory = [UNNotificationCategory
 //         categoryWithIdentifier:@"GENERAL"
 //         actions:@[]
 //         intentIdentifiers:@[]
 //         options:UNNotificationCategoryOptionCustomDismissAction];
-//     
+//
 //    // Register the notification categories.
 //    [center setNotificationCategories:[NSSet setWithObjects:generalCategory, nil]];
-//    
+//
 //    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
 //    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
 //    content.body = [NSString localizedUserNotificationStringForKey:@"Time to be lucid."
 //            arguments:nil];
-//     
+//
 //    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:FALSE];
-//     
+//
 //    // Create the request object.
 //    UNNotificationRequest* request = [UNNotificationRequest
 //           requestWithIdentifier:@"ToneBarrierAlarm" content:content trigger:trigger];
@@ -52,7 +52,38 @@
 //           NSLog(@"%@", error.localizedDescription);
 //       }
 //    }];
-//    
+//
+    
+//
+    
+    // HealthKit
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([HKHealthStore isHealthDataAvailable]) {
+            [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorDataAvailable];
+            HKHealthStore *healthStore = [HKHealthStore new];
+            NSSet *objectTypes = [NSSet setWithArray:@[[HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate]]];
+            [healthStore requestAuthorizationToShareTypes:objectTypes readTypes:objectTypes completion:^(BOOL success, NSError * _Nullable error) {
+                if (!success) {
+                    NSLog(@"Unable to access healthkit data: %@", error.description);
+                    [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorPermissionDenied];
+                } else {
+                    [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorPermissionGranted];
+                    HKHeartbeatSeriesBuilder *heartRateSeriesBuilder = [[HKHeartbeatSeriesBuilder alloc] initWithHealthStore:healthStore device:[HKDevice localDevice] startDate:[NSDate date]];
+                    [heartRateSeriesBuilder addHeartbeatWithTimeIntervalSinceSeriesStartDate:[[NSDate date] timeIntervalSinceDate:[[NSDate date] dateByAddingTimeInterval:-10000]] precededByGap:FALSE completion:^(BOOL success, NSError * _Nullable error) {
+                        if (success)
+                            NSLog(@"Built heart rate series:\t%@", error.description);
+                        else
+                            NSLog(@"Error building heart rate series:\t%@", error.description);
+                    }];
+                    [heartRateSeriesBuilder finishSeriesWithCompletion:^(HKHeartbeatSeriesSample * _Nullable heartbeatSeries, NSError * _Nullable error) {
+                        NSLog(@"Finished building series with count: %lu\nError: %@", (unsigned long)[heartbeatSeries count], error.description);
+                    }];
+                }
+            }];
+        } else {
+            [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorDataUnavailable];
+        }
+    });
 
     [self activateWatchConnectivitySession];
     [self requestPeerDeviceStatus]; // EXTRANEOUS?
@@ -102,6 +133,18 @@
                     NSLog(@"Background refresh task error:\t%@", error.description);
                     [self requestPeerDeviceStatus];
                 }];
+    
+    MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [[remoteCommandCenter togglePlayPauseCommand] addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (![WatchToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+                    [WatchToneGenerator.sharedGenerator start];
+            } else if ([WatchToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
+                [WatchToneGenerator.sharedGenerator stop];
+            }
+        });
+        return MPRemoteCommandHandlerStatusSuccess;
+    }];
 }
 
 - (void)handleBackgroundTasks:(NSSet<WKRefreshBackgroundTask *> *)backgroundTasks {
@@ -169,8 +212,7 @@
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:activationState reachability:session.isReachable];
     if (activationState != WCSessionActivationStateActivated) [self activateWatchConnectivitySession];
-    else
-        if (activationState == WCSessionActivationStateActivated) [self requestPeerDeviceStatus];
+    else [self requestPeerDeviceStatus];
 }
 
 - (void)sessionReachabilityDidChange:(WCSession *)session
@@ -186,16 +228,35 @@
     [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:applicationContext];
 }
 
-- (void)requestPeerDeviceStatus
+- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
 {
-    if (self.watchConnectivitySession.activationState == WCSessionActivationStateActivated)
-        [self.watchConnectivitySession updateApplicationContext:@{@"DeviceStatus" : @"Send"} error:nil];
-    else
-        [self.watchConnectivitySession activateSession];
+   [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
+   [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:message];
 }
 
+- (void)requestPeerDeviceStatus
+{
+    if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
+    {
+    __autoreleasing NSError *error;
+    [watchConnectivitySession updateApplicationContext:@{@"DeviceStatusRequest" : @""} error:&error];
+    
+    if (error)
+    {
+        NSLog(@"Error updating application context: %@", error.description);
+        if (watchConnectivitySession.reachable)
+            [watchConnectivitySession sendMessage:@{@"DeviceStatusRequest" : @""} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+            
+        } errorHandler:^(NSError * _Nonnull error) {
+            NSLog(@"Error sending message: %@", error.description);
+        }];
+    }
+    }
+    
+}
 
 @end
+
 
 
 

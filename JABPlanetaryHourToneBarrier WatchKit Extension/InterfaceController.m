@@ -66,13 +66,11 @@
         [self.reachabilityImage setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];
     });
 }
-- (void)updatePeerDeviceStatusInterface:(NSDictionary<NSString *, NSArray<NSDictionary<NSString *, NSNumber *> *> *> *)receivedApplicationContext
+- (void)updatePeerDeviceStatusInterface:(NSDictionary<NSString *, id> *)receivedApplicationContext
 {
-    [[receivedApplicationContext objectForKey:[receivedApplicationContext allKeys][0]] enumerateObjectsUsingBlock:^(NSDictionary<NSString *,NSNumber *> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[obj allKeys][0] isEqualToString:@"NSProcessInfoThermalStateDidChangeNotification"])
-        {
             dispatch_async(dispatch_get_main_queue(), ^{
-                switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
+                NSUInteger thermalState = [[receivedApplicationContext objectForKey:@"NSProcessInfoThermalStateDidChangeNotification"] unsignedIntegerValue];
+                switch (thermalState) {
                     case NSProcessInfoThermalStateNominal:
                     {
                         [self.thermalStateImage setTintColor:[UIColor greenColor]];
@@ -103,12 +101,9 @@
                     }
                         break;
                 }
-            });
-        } else
-            if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryStateDidChangeNotification"])
-            {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    switch ([[obj objectForKey:[obj allKeys][0]] unsignedIntegerValue]) {
+           
+        NSUInteger batteryState = [[receivedApplicationContext objectForKey:@"UIDeviceBatteryStateDidChangeNotification"] unsignedIntegerValue];
+                    switch (batteryState) {
                         case WKInterfaceDeviceBatteryStateUnknown:
                         {
                             [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
@@ -144,35 +139,26 @@
                             break;
                         }
                     }
-                });
-            } else
-                if ([[obj allKeys][0] isEqualToString:@"UIDeviceBatteryLevelDidChangeNotification"])
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= 1.0 &&
-                            [[obj objectForKey:[obj allKeys][0]] floatValue] > .66)
+                
+                            float batteryLevel =  [[receivedApplicationContext objectForKey:@"UIDeviceBatteryLevelDidChangeNotification"] floatValue];
+                        if (batteryLevel <= 1.0 && batteryLevel > .66)
                         {
                             [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.100"]];
                             [self.batteryLevelImage setTintColor:[UIColor greenColor]];
                         } else
-                            if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .66 &&
-                                [[obj objectForKey:[obj allKeys][0]] floatValue] > .33)
+                            if (batteryLevel <= .66 && batteryLevel > .33)
                             {
                                 [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.25"]];
                                 [self.batteryLevelImage setTintColor:[UIColor yellowColor]];
                             } else
-                                if ([[obj objectForKey:[obj allKeys][0]] floatValue] <= .33)
+                                if (batteryLevel <= .33)
                                 {
                                     [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.0"]];
                                     [self.batteryLevelImage setTintColor:[UIColor redColor]];
                                 }
-                    });
-            } else
-                if ([[obj allKeys][0] isEqualToString:@"ToneGeneratorPlaying"])
-                {
-                    [self.playButton setBackgroundImage:([[obj objectForKey:[obj allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
-                }
-    }];
+                 
+    [self.playButton setBackgroundImage:([[receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"] isEqualToString:@"TRUE"]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
+    });
 }
 
 - (IBAction)toggleToneGenerator
@@ -180,14 +166,53 @@
     WCSession *watchConnectivitySession = [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] watchConnectivitySession];
     if (watchConnectivitySession.isReachable)
     {
+//        [watchConnectivitySession updateApplicationContext:@{@"ToneGenerator" : @"Toggle"} error:nil];
         [watchConnectivitySession sendMessage:@{@"ToneGenerator" : @"Toggle"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.playButton setBackgroundImage:([[replyMessage objectForKey:[replyMessage allKeys][0]] boolValue]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
+                [self updatePeerDeviceStatusInterface:replyMessage];
             });
         } errorHandler:^(NSError * _Nonnull error) {
 
         }];
     }
+}
+
+- (void)updateHeartRateMonitorStatus:(HeartRateMonitorStatus)heartRateMonitorStatus
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (heartRateMonitorStatus) {
+            case HeartRateMonitorPermissionDenied:
+            {
+                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor darkGrayColor]];
+                break;
+            }
+            
+            case HeartRateMonitorPermissionGranted:
+            {
+                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case HeartRateMonitorDataUnavailable:
+            {
+                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.slash"]];
+                [self.heartRateImage setTintColor:[UIColor darkGrayColor]];
+                break;
+            }
+                
+            case HeartRateMonitorDataAvailable:
+            {
+                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
+                [self.heartRateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+                break;
+        }
+    });
 }
 
 @end

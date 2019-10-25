@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14854.2" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14865.1" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch44"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14806.4"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14640.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14819.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14642"/>
     </dependencies>
     <scenes>
         <!--Secondary Interface Controller-->
@@ -35,13 +35,20 @@
             </objects>
             <point key="canvasLocation" x="136" y="17"/>
         </scene>
-        <!--ToneBarrier Remote-->
+        <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="ToneBarrier Remote" fullBounds="YES" fullScreen="YES" id="AgC-eL-Hgc" customClass="InterfaceController">
+                <controller fullBounds="YES" fullScreen="YES" id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
                         <group width="1" height="1" alignment="left" layout="vertical" id="mA2-QY-Gjx">
                             <items>
+                                <group width="1" alignment="left" id="Pma-wo-gnr">
+                                    <items>
+                                        <imageView alignment="left" image="heart.slash" catalog="system" id="mfS-xi-lux">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                    </items>
+                                </group>
                                 <group width="0.40000000000000002" height="0.40000000000000002" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="overlap" id="7UP-qf-oZ1">
                                     <items>
                                         <button width="0.90000000000000002" height="0.90000000000000002" alignment="center" backgroundImage="play.fill" catalog="system" id="MW2-FC-E7u">
@@ -82,6 +89,7 @@
                         <outlet property="activationImage" destination="kr8-yM-26Q" id="tET-EI-v37"/>
                         <outlet property="batteryLevelImage" destination="Bvl-l2-fEU" id="sBY-en-KKc"/>
                         <outlet property="batteryStateImage" destination="USO-Vt-HEJ" id="y3Q-Yu-Qse"/>
+                        <outlet property="heartRateImage" destination="mfS-xi-lux" id="ceF-69-StO"/>
                         <outlet property="playButton" destination="MW2-FC-E7u" id="HHy-TN-nBT"/>
                         <outlet property="reachabilityImage" destination="p44-L6-Exl" id="nOj-fo-c9P"/>
                         <outlet property="thermalStateImage" destination="eCB-u2-8yT" id="LrH-9Y-gfr"/>
@@ -127,6 +135,7 @@
     <resources>
         <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="50" height="64"/>
+        <image name="heart.slash" catalog="system" width="64" height="56"/>
         <image name="play.fill" catalog="system" width="58" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>

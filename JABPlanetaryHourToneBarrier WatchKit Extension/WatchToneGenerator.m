@@ -40,8 +40,6 @@ static const float low_frequency = 500.0f;
 @interface WatchToneGenerator ()
 
 @property (nonatomic, readonly) AVAudioMixerNode *mixerNode;
-@property (nonatomic, readonly) AVAudioPlayerNode *playerOneNode;
-@property (nonatomic, readonly) AVAudioPlayerNode *playerTwoNode;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferOne;
 @property (nonatomic, readonly) AVAudioPCMBuffer* pcmBufferTwo;
 @property (nonatomic, readonly) AVAudioSession *audioSession;
@@ -120,51 +118,35 @@ static WatchToneGenerator *sharedGenerator = NULL;
     return self;
 }
 
--(AVAudioPCMBuffer*)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
+-(float)generateRandomNumberBetweenMin:(int)min Max:(int)max
+{
+    return ( (arc4random() % (max-min+1)) + min );
+}
+
+-(AVAudioPCMBuffer *)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
 {
     AVAudioFormat *mixerFormat = [_mixerNode outputFormatForBus:0];
-    
-    double sampleRate = mixerFormat.sampleRate;
-    double frameLength = kSamplesPerBuffer;
-    
-    // BM: Find the greatest common divisor so that we can determine the number of full cycles
-    // BM: and size of buffer needed to make a loop of a sine wav at this frequency for this
-    // BM: sampleRate.  Otherwise we hear pops and clicks in our loops.
-    NSUInteger gcd = [self greatestCommonDivisor:frequency secondValue:mixerFormat.sampleRate];
-    if (gcd != 0)
-    {
-        // NSUInteger numberOfCycles = frequency / gcd;
-        frameLength = mixerFormat.sampleRate / gcd;
-    }
-    
+    NSUInteger randomNum = [self generateRandomNumberBetweenMin:1 Max:4];
+    double frameLength = mixerFormat.sampleRate / randomNum;
     AVAudioPCMBuffer *pcmBuffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:mixerFormat frameCapacity:frameLength];
     pcmBuffer.frameLength = frameLength;
     
     float *leftChannel = pcmBuffer.floatChannelData[0];
     float *rightChannel = mixerFormat.channelCount == 2 ? pcmBuffer.floatChannelData[1] : nil;
     
-    double increment = 2.0f * M_PI * frequency/sampleRate;
-    double theta = 0.0f;
     NSUInteger r = arc4random_uniform(2);
-    double amplitude_step  = 1.0 / pcmBuffer.frameLength;
+    double amplitude_step  = (1.0 / frameLength > 0.000100) ? (((double)arc4random() / 0x100000000) * (0.000100 - 0.000021) + 0.000021) : 1.0 / frameLength;
     double amplitude_value = 0.0;
-    float randomNum = ((float)rand() / RAND_MAX) * 4;
-    if (randomNum < 1.0) randomNum = 1.0;
-    for (NSUInteger i_sample=0; i_sample < pcmBuffer.frameLength; i_sample++)
+    for (int i_sample = 0; i_sample < pcmBuffer.frameCapacity; i_sample++)
     {
-        CGFloat value = sinf(theta);
-        
-        theta += increment;
-        
-        if (theta > 2.0f * M_PI) theta -= (2.0f * M_PI);
-        
         amplitude_value += amplitude_step;
-        
-        // ...alternating between channels...alternative between cycles...alternating between tones...
-        if (leftChannel)  leftChannel[i_sample]  = value * pow(((r == 1) ? ((amplitude_value < 1.0) ? amplitude_value : 1.0) : ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0)), ((r == 1) ? randomNum : 1.0/randomNum));
-        if (rightChannel) rightChannel[i_sample] = value * pow(((r == 1) ? ((1.0 - amplitude_value > 0.0) ? 1.0 - amplitude_value : 0.0) : ((amplitude_value < 1.0) ? amplitude_value : 1.0)), ((r == 1) ? randomNum : 1.0/randomNum));
+        double amplitude = pow(((r == 1) ? ((amplitude_value < 1.0) ? (amplitude_value) : 1.0) : ((1.0 - amplitude_value > 0.0) ? 1.0 - (amplitude_value) : 0.0)), ((r == 1) ? randomNum : 1.0/randomNum));
+        amplitude = ((amplitude < 0.000001) ? 0.000001 : amplitude);
+        double value = sinf((frequency*i_sample*2*M_PI) / mixerFormat.sampleRate);
+        if (leftChannel)  leftChannel[i_sample]  = value * amplitude;
+        if (rightChannel) rightChannel[i_sample] = value * (1.0 - amplitude);
     }
-    
+
     return pcmBuffer;
 }
 
