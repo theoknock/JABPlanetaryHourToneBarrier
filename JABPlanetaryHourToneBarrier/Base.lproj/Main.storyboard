@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14865.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14819.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,6 +15,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.14999999999999999" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="waveform.path" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="4yr-dj-vUM">
+                                <rect key="frame" x="-1" y="1" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
                             <view contentMode="left" translatesAutoresizingMaskIntoConstraints="NO" id="Mvu-Rz-q33" userLabel="Heart Rate Monitor View">
                                 <rect key="frame" x="20" y="44" width="41.5" height="82"/>
                                 <subviews>
@@ -32,19 +36,19 @@
                                 <rect key="frame" x="356.5" y="842" width="49.5" height="20"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="9FW-tx-enj" userLabel="Activation">
-                                        <rect key="frame" x="0.0" y="0.5" width="0.0" height="19.5"/>
+                                        <rect key="frame" x="0.0" y="0.5" width="0.0" height="19"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radiowaves.left" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VGN-EX-ZUk" userLabel="Reachability">
-                                        <rect key="frame" x="8" y="0.5" width="0.0" height="19.5"/>
+                                        <rect key="frame" x="8" y="0.5" width="0.0" height="19"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iCb-DB-MZp">
-                                        <rect key="frame" x="16" y="0.5" width="0.0" height="21"/>
+                                        <rect key="frame" x="16" y="0.5" width="0.0" height="20.5"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bolt.slash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zlr-6A-bDq" userLabel="power">
-                                        <rect key="frame" x="24" y="-1" width="0.0" height="22"/>
+                                        <rect key="frame" x="24" y="-1" width="0.0" height="21.5"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="battery.0" catalog="system" id="TOM-jN-uCC" userLabel="battery">
@@ -53,9 +57,10 @@
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                 </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </stackView>
                             <imageView opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="KkQ-O9-7cw">
-                                <rect key="frame" x="165.5" y="373" width="83" height="160.5"/>
+                                <rect key="frame" x="165.5" y="373" width="83" height="160"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" button="YES" image="YES"/>
                                 </accessibility>
@@ -64,19 +69,13 @@
                                     <outletCollection property="gestureRecognizers" destination="pU9-73-0hC" appends="YES" id="zRV-Sr-tW1"/>
                                 </connections>
                             </imageView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1vA-Tv-p26" customClass="GraphView">
-                                <rect key="frame" x="0.0" y="149" width="414" height="245.5"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="KkQ-O9-7cw" firstAttribute="centerX" secondItem="Uee-0j-aNJ" secondAttribute="centerX" id="3By-aO-7Sh"/>
-                            <constraint firstItem="1vA-Tv-p26" firstAttribute="width" secondItem="Uee-0j-aNJ" secondAttribute="width" id="6fd-n7-Ewg"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="width" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="width" id="9hj-X8-UPo"/>
                             <constraint firstItem="Mvu-Rz-q33" firstAttribute="width" secondItem="Uee-0j-aNJ" secondAttribute="width" multiplier="0.1" id="ICo-UT-D65"/>
-                            <constraint firstItem="1vA-Tv-p26" firstAttribute="height" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.3" id="KUs-4V-qNy"/>
                             <constraint firstItem="Mvu-Rz-q33" firstAttribute="height" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.1" id="MEw-Rq-VlW"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" id="ObZ-7A-jOV">
                                 <variation key="heightClass=compact-widthClass=regular" constant="0.0"/>
@@ -85,9 +84,7 @@
                             <constraint firstItem="Mvu-Rz-q33" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Sms-cF-4UV"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="bottom" secondItem="Uee-0j-aNJ" secondAttribute="bottom" id="XqM-IZ-DKz"/>
                             <constraint firstItem="KkQ-O9-7cw" firstAttribute="height" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.2" id="bE1-G2-aye"/>
-                            <constraint firstItem="1vA-Tv-p26" firstAttribute="centerY" secondItem="Uee-0j-aNJ" secondAttribute="centerY" multiplier="0.6" id="c0R-ib-xm9"/>
                             <constraint firstItem="KkQ-O9-7cw" firstAttribute="width" secondItem="Uee-0j-aNJ" secondAttribute="width" multiplier="0.2" id="dYk-3y-fa9"/>
-                            <constraint firstItem="1vA-Tv-p26" firstAttribute="centerX" secondItem="Uee-0j-aNJ" secondAttribute="centerX" id="jgv-T5-57y"/>
                             <constraint firstItem="fyC-xg-wPD" firstAttribute="height" relation="lessThanOrEqual" secondItem="Uee-0j-aNJ" secondAttribute="height" multiplier="0.1" id="mOT-eK-xZa"/>
                             <constraint firstItem="KkQ-O9-7cw" firstAttribute="centerY" secondItem="Uee-0j-aNJ" secondAttribute="centerY" id="v7E-Ch-Ktm"/>
                             <constraint firstItem="Mvu-Rz-q33" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="vL3-2p-F6H"/>
@@ -98,7 +95,6 @@
                         <outlet property="activationImageView" destination="9FW-tx-enj" id="FMi-mN-XMg"/>
                         <outlet property="batteryImageView" destination="zlr-6A-bDq" id="irN-iy-5uM"/>
                         <outlet property="batteryLevelImageView" destination="TOM-jN-uCC" id="zSL-Y1-F8e"/>
-                        <outlet property="graphView" destination="1vA-Tv-p26" id="y1i-71-nbm"/>
                         <outlet property="heartRateImage" destination="lol-sA-TDn" id="hpw-C2-J6s"/>
                         <outlet property="playButton" destination="KkQ-O9-7cw" id="why-ps-U9Z"/>
                         <outlet property="reachabilityImageView" destination="VGN-EX-ZUk" id="7Ir-GJ-MOT"/>
@@ -128,16 +124,17 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LQW-sG-zN7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="368" y="771"/>
+            <point key="canvasLocation" x="2616" y="126"/>
         </scene>
     </scenes>
     <resources>
         <image name="battery.0" catalog="system" width="64" height="32"/>
         <image name="bolt.slash" catalog="system" width="50" height="64"/>
         <image name="heart.slash" catalog="system" width="64" height="56"/>
-        <image name="play" catalog="system" width="58" height="64"/>
+        <image name="play" catalog="system" width="60" height="64"/>
         <image name="radiowaves.left" catalog="system" width="44" height="64"/>
         <image name="radiowaves.right" catalog="system" width="44" height="64"/>
         <image name="thermometer" catalog="system" width="42" height="64"/>
+        <image name="waveform.path" catalog="system" width="64" height="58"/>
     </resources>
 </document>

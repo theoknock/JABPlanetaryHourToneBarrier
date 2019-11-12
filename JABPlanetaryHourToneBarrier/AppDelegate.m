@@ -81,6 +81,7 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    
     [[remoteCommandCenter togglePlayPauseCommand] addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {

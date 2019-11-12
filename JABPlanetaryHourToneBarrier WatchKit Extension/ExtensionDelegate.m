@@ -21,124 +21,98 @@
 
 - (void)applicationDidFinishLaunching {
     
-//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-//    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-//       completionHandler:^(BOOL granted, NSError * _Nullable error) {
-//          // Enable or disable features based on authorization.
-//    }];
-//
-//    UNNotificationCategory* generalCategory = [UNNotificationCategory
-//         categoryWithIdentifier:@"GENERAL"
-//         actions:@[]
-//         intentIdentifiers:@[]
-//         options:UNNotificationCategoryOptionCustomDismissAction];
-//
-//    // Register the notification categories.
-//    [center setNotificationCategories:[NSSet setWithObjects:generalCategory, nil]];
-//
-//    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-//    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
-//    content.body = [NSString localizedUserNotificationStringForKey:@"Time to be lucid."
-//            arguments:nil];
-//
-//    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:FALSE];
-//
-//    // Create the request object.
-//    UNNotificationRequest* request = [UNNotificationRequest
-//           requestWithIdentifier:@"ToneBarrierAlarm" content:content trigger:trigger];
-//
-//    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-//       if (error != nil) {
-//           NSLog(@"%@", error.localizedDescription);
-//       }
-//    }];
-//
+    //    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    //    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+    //       completionHandler:^(BOOL granted, NSError * _Nullable error) {
+    //          // Enable or disable features based on authorization.
+    //    }];
+    //
+    //    UNNotificationCategory* generalCategory = [UNNotificationCategory
+    //         categoryWithIdentifier:@"GENERAL"
+    //         actions:@[]
+    //         intentIdentifiers:@[]
+    //         options:UNNotificationCategoryOptionCustomDismissAction];
+    //
+    //    // Register the notification categories.
+    //    [center setNotificationCategories:[NSSet setWithObjects:generalCategory, nil]];
+    //
+    //    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    //    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
+    //    content.body = [NSString localizedUserNotificationStringForKey:@"Time to be lucid."
+    //            arguments:nil];
+    //
+    //    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:FALSE];
+    //
+    //    // Create the request object.
+    //    UNNotificationRequest* request = [UNNotificationRequest
+    //           requestWithIdentifier:@"ToneBarrierAlarm" content:content trigger:trigger];
+    //
+    //    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+    //       if (error != nil) {
+    //           NSLog(@"%@", error.localizedDescription);
+    //       }
+    //    }];
+    //
     
-//
+    //
     
     // HealthKit
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([HKHealthStore isHealthDataAvailable]) {
-            [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorDataAvailable];
-            HKHealthStore *healthStore = [HKHealthStore new];
-            NSSet *objectTypes = [NSSet setWithArray:@[[HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate]]];
-            [healthStore requestAuthorizationToShareTypes:objectTypes readTypes:objectTypes completion:^(BOOL success, NSError * _Nullable error) {
-                if (!success) {
-                    NSLog(@"Unable to access healthkit data: %@", error.description);
-                    [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorPermissionDenied];
-                } else {
-                    [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorPermissionGranted];
-                    HKHeartbeatSeriesBuilder *heartRateSeriesBuilder = [[HKHeartbeatSeriesBuilder alloc] initWithHealthStore:healthStore device:[HKDevice localDevice] startDate:[NSDate date]];
-                    [heartRateSeriesBuilder addHeartbeatWithTimeIntervalSinceSeriesStartDate:[[NSDate date] timeIntervalSinceDate:[[NSDate date] dateByAddingTimeInterval:-10000]] precededByGap:FALSE completion:^(BOOL success, NSError * _Nullable error) {
-                        if (success)
-                            NSLog(@"Built heart rate series:\t%@", error.description);
-                        else
-                            NSLog(@"Error building heart rate series:\t%@", error.description);
-                    }];
-                    [heartRateSeriesBuilder finishSeriesWithCompletion:^(HKHeartbeatSeriesSample * _Nullable heartbeatSeries, NSError * _Nullable error) {
-                        NSLog(@"Finished building series with count: %lu\nError: %@", (unsigned long)[heartbeatSeries count], error.description);
-                    }];
-                }
-            }];
-        } else {
-            [self.watchConnectivityStatusInterfaceDelegate updateHeartRateMonitorStatus:HeartRateMonitorDataUnavailable];
-        }
-    });
-
+    
     [self activateWatchConnectivitySession];
     [self requestPeerDeviceStatus]; // EXTRANEOUS?
-    NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 1)];
-    NSIndexSet *dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 2)];
-    NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(20, 1)];
- 
-       [[PlanetaryHourDataSource data] solarCyclesForDays:daysIndices
-                                        planetaryHourData:dataIndices
-                                           planetaryHours:hoursIndices
-              planetaryHourDataSourceStartCompletionBlock:^{
-           NSLog(@"planetaryHourDataSourceStartCompletionBlock\t%s", __PRETTY_FUNCTION__);
-       }
-                                solarCycleCompletionBlock:^(NSDictionary<NSNumber *,NSDate *> * _Nonnull solarCycle) {
-           NSLog(@"solarCycleCompletionBlock\t%s", __PRETTY_FUNCTION__);
-       }
-                             planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
-           NSLog(@"planetaryHourCompletionBlock\t%s", __PRETTY_FUNCTION__);
-           
-           NSTimeInterval startDelay = [[planetaryHour objectForKey:@(StartDate)] timeIntervalSinceDate:[NSDate date]];
-           NSLog(@"Start date:\t%@", [planetaryHour objectForKey:@(StartDate)]);
-           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(startDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-               [WatchToneGenerator.sharedGenerator start];
-           });
-           NSTimeInterval stopDelay = [[planetaryHour objectForKey:@(EndDate)] timeIntervalSinceDate:[NSDate date]];
-           NSLog(@"End date:\t%@", [planetaryHour objectForKey:@(EndDate)]);
-           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(stopDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-               [WatchToneGenerator.sharedGenerator stop];
-           });
-           NSLog(@"\nStart:\t%f\nEnd:\t%f", startDelay, stopDelay);
-       }
-                            planetaryHoursCompletionBlock:nil
-                planetaryHoursCalculationsCompletionBlock:nil
-                   planetaryHourDataSourceCompletionBlock:nil];
+    //    NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 1)];
+    //    NSIndexSet * dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 2)];
+    //    NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(20, 1)];
+    // 
+    //       [[PlanetaryHourDataSource data] solarCyclesForDays:daysIndices
+    //                                        planetaryHourData:dataIndices
+    //                                           planetaryHours:hoursIndices
+    //              planetaryHourDataSourceStartCompletionBlock:^{
+    //           NSLog(@"planetaryHourDataSourceStartCompletionBlock\t%s", __PRETTY_FUNCTION__);
+    //       }
+    //                                solarCycleCompletionBlock:^(NSDictionary<NSNumber *,NSDate *> * _Nonnull solarCycle) {
+    //           NSLog(@"solarCycleCompletionBlock\t%s", __PRETTY_FUNCTION__);
+    //       }
+    //                             planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
+    //           NSLog(@"planetaryHourCompletionBlock\t%s", __PRETTY_FUNCTION__);
+    //           
+    //           NSTimeInterval startDelay = [[planetaryHour objectForKey:@(StartDate)] timeIntervalSinceDate:[NSDate date]];
+    //           NSLog(@"Start date:\t%@", [planetaryHour objectForKey:@(StartDate)]);
+    //           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(startDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    //               [WatchToneGenerator.sharedGenerator start];
+    //           });
+    //           NSTimeInterval stopDelay = [[planetaryHour objectForKey:@(EndDate)] timeIntervalSinceDate:[NSDate date]];
+    //           NSLog(@"End date:\t%@", [planetaryHour objectForKey:@(EndDate)]);
+    //           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(stopDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    //               [WatchToneGenerator.sharedGenerator stop];
+    //           });
+    //           NSLog(@"\nStart:\t%f\nEnd:\t%f", startDelay, stopDelay);
+    //       }
+    //                            planetaryHoursCompletionBlock:nil
+    //                planetaryHoursCalculationsCompletionBlock:nil
+    //                   planetaryHourDataSourceCompletionBlock:nil];
 }
 
 - (void)applicationDidBecomeActive {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self activateWatchConnectivitySession];
-    [self requestPeerDeviceStatus]; // EXTRANEOUS?
+    //    [self requestPeerDeviceStatus]; // EXTRANEOUS?
 }
 
 - (void)applicationWillResignActive {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, etc.
     [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0] userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
-                    NSLog(@"Background refresh task error:\t%@", error.description);
-                    [self requestPeerDeviceStatus];
-                }];
+        if (error)
+            NSLog(@"Background refresh task error:\t%@", error.description);
+        [self requestPeerDeviceStatus];
+    }];
     
     MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     [[remoteCommandCenter togglePlayPauseCommand] addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![WatchToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
-                    [WatchToneGenerator.sharedGenerator start];
+                [WatchToneGenerator.sharedGenerator start];
             } else if ([WatchToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
                 [WatchToneGenerator.sharedGenerator stop];
             }
@@ -156,9 +130,10 @@
             WKApplicationRefreshBackgroundTask *backgroundTask = (WKApplicationRefreshBackgroundTask*)task;
             
             [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0]userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
-                            NSLog(@"Background refresh task error:\t%@", error.description);
-                            [self requestPeerDeviceStatus];
-                        }];
+                if (error)
+                    NSLog(@"Background refresh task error:\t%@", error.description);
+                [self requestPeerDeviceStatus];
+            }];
             
             [backgroundTask setTaskCompletedWithSnapshot:NO];
         } else if ([task isKindOfClass:[WKSnapshotRefreshBackgroundTask class]]) {
@@ -170,10 +145,11 @@
             WKWatchConnectivityRefreshBackgroundTask *backgroundTask = (WKWatchConnectivityRefreshBackgroundTask*)task;
             
             [[WKExtension sharedExtension] scheduleBackgroundRefreshWithPreferredDate:[[NSDate date] dateByAddingTimeInterval:3.0]userInfo:@{@"DeviceStatus" : @"Send"} scheduledCompletion:^(NSError * _Nullable error) {
-                NSLog(@"Background refresh task error:\t%@", error.description);
+                if (error)
+                    NSLog(@"Background refresh task error:\t%@", error.description);
                 [self requestPeerDeviceStatus];
             }];
-
+            
             [backgroundTask setTaskCompletedWithSnapshot:YES];
             
         } else if ([task isKindOfClass:[WKURLSessionRefreshBackgroundTask class]]) {
@@ -230,27 +206,28 @@
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
 {
-   [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
-   [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:message];
+    [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
+    [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:message];
 }
 
 - (void)requestPeerDeviceStatus
 {
     if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
     {
-    __autoreleasing NSError *error;
-    [watchConnectivitySession updateApplicationContext:@{@"DeviceStatusRequest" : @""} error:&error];
-    
-    if (error)
-    {
-        NSLog(@"Error updating application context: %@", error.description);
-        if (watchConnectivitySession.reachable)
-            [watchConnectivitySession sendMessage:@{@"DeviceStatusRequest" : @""} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-            
-        } errorHandler:^(NSError * _Nonnull error) {
-            NSLog(@"Error sending message: %@", error.description);
-        }];
-    }
+        __autoreleasing NSError *error;
+        [watchConnectivitySession updateApplicationContext:@{@"DeviceStatusRequest" : @""} error:&error];
+        
+        if (error)
+        {
+            NSLog(@"Error requesting peer device status: %@", error.description);
+            if (watchConnectivitySession.reachable)
+                [watchConnectivitySession sendMessage:@{@"DeviceStatusRequest" : @""} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                    
+                } errorHandler:^(NSError * _Nonnull error) {
+                    if (error)
+                        NSLog(@"Peer device unreachable:\t%@", error.description);
+                }];
+        }
     }
     
 }

@@ -20,7 +20,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		8A810E0722F75EBC0039BFBE /* SecondaryInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A810E0522F75EBC0039BFBE /* SecondaryInterfaceController.m */; };
 		8ACEC33922F7B7E600001AB3 /* WatchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ACEC33822F7B7DB00001AB3 /* WatchKit.framework */; };
 		B904CDBC22D3CA340086CAF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDBB22D3CA340086CAF8 /* AppDelegate.m */; };
 		B904CDBF22D3CA340086CAF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDBE22D3CA340086CAF8 /* ViewController.m */; };
@@ -42,6 +41,7 @@
 		B96EB335230F9F090054F514 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96EB334230F9F090054F514 /* HealthKit.framework */; };
 		B96EB337230F9F0E0054F514 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96EB334230F9F090054F514 /* HealthKit.framework */; };
 		B96EB339230F9F3F0054F514 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96EB334230F9F090054F514 /* HealthKit.framework */; };
+		B972D36F236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B972D36E236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m */; };
 		B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98CF2C722D583CB00661419 /* ToneGenerator.m */; };
 		B98EBEEE230F3E1100C94E2E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98EBEED230F3E1100C94E2E /* HealthKit.framework */; };
 		B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426022DD1A5A00406201 /* IntentHandler.m */; };
@@ -136,8 +136,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8A810E0522F75EBC0039BFBE /* SecondaryInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondaryInterfaceController.m; sourceTree = "<group>"; };
-		8A810E0622F75EBC0039BFBE /* SecondaryInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondaryInterfaceController.h; sourceTree = "<group>"; };
 		8ACEC33822F7B7DB00001AB3 /* WatchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.0.sdk/System/Library/Frameworks/WatchKit.framework; sourceTree = DEVELOPER_DIR; };
 		B904CDB722D3CA340086CAF8 /* JABPlanetaryHourToneBarrier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JABPlanetaryHourToneBarrier.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B904CDBA22D3CA340086CAF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -175,6 +173,8 @@
 		B96EB33B230FA3CB0054F514 /* JABPlanetaryHourToneBarrierDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JABPlanetaryHourToneBarrierDebug.entitlements; sourceTree = "<group>"; };
 		B96EB33C230FA3D10054F514 /* JABPlanetaryHourToneBarrierIntentsExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JABPlanetaryHourToneBarrierIntentsExtensionDebug.entitlements; sourceTree = "<group>"; };
 		B96EB33D230FA3DC0054F514 /* JABPlanetaryHourToneBarrierIntentsExtensionUIDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JABPlanetaryHourToneBarrierIntentsExtensionUIDebug.entitlements; sourceTree = "<group>"; };
+		B972D36D236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WatchToneBarrierInterfaceController.h; sourceTree = "<group>"; };
+		B972D36E236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WatchToneBarrierInterfaceController.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF29922D5739900661419 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B98CF2C722D583CB00661419 /* ToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToneGenerator.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF2C822D583CB00661419 /* ToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToneGenerator.h; sourceTree = "<group>"; wrapsLines = 0; };
@@ -281,7 +281,6 @@
 				B904CDC522D3CA350086CAF8 /* LaunchScreen.storyboard */,
 				B904CDC822D3CA350086CAF8 /* Info.plist */,
 				B904CDC922D3CA350086CAF8 /* main.m */,
-				8A810E0622F75EBC0039BFBE /* SecondaryInterfaceController.h */,
 			);
 			path = JABPlanetaryHourToneBarrier;
 			sourceTree = "<group>";
@@ -289,9 +288,9 @@
 		B904CDD122D3CA350086CAF8 /* JABPlanetaryHourToneBarrier WatchKit App */ = {
 			isa = PBXGroup;
 			children = (
-				B904CDD222D3CA350086CAF8 /* Interface.storyboard */,
-				B904CDD722D3CA350086CAF8 /* Info.plist */,
 				B9B9C00C2364DE7E007DC93D /* Assets.xcassets */,
+				B904CDD722D3CA350086CAF8 /* Info.plist */,
+				B904CDD222D3CA350086CAF8 /* Interface.storyboard */,
 			);
 			path = "JABPlanetaryHourToneBarrier WatchKit App";
 			sourceTree = "<group>";
@@ -300,7 +299,8 @@
 			isa = PBXGroup;
 			children = (
 				B96EB33A230FA3B80054F514 /* JABPlanetaryHourToneBarrier WatchKit ExtensionDebug.entitlements */,
-				8A810E0522F75EBC0039BFBE /* SecondaryInterfaceController.m */,
+				B972D36D236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.h */,
+				B972D36E236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m */,
 				B969248D22F6923A002440CE /* WatchToneGenerator.h */,
 				B969248E22F6923A002440CE /* WatchToneGenerator.m */,
 				B9AB427E22DD73F900406201 /* JABPlanetaryHourToneBarrier WatchKit ExtensionRelease.entitlements */,
@@ -569,8 +569,8 @@
 			files = (
 				B904CDE622D3CA350086CAF8 /* ExtensionDelegate.m in Sources */,
 				B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */,
-				8A810E0722F75EBC0039BFBE /* SecondaryInterfaceController.m in Sources */,
 				B904CDE322D3CA350086CAF8 /* InterfaceController.m in Sources */,
+				B972D36F236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m in Sources */,
 				B969248F22F6923A002440CE /* WatchToneGenerator.m in Sources */,
 				B904CDE922D3CA350086CAF8 /* NotificationController.m in Sources */,
 			);
@@ -641,6 +641,7 @@
 			);
 			name = Interface.storyboard;
 			sourceTree = "<group>";
+			wrapsLines = 0;
 		};
 		B9AB426E22DD1A5A00406201 /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -703,7 +704,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -755,7 +756,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -781,7 +782,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
 			};
 			name = Debug;
 		};
@@ -803,7 +804,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
 			};
 			name = Release;
 		};
@@ -820,7 +821,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
 			};
 			name = Debug;
 		};
@@ -837,7 +838,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
 			};
 			name = Release;
 		};

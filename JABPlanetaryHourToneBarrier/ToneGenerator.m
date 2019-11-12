@@ -89,7 +89,7 @@ static ToneGenerator *sharedGenerator = NULL;
     return self;
 }
 
--(float)generateRandomNumberBetweenMin:(int)min Max:(int)max
+- (float)generateRandomNumberBetweenMin:(int)min Max:(int)max
 {
     return ( (arc4random() % (max-min+1)) + min );
 }
@@ -101,7 +101,7 @@ float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min
 
 
 
--(AVAudioPCMBuffer *)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
+- (AVAudioPCMBuffer *)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
 {
     AVAudioFormat *mixerFormat = [_mixerNode outputFormatForBus:0];
     NSUInteger randomNum = [self generateRandomNumberBetweenMin:1 Max:4];

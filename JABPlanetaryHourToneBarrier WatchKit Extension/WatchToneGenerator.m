@@ -33,7 +33,7 @@
 #import "WatchToneGenerator.h"
 
 
-static const AVAudioFrameCount kSamplesPerBuffer = 1024;
+//static const AVAudioFrameCount kSamplesPerBuffer = 1024;
 static const float high_frequency = 4000.0f;
 static const float low_frequency = 500.0f;
 
@@ -150,6 +150,7 @@ static WatchToneGenerator *sharedGenerator = NULL;
     return pcmBuffer;
 }
 
+
 //- (void)start
 //{
 //    if (self.audioEngine.isRunning == NO)
@@ -188,7 +189,7 @@ static WatchToneGenerator *sharedGenerator = NULL;
 //    dispatch_resume(self.timer);
 //}
 
- - (void)start
+- (void)start
  {
      if (self.audioEngine.isRunning == NO)
      {
@@ -196,9 +197,9 @@ static WatchToneGenerator *sharedGenerator = NULL;
          [_audioEngine startAndReturnError:&error];
          NSLog(@"error: %@", error);
      }
-     
+
      if (self->_timer != nil) [self stop];
-     
+
      self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
      dispatch_source_set_timer(self->_timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
      dispatch_source_set_event_handler(self->_timer, ^{
@@ -208,34 +209,76 @@ static WatchToneGenerator *sharedGenerator = NULL;
              [self->_playerTwoNode play];
          }
 
-         AVAudioTime *start_time_one = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(CMClockGetTime(CMClockGetHostTimeClock()))];
          if (self->_playerOneNode && self->_playerTwoNode)
          {
-             [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+             AVAudioTime *start_time_one = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(CMClockGetTime(CMClockGetHostTimeClock()))];
+             double frequencyOne = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
+             [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyOne] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
                  
              }];
              
-             [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+             float randomNum = (((double)arc4random() / 0x100000000) * (1.0 - 0.0) + 0.0); //((float)rand() / RAND_MAX) * 1;
+             CMTime current_cmtime = CMTimeAdd(CMClockGetTime(CMClockGetHostTimeClock()), CMTimeMakeWithSeconds(randomNum, NSEC_PER_SEC));
+             AVAudioTime *start_time_two = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(current_cmtime)];
+
+             double frequencyTwo = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
+             [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:frequencyTwo] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
                  
              }];
-         }
-         
-         float randomNum = ((float)rand() / RAND_MAX) * 1;
-         CMTime current_cmtime = CMTimeAdd(CMClockGetTime(CMClockGetHostTimeClock()), CMTimeMakeWithSeconds(randomNum, NSEC_PER_SEC));
-         AVAudioTime *start_time_two = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(current_cmtime)];
-          if (self->_playerOneNode && self->_playerTwoNode)
-          {
-              [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                  
-              }];
-              
-              [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
-                  
-              }];
           }
      });
      dispatch_resume(self.timer);
  }
+
+//
+// - (void)start
+// {
+//     if (self.audioEngine.isRunning == NO)
+//     {
+//         NSError *error = nil;
+//         [_audioEngine startAndReturnError:&error];
+//         NSLog(@"error: %@", error);
+//     }
+//
+//     if (self->_timer != nil) [self stop];
+//
+//     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+//     dispatch_source_set_timer(self->_timer, DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC, 0.0 * NSEC_PER_SEC);
+//     dispatch_source_set_event_handler(self->_timer, ^{
+//         if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
+//         {
+//             [self->_playerOneNode play];
+//             [self->_playerTwoNode play];
+//         }
+//
+//         AVAudioTime *start_time_one = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(CMClockGetTime(CMClockGetHostTimeClock()))];
+//         if (self->_playerOneNode && self->_playerTwoNode)
+//         {
+//             [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+//
+//             }];
+//
+//             [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_one options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+//
+//             }];
+//         }
+//
+//         float randomNum = ((float)rand() / RAND_MAX) * 1;
+//         CMTime current_cmtime = CMTimeAdd(CMClockGetTime(CMClockGetHostTimeClock()), CMTimeMakeWithSeconds(randomNum, NSEC_PER_SEC));
+//         AVAudioTime *start_time_two = [[AVAudioTime alloc] initWithHostTime:CMClockConvertHostTimeToSystemUnits(current_cmtime)];
+//          if (self->_playerOneNode && self->_playerTwoNode)
+//          {
+//              [self->_playerOneNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+//
+//              }];
+//
+//              [self->_playerTwoNode scheduleBuffer:[self createAudioBufferWithLoopableSineWaveFrequency:(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)] atTime:start_time_two options:AVAudioPlayerNodeBufferLoops completionHandler:^{
+//
+//              }];
+//          }
+//     });
+//     dispatch_resume(self.timer);
+// }
 
 - (void)stop
 {

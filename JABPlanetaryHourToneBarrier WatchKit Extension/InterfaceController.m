@@ -66,98 +66,101 @@
         [self.reachabilityImage setTintColor:(reachable) ? [UIColor greenColor] : [UIColor redColor]];
     });
 }
+
 - (void)updatePeerDeviceStatusInterface:(NSDictionary<NSString *, id> *)receivedApplicationContext
 {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSUInteger thermalState = [[receivedApplicationContext objectForKey:@"NSProcessInfoThermalStateDidChangeNotification"] unsignedIntegerValue];
-                switch (thermalState) {
-                    case NSProcessInfoThermalStateNominal:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor greenColor]];
-                        break;
-                    }
-                        
-                    case NSProcessInfoThermalStateFair:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor yellowColor]];
-                        break;
-                    }
-                        
-                    case NSProcessInfoThermalStateSerious:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor redColor]];
-                        break;
-                    }
-                        
-                    case NSProcessInfoThermalStateCritical:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor whiteColor]];
-                        break;
-                    }
-                        
-                    default:
-                    {
-                        [self.thermalStateImage setTintColor:[UIColor grayColor]];
-                    }
-                        break;
-                }
-           
-        NSUInteger batteryState = [[receivedApplicationContext objectForKey:@"UIDeviceBatteryStateDidChangeNotification"] unsignedIntegerValue];
-                    switch (batteryState) {
-                        case WKInterfaceDeviceBatteryStateUnknown:
-                        {
-                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
-                            [self.batteryStateImage setTintColor:[UIColor grayColor]];
-                            break;
-                        }
-                            
-                        case WKInterfaceDeviceBatteryStateUnplugged:
-                        {
-                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
-                            [self.batteryStateImage setTintColor:[UIColor redColor]];
-                            break;
-                        }
-                            
-                        case WKInterfaceDeviceBatteryStateCharging:
-                        {
-                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
-                            [self.batteryStateImage setTintColor:[UIColor greenColor]];
-                            break;
-                        }
-                            
-                        case WKInterfaceDeviceBatteryStateFull:
-                        {
-                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
-                            [self.batteryStateImage setTintColor:[UIColor greenColor]];
-                            break;
-                        }
-                            
-                        default:
-                        {
-                            [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
-                            [self.batteryStateImage setTintColor:[UIColor grayColor]];
-                            break;
-                        }
-                    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSUInteger thermalState = [[receivedApplicationContext objectForKey:@"NSProcessInfoThermalStateDidChangeNotification"] unsignedIntegerValue];
+        switch (thermalState) {
+            case NSProcessInfoThermalStateNominal:
+            {
+                [self.thermalStateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
                 
-                            float batteryLevel =  [[receivedApplicationContext objectForKey:@"UIDeviceBatteryLevelDidChangeNotification"] floatValue];
-                        if (batteryLevel <= 1.0 && batteryLevel > .66)
-                        {
-                            [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.100"]];
-                            [self.batteryLevelImage setTintColor:[UIColor greenColor]];
-                        } else
-                            if (batteryLevel <= .66 && batteryLevel > .33)
-                            {
-                                [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.25"]];
-                                [self.batteryLevelImage setTintColor:[UIColor yellowColor]];
-                            } else
-                                if (batteryLevel <= .33)
-                                {
-                                    [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.0"]];
-                                    [self.batteryLevelImage setTintColor:[UIColor redColor]];
-                                }
-                 
-    [self.playButton setBackgroundImage:([[receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"] isEqualToString:@"TRUE"]) ? [UIImage systemImageNamed:@"stop.fill"] : [UIImage systemImageNamed:@"play.fill"]];
+            case NSProcessInfoThermalStateFair:
+            {
+                [self.thermalStateImage setTintColor:[UIColor yellowColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateSerious:
+            {
+                [self.thermalStateImage setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateCritical:
+            {
+                [self.thermalStateImage setTintColor:[UIColor whiteColor]];
+                break;
+            }
+                
+            default:
+            {
+                [self.thermalStateImage setTintColor:[UIColor grayColor]];
+            }
+                break;
+        }
+        
+        NSUInteger batteryState = [[receivedApplicationContext objectForKey:@"UIDeviceBatteryStateDidChangeNotification"] unsignedIntegerValue];
+        switch (batteryState) {
+            case WKInterfaceDeviceBatteryStateUnknown:
+            {
+                [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryStateImage setTintColor:[UIColor grayColor]];
+                break;
+            }
+                
+            case WKInterfaceDeviceBatteryStateUnplugged:
+            {
+                [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
+                [self.batteryStateImage setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case WKInterfaceDeviceBatteryStateCharging:
+            {
+                [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt"]];
+                [self.batteryStateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            case WKInterfaceDeviceBatteryStateFull:
+            {
+                [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.fill"]];
+                [self.batteryStateImage setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+            {
+                [self.batteryStateImage setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryStateImage setTintColor:[UIColor grayColor]];
+                break;
+            }
+        }
+        
+        float batteryLevel =  [[receivedApplicationContext objectForKey:@"UIDeviceBatteryLevelDidChangeNotification"] floatValue];
+        if (batteryLevel <= 1.0 && batteryLevel > .66)
+        {
+            [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.100"]];
+            [self.batteryLevelImage setTintColor:[UIColor greenColor]];
+        } else {
+            if (batteryLevel <= .66 && batteryLevel > .33)
+            {
+                [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.25"]];
+                [self.batteryLevelImage setTintColor:[UIColor yellowColor]];
+            } else {
+                if (batteryLevel <= .33)
+                {
+                    [self.batteryLevelImage setImage:[UIImage systemImageNamed:@"battery.0"]];
+                    [self.batteryLevelImage setTintColor:[UIColor redColor]];
+                }
+            }
+        }
+        
+        [self.playButton setBackgroundImage:([[receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"] isEqualToString:@"TRUE"]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
     });
 }
 
@@ -166,53 +169,14 @@
     WCSession *watchConnectivitySession = [(ExtensionDelegate *)[[WKExtension sharedExtension] delegate] watchConnectivitySession];
     if (watchConnectivitySession.isReachable)
     {
-//        [watchConnectivitySession updateApplicationContext:@{@"ToneGenerator" : @"Toggle"} error:nil];
         [watchConnectivitySession sendMessage:@{@"ToneGenerator" : @"Toggle"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 [self updatePeerDeviceStatusInterface:replyMessage];
-            });
+//            });
         } errorHandler:^(NSError * _Nonnull error) {
-
+            NSLog(@"Tone generator activation error: %@", error.description);
         }];
     }
-}
-
-- (void)updateHeartRateMonitorStatus:(HeartRateMonitorStatus)heartRateMonitorStatus
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        switch (heartRateMonitorStatus) {
-            case HeartRateMonitorPermissionDenied:
-            {
-                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
-                [self.heartRateImage setTintColor:[UIColor darkGrayColor]];
-                break;
-            }
-            
-            case HeartRateMonitorPermissionGranted:
-            {
-                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
-                [self.heartRateImage setTintColor:[UIColor redColor]];
-                break;
-            }
-                
-            case HeartRateMonitorDataUnavailable:
-            {
-                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.slash"]];
-                [self.heartRateImage setTintColor:[UIColor darkGrayColor]];
-                break;
-            }
-                
-            case HeartRateMonitorDataAvailable:
-            {
-                [self.heartRateImage setImage:[UIImage systemImageNamed:@"heart.fill"]];
-                [self.heartRateImage setTintColor:[UIColor greenColor]];
-                break;
-            }
-                
-            default:
-                break;
-        }
-    });
 }
 
 @end
