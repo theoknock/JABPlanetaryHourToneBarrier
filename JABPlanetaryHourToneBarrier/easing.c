@@ -11,6 +11,8 @@
 #include <math.h>
 #include "easing.h"
 
+// Source control...
+
 // Modeled after the line y = x
 double LinearInterpolation(double a, double b)
 {

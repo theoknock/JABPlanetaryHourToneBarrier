@@ -130,6 +130,7 @@ float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min
 typedef void (^PlayToneCompletionBlock)(void);
 typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock);
 
+// Source control...
 - (void)createAudioBufferWithCompletionBlock:(CreateAudioBufferCompletionBlock)createAudioBufferCompletionBlock
 {
     static AVAudioPCMBuffer * (^createAudioBuffer)(NSUInteger);
