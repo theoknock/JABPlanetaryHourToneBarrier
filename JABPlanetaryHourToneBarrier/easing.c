@@ -28,7 +28,7 @@ double LinearEaseInOut(double x)
 // Sine-pi easing
 double SinePiEaseInOutTimesFour(double x)
 {
-    return sin((x * 2 * M_PI) / 0.25);
+    return sinf((x * 2 * M_PI) / 0.25) * M_PI;
 //    return sinf(x * M_PI);
 }
 
