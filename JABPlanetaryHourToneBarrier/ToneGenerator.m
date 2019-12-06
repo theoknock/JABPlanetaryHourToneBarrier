@@ -127,7 +127,6 @@ float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min
 //    return pcmBuffer;
 //}
 
-// To-Do: "Loop" tones (Concatenate buffers?)
 typedef void (^PlayToneCompletionBlock)(void);
 typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock);
 
@@ -155,7 +154,7 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
             {
                 amplitude = 0;
             } else {
-                amplitude = SinePiEaseInOut(normalized_index);
+                amplitude = SinePiEaseInOutTimesFour(normalized_index);
             }
             //        NSLog(@"amplitudeLeft %f", amplitude);
             //        NSLog(@"amplitudeLeft %f", ((double)(i_sample / frameLength) < 0.4 && ((double)(i_sample / frameLength) < 0.5)) ? ((double)(i_sample / frameLength)) * 2.0 : @"");

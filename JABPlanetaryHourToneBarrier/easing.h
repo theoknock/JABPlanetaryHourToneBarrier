@@ -18,7 +18,7 @@ double LinearInterpolation(double a, double b);
 double LinearEaseInOut(double x);
 
 // Sine-pi easing
-double SinePiEaseInOut(double x);
+double SinePiEaseInOutTimesFour(double x);
 
 // Quadratic easing; x^2
 double QuadraticEaseIn(double x);
