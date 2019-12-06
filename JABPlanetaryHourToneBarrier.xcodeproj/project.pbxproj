@@ -44,6 +44,7 @@
 		B972D36F236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B972D36E236A8EA400E1A7A1 /* WatchToneBarrierInterfaceController.m */; };
 		B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B98CF2C722D583CB00661419 /* ToneGenerator.m */; };
 		B98EBEEE230F3E1100C94E2E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98EBEED230F3E1100C94E2E /* HealthKit.framework */; };
+		B9A17FB02396003A009F5926 /* easing.c in Sources */ = {isa = PBXBuildFile; fileRef = B9A17FAF2396003A009F5926 /* easing.c */; };
 		B9AB426122DD1A5A00406201 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426022DD1A5A00406201 /* IntentHandler.m */; };
 		B9AB426922DD1A5A00406201 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AB426822DD1A5A00406201 /* IntentsUI.framework */; };
 		B9AB426D22DD1A5A00406201 /* IntentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AB426C22DD1A5A00406201 /* IntentViewController.m */; };
@@ -179,6 +180,8 @@
 		B98CF2C722D583CB00661419 /* ToneGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToneGenerator.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B98CF2C822D583CB00661419 /* ToneGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToneGenerator.h; sourceTree = "<group>"; wrapsLines = 0; };
 		B98EBEED230F3E1100C94E2E /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		B9A17FAE2396003A009F5926 /* easing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		B9A17FAF2396003A009F5926 /* easing.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = easing.c; sourceTree = "<group>"; };
 		B9AB425D22DD1A5900406201 /* JABPlanetaryHourToneBarrierIntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JABPlanetaryHourToneBarrierIntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AB425F22DD1A5A00406201 /* IntentHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentHandler.h; sourceTree = "<group>"; };
 		B9AB426022DD1A5A00406201 /* IntentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentHandler.m; sourceTree = "<group>"; };
@@ -276,6 +279,8 @@
 				B9E0231523126ADE00035A41 /* GraphView.m */,
 				B98CF2C822D583CB00661419 /* ToneGenerator.h */,
 				B98CF2C722D583CB00661419 /* ToneGenerator.m */,
+				B9A17FAE2396003A009F5926 /* easing.h */,
+				B9A17FAF2396003A009F5926 /* easing.c */,
 				B904CDC022D3CA340086CAF8 /* Main.storyboard */,
 				B904CDC322D3CA350086CAF8 /* Assets.xcassets */,
 				B904CDC522D3CA350086CAF8 /* LaunchScreen.storyboard */,
@@ -555,6 +560,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A17FB02396003A009F5926 /* easing.c in Sources */,
 				B904CDBF22D3CA340086CAF8 /* ViewController.m in Sources */,
 				B9E0231623126ADE00035A41 /* GraphView.m in Sources */,
 				B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */,

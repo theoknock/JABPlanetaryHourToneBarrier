@@ -14,6 +14,7 @@ typedef NS_ENUM(NSUInteger, StereoChannels) {
     StereoChannelL
 };
 
+
 @protocol ToneWaveRendererDelegate <NSObject>
 
 - (void)drawFrequency:(double)frequency amplitude:(double)amplitude channel:(StereoChannels)channel;
@@ -41,6 +42,10 @@ typedef NS_ENUM(NSUInteger, StereoChannels) {
 
 @property (nonatomic, readonly) AVAudioPlayerNode * _Nullable playerOneNode;
 @property (nonatomic, readonly) AVAudioPlayerNode * _Nullable playerTwoNode;
+@property (copy) void (^block)(void);
+@property (strong, nonatomic) dispatch_queue_t tone_serial_queue;
+
+
 
 - (void)start;
 - (void)stop;
