@@ -10,7 +10,7 @@
 #define easing_h
 
 #include <stdio.h>
-
+//
 // Linear interpolation (no easing)
 double LinearInterpolation(double a, double b);
 
