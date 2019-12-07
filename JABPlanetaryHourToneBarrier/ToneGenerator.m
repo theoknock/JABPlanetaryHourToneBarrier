@@ -155,7 +155,7 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
             {
                 amplitude = 0;
             } else {
-                amplitude = SinePiEaseInOutTimesFour(normalized_index);
+                amplitude = NormalizedSineEaseInOut(normalized_index, 4);
             }
             //        NSLog(@"amplitudeLeft %f", amplitude);
             //        NSLog(@"amplitudeLeft %f", ((double)(i_sample / frameLength) < 0.4 && ((double)(i_sample / frameLength) < 0.5)) ? ((double)(i_sample / frameLength)) * 2.0 : @"");
