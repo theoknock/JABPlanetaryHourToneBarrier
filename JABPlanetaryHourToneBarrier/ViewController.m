@@ -326,29 +326,33 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState()),
       @"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device)),
       @"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device)),
-      @"ToneGeneratorDidPlay"                           : [NSString stringWithFormat:@"%@", ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) ? @"TRUE" : @"FALSE"]};
+      @"ToneGeneratorDidPlay"                           : @([ToneGenerator.sharedGenerator.playerOneNode isPlaying])};
     
     return status;
 };
 
 - (void)updateDeviceStatus
 {
-    NSDictionary<NSString *, id> * status = deviceStatus(device);
-    if (watchConnectivitySession.reachable) {
-        [watchConnectivitySession sendMessage:status replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-        } errorHandler:^(NSError * _Nonnull error) {
-            NSLog(@"Error sending message: %@", error.description);
-        }];
-    } else {
-        if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
-        {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSDictionary<NSString *, id> * status = deviceStatus(device);
+        if (watchConnectivitySession.reachable) {
             __autoreleasing NSError *error;
             [watchConnectivitySession updateApplicationContext:status error:&error];
-        } else {
-            [watchConnectivitySession activateSession];
+//            [watchConnectivitySession sendMessage:status replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+//            } errorHandler:^(NSError * _Nonnull error) {
+//                NSLog(@"Error sending message: %@", error.description);
+//            }];
         }
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
+        else {
+            if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
+            {
+                __autoreleasing NSError *error;
+                [watchConnectivitySession updateApplicationContext:status error:&error];
+            } else {
+                [watchConnectivitySession activateSession];
+            }
+        }
+        
         switch (thermalState()) {
             case NSProcessInfoThermalStateNominal:
             {
@@ -438,7 +442,7 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
                     {
                         [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
                         [self.batteryLevelImageView setTintColor:[UIColor redColor]];
-                        [ToneGenerator.sharedGenerator alarm];
+//                        [ToneGenerator.sharedGenerator alarm];
                     }
     });
 }
@@ -487,36 +491,25 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
         if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
             [ToneGenerator.sharedGenerator start];
-            remoteCommandCenter.playCommand.enabled = NO;
-            remoteCommandCenter.stopCommand.enabled = YES;
-
-            //                [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
         } else if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
             [ToneGenerator.sharedGenerator stop];
-            remoteCommandCenter.playCommand.enabled = YES;
-            remoteCommandCenter.stopCommand.enabled = NO;
-            //                [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
         }
     });
-    //    [self updateDeviceStatus];
 }
 
 - (void)togglePlayButton
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
-            //                                                                                               [ToneGenerator.sharedGenerator start];
             [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
         } else if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
-            //                                                                                           [ToneGenerator.sharedGenerator stop];
             [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
         }
+        [self updateDeviceStatus];
     });
-    [self updateDeviceStatus];
+//    [self updateDeviceStatus];
 }
 
 - (void)handleInterruption:(NSNotification *)notification

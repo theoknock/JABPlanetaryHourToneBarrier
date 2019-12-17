@@ -221,7 +221,6 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
     {
         [self->_playerOneNode play];
         [self->_playerTwoNode play];
-        NSLog(@"%s", __PRETTY_FUNCTION__);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
     }
     
@@ -530,12 +529,10 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
     //    dispatch_source_cancel(self->_timer);
     //    self->_timer = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
-        NSLog(@"Stopping...");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];\
         [self->_playerOneNode stop];
         [self->_playerTwoNode stop];
         [self->_audioEngine stop];
-        NSLog(@"Player node %@ playing", ([_playerOneNode isPlaying]) ? @"is" : @"is not");
     });
 }
 

@@ -160,7 +160,8 @@
             }
         }
         
-        [self.playButton setBackgroundImage:([[receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"] isEqualToString:@"TRUE"]) ? [UIImage systemImageNamed:@"stop"] : [UIImage systemImageNamed:@"play"]];
+        NSLog(@"Tone barrier %@ playing", ([receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"]) ? @"is" : @"is not");
+        [self.playButton setBackgroundImage:([receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"]) ? [UIImage systemImageNamed:@"play"] : [UIImage systemImageNamed:@"stop"]];
     });
 }
 
