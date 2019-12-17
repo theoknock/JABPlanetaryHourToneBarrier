@@ -168,7 +168,6 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
             if ([self->_playerOneNode isPlaying] || [self->_playerTwoNode isPlaying])
             {
                 block();
-//                NSLog(@"Calling block...");
             }
         });
     };

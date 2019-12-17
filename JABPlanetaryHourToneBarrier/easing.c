@@ -10,7 +10,7 @@
 
 #include <math.h>
 #include "easing.h"
-//
+
 
 // Modeled after the line y = x
 double LinearInterpolation(double a, double b)
