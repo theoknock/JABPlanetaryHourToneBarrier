@@ -141,26 +141,26 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
         pcmBuffer.frameLength = frameCount;
         float *leftChannel = pcmBuffer.floatChannelData[0];
         float *rightChannel = audioFormat.channelCount == 2 ? pcmBuffer.floatChannelData[1] : nil;
-
+        
         double leftFrequency[2]  = {(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency), (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)};
         double rightFrequency[2] = {(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency), (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)};
         int amplitude_frequency = arc4random_uniform(24) + 8;
         for (int index = 0; index < frameCount; index++)
         {
             double normalized_index   = LinearInterpolation(index, frameCount);
-//            double scaled_index       = normalized_index;
-//            double leftFrequency_avg  = ((leftFrequency[0]  * scaled_index) + (leftFrequency[1]  * (1.0 - scaled_index)));
-//            double rightFrequency_avg = ((rightFrequency[0] * scaled_index) + (rightFrequency[1] * (1.0 - scaled_index)));
-
+            //            double scaled_index       = normalized_index;
+            //            double leftFrequency_avg  = ((leftFrequency[0]  * scaled_index) + (leftFrequency[1]  * (1.0 - scaled_index)));
+            //            double rightFrequency_avg = ((rightFrequency[0] * scaled_index) + (rightFrequency[1] * (1.0 - scaled_index)));
+            
             double leftFrequency_avg  = leftFrequency[0];
             double rightFrequency_avg = rightFrequency[0];
-
+            
             if (leftChannel)  leftChannel[index]   = NormalizedSineEaseInOut(normalized_index, leftFrequency_avg,  1) * NormalizedSineEaseInOut(normalized_index, amplitude_frequency, 1);
             if (rightChannel) rightChannel[index]  = NormalizedSineEaseInOut(normalized_index, rightFrequency_avg, 1) * NormalizedSineEaseInOut(normalized_index, amplitude_frequency, 1);
         }
         return pcmBuffer;
     };
-
+    
     static void (^block)(void);
     block = ^void(void)
     {
@@ -214,24 +214,26 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
         [_audioEngine startAndReturnError:&error];
         NSLog(@"error: %@", error);
     }
-
+    
     if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
     {
         [self->_playerOneNode play];
         [self->_playerTwoNode play];
+        NSLog(@"%s", __PRETTY_FUNCTION__);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
     }
-
+    
     if (self->_playerOneNode)
     {
         [self createAudioBufferWithCompletionBlock:^(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
             [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
-//                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-//                    NSLog(@"Calling playToneCompletionBlock 1...");
+                //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+                //                    NSLog(@"Calling playToneCompletionBlock 1...");
             }];
             [self->_playerTwoNode scheduleBuffer:buffer2 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
                 if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
                     playToneCompletionBlock();
-//                NSLog(@"Calling playToneCompletionBlock 2...");
+                //                NSLog(@"Calling playToneCompletionBlock 2...");
             }];
         }];
     }
@@ -525,8 +527,13 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
 {
     //    dispatch_source_cancel(self->_timer);
     //    self->_timer = nil;
-    [_playerOneNode stop];
-    [_playerTwoNode stop];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
+        NSLog(@"Stopping...");
+        [_playerOneNode stop];
+        [_playerTwoNode stop];
+        NSLog(@"Player node %@ playing", ([_playerOneNode isPlaying]) ? @"is" : @"is not");
+    });
 }
 
 //- (void)alarm
