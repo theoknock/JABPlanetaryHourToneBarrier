@@ -13,9 +13,8 @@
 
 #include "easing.h"
 
-static const AVAudioFrameCount kSamplesPerBuffer = 2048;
-static const float high_frequency = 2048.0;
-static const float low_frequency = 500.0f;
+static const float high_frequency = 6000.0;
+static const float low_frequency  = 1000.0;
 
 @interface ToneGenerator ()
 
@@ -126,6 +125,7 @@ float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min
 //
 //    return pcmBuffer;
 //}
+
 //
 typedef void (^PlayToneCompletionBlock)(void);
 typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock);
@@ -135,38 +135,32 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
     static AVAudioPCMBuffer * (^createAudioBuffer)(NSUInteger);
     createAudioBuffer = ^AVAudioPCMBuffer *(NSUInteger bufferIndex)
     {
-        double leftFrequency  = (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
-        double rightFrequency =(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency);
-      
-        AVAudioFormat *mixerFormat = [self->_mixerNode outputFormatForBus:0];
-        double frameLength = mixerFormat.sampleRate * 2.0;
-        AVAudioPCMBuffer *pcmBuffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:mixerFormat frameCapacity:frameLength];
-        pcmBuffer.frameLength = frameLength;
-        
+        AVAudioFormat *audioFormat = [self->_mixerNode outputFormatForBus:0];
+        AVAudioFrameCount frameCount = audioFormat.sampleRate * 2.0;
+        AVAudioPCMBuffer *pcmBuffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:audioFormat frameCapacity:frameCount];
+        pcmBuffer.frameLength = frameCount;
         float *leftChannel = pcmBuffer.floatChannelData[0];
-        float *rightChannel = mixerFormat.channelCount == 2 ? pcmBuffer.floatChannelData[1] : nil;
-        
-        for (int index = 0; index < (int)frameLength; index++)
+        float *rightChannel = audioFormat.channelCount == 2 ? pcmBuffer.floatChannelData[1] : nil;
+
+        double leftFrequency[2]  = {(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency), (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)};
+        double rightFrequency[2] = {(((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency), (((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency)};
+        int amplitude_frequency = arc4random_uniform(24) + 8;
+        for (int index = 0; index < frameCount; index++)
         {
-            double amplitude = 0;
-            double normalized_index = LinearInterpolation(index, frameLength);
-            if ((bufferIndex == 2) && (index <= 0.5))
-            {
-                amplitude = 0;
-            } else {
-                amplitude = NormalizedSineEaseInOut(normalized_index, 4);
-            }
-            //        NSLog(@"amplitudeLeft %f", amplitude);
-            //        NSLog(@"amplitudeLeft %f", ((double)(i_sample / frameLength) < 0.4 && ((double)(i_sample / frameLength) < 0.5)) ? ((double)(i_sample / frameLength)) * 2.0 : @"");
-            double leftValue = sinf((leftFrequency*index*2*M_PI) / frameLength);
-            double rightValue = sinf((rightFrequency*index*2*M_PI) / frameLength);
-            if (leftChannel)  leftChannel[index]  = leftValue * amplitude;
-            if (rightChannel)  rightChannel[index]  = rightValue * (1.0 - amplitude);
-            //        if (rightChannel) rightChannel[(pcmBuffer.frameCapacity - 1) - i_sample] = value * amplitude;
+            double normalized_index   = LinearInterpolation(index, frameCount);
+//            double scaled_index       = normalized_index;
+//            double leftFrequency_avg  = ((leftFrequency[0]  * scaled_index) + (leftFrequency[1]  * (1.0 - scaled_index)));
+//            double rightFrequency_avg = ((rightFrequency[0] * scaled_index) + (rightFrequency[1] * (1.0 - scaled_index)));
+
+            double leftFrequency_avg  = leftFrequency[0];
+            double rightFrequency_avg = rightFrequency[0];
+
+            if (leftChannel)  leftChannel[index]   = NormalizedSineEaseInOut(normalized_index, leftFrequency_avg,  1) * NormalizedSineEaseInOut(normalized_index, amplitude_frequency, 1);
+            if (rightChannel) rightChannel[index]  = NormalizedSineEaseInOut(normalized_index, rightFrequency_avg, 1) * NormalizedSineEaseInOut(normalized_index, amplitude_frequency, 1);
         }
         return pcmBuffer;
     };
-    
+
     static void (^block)(void);
     block = ^void(void)
     {
@@ -174,20 +168,45 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
             if ([self->_playerOneNode isPlaying] || [self->_playerTwoNode isPlaying])
             {
                 block();
-                NSLog(@"Calling block...");
+//                NSLog(@"Calling block...");
             }
         });
     };
-    
-    createAudioBufferCompletionBlock(createAudioBuffer(1), createAudioBuffer(2), ^{
-        if ([self->_playerOneNode isPlaying] || [self->_playerTwoNode isPlaying])
-        {
-            block();
-            NSLog(@"Calling block...");
-        }
-    });
+    block();
 }
 
+typedef void (^ToneCompletionBlock)(void);
+typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneCompletionBlock toneCompletionBlock);
+
+//- (void)start
+//{
+//    static void (^recursive_block)(double, AudioBufferCompletionBlock);
+//    recursive_block = ^(double first_frequency, AudioBufferCompletionBlock audioBufferCompletionBlock)
+//    {
+//        // create audio buffer with first_frequency
+//        // generate second frequency
+//        // generate third frequency
+//        // create audio buffer with interstitial frequency by averaging first and second frequency
+//        // create audio buffer with second frequency
+//        // create audio buffer with interstitial frequency by averaging second and third frequency
+//        // return audio buffers with CreateAudioBufferCompletionBlock
+//        // pass third frequency to recursive_block as first_frequency when PlayToneCompletionBlock is called
+//        audioBufferCompletionBlock([AVAudioPCMBuffer new], ^{
+//
+//        });
+//    };
+//
+//    recursive_block((((double)arc4random() / 0x100000000) * (high_frequency - low_frequency) + low_frequency), ^(AVAudioPCMBuffer *buffer, ToneCompletionBlock toneCompletionBlock)
+//    {
+//        [self->_playerOneNode scheduleBuffer:buffer atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
+//            if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+//                toneCompletionBlock();
+//            NSLog(@"Calling playToneCompletionBlock 2...");
+//        }];
+//    });
+//}
+
+//// To-Do: Use dispatch_io to read buffers instead
 - (void)start
 {
     if (self.audioEngine.isRunning == NO)
@@ -196,38 +215,26 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
         [_audioEngine startAndReturnError:&error];
         NSLog(@"error: %@", error);
     }
-    
+
+    if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
+    {
+        [self->_playerOneNode play];
+        [self->_playerTwoNode play];
+    }
+
     if (self->_playerOneNode)
     {
         [self createAudioBufferWithCompletionBlock:^(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
             [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
 //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-//                    playToneCompletionBlock();
-                NSLog(@"Calling playToneCompletionBlock 1...");
+//                    NSLog(@"Calling playToneCompletionBlock 1...");
             }];
             [self->_playerTwoNode scheduleBuffer:buffer2 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
-                            if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-                                playToneCompletionBlock();
-                            NSLog(@"Calling playToneCompletionBlock 2...");
-                        }];
+                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+                    playToneCompletionBlock();
+//                NSLog(@"Calling playToneCompletionBlock 2...");
+            }];
         }];
-    }
-    //
-    //    if (self->_playerTwoNode)
-    //    {
-    //        [self createAudioBufferWithCompletionBlock:^(AVAudioPCMBuffer *buffer, PlayToneCompletionBlock playToneCompletionBlock) {
-    //            [self->_playerTwoNode scheduleBuffer:buffer atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
-    //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-    //                    playToneCompletionBlock();
-    //                NSLog(@"Calling playToneCompletionBlock 2...");
-    //            }];
-    //        }];
-    //    }
-    
-    if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
-    {
-        [self->_playerOneNode play];
-        [self->_playerTwoNode play];
     }
 }
 
