@@ -533,8 +533,8 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
         NSLog(@"Stopping...");
         [self->_playerOneNode stop];
-        [_audioEngine stop];
-        //        [_playerTwoNode stop];
+        [self->_playerTwoNode stop];
+        [self->_audioEngine stop];
         NSLog(@"Player node %@ playing", ([_playerOneNode isPlaying]) ? @"is" : @"is not");
     });
 }
