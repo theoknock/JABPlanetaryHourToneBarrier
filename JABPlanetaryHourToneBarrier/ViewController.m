@@ -487,11 +487,17 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
 - (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
         if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
             [ToneGenerator.sharedGenerator start];
+            remoteCommandCenter.playCommand.enabled = NO;
+            remoteCommandCenter.stopCommand.enabled = YES;
+
             //                [self.playButton setImage:[UIImage systemImageNamed:@"stop"]];
         } else if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
             [ToneGenerator.sharedGenerator stop];
+            remoteCommandCenter.playCommand.enabled = YES;
+            remoteCommandCenter.stopCommand.enabled = NO;
             //                [self.playButton setImage:[UIImage systemImageNamed:@"play"]];
         }
     });

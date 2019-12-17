@@ -208,6 +208,8 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
 //// To-Do: Use dispatch_io to read buffers instead
 - (void)start
 {
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    
     if (self.audioEngine.isRunning == NO)
     {
         NSError *error = nil;
@@ -530,8 +532,9 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
         NSLog(@"Stopping...");
-        [_playerOneNode stop];
-        [_playerTwoNode stop];
+        [self->_playerOneNode stop];
+        [_audioEngine stop];
+        //        [_playerTwoNode stop];
         NSLog(@"Player node %@ playing", ([_playerOneNode isPlaying]) ? @"is" : @"is not");
     });
 }
