@@ -160,8 +160,8 @@
             }
         }
         
-        NSLog(@"Tone barrier %@ playing", ([receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"]) ? @"is" : @"is not");
-        [self.playButton setBackgroundImage:([receivedApplicationContext objectForKey:@"ToneGeneratorDidPlay"]) ? [UIImage systemImageNamed:@"play"] : [UIImage systemImageNamed:@"stop"]];
+        NSLog(@"Tone barrier %@ playing", ([receivedApplicationContext objectForKey:@"ToneBarrierPlayingNotification"]) ? @"is" : @"is not");
+        [self.playButton setBackgroundImage:([receivedApplicationContext objectForKey:@"ToneBarrierPlayingNotification"]) ? [UIImage systemImageNamed:@"play"] : [UIImage systemImageNamed:@"stop"]];
     });
 }
 

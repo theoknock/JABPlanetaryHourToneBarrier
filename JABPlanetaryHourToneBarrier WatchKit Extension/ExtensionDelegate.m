@@ -173,6 +173,14 @@
 
 - (WCSession *)watchConnectivitySession
 {
+    WCSession *wcs = watchConnectivitySession;
+    if (!wcs)
+    {
+        wcs = [WCSession defaultSession];
+        [wcs setDelegate:(id<WCSessionDelegate> _Nullable)self];
+        [wcs activateSession];
+        watchConnectivitySession = wcs;
+    }
     return watchConnectivitySession;
 }
 
@@ -202,6 +210,7 @@
 {
     [self.watchConnectivityStatusInterfaceDelegate updateStatusInterfaceForActivationState:session.activationState reachability:session.isReachable];
     [self.watchConnectivityStatusInterfaceDelegate updatePeerDeviceStatusInterface:applicationContext];
+    NSLog(@"Tone barrier %@ playing", ([applicationContext objectForKey:@"ToneBarrierPlayingNotification"]) ? @"is" : @"is not");
 }
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler

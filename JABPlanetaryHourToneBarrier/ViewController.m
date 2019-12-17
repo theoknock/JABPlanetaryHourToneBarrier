@@ -326,7 +326,7 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState()),
       @"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device)),
       @"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device)),
-      @"ToneGeneratorDidPlay"                           : @([ToneGenerator.sharedGenerator.playerOneNode isPlaying])};
+      @"ToneBarrierPlayingNotification"                           : @([ToneGenerator.sharedGenerator.audioEngine isRunning])};
     
     return status;
 };
