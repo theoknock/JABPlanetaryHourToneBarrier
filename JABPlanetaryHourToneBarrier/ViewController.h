@@ -26,7 +26,7 @@
 #define min_amplitude 0.5f
 #define max_amplitude 1.0f
 
-@interface ViewController : UIViewController <WCSessionDelegate, DeviceStatusInterfaceDelegate, ToneWaveRendererDelegate>
+@interface ViewController : UIViewController <WCSessionDelegate, DeviceStatusInterfaceDelegate, ToneWaveRendererDelegate, UIGestureRecognizerDelegate>
 
 @end
 

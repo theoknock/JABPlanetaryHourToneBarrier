@@ -10,6 +10,9 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "ToneGenerator.h"
+#import "ToneBarrierPlayerContext.h"
+#import "ClicklessTones.h"
+
 
 #include "easing.h"
 
@@ -77,8 +80,8 @@ static ToneGenerator *sharedGenerator = NULL;
         
         [_audioEngine connect:_playerTwoNode to:_mixerNode format:[_playerTwoNode outputFormatForBus:0]];
         
-        NSError *error = nil;
-        [_audioEngine startAndReturnError:&error];
+        __autoreleasing NSError *error = nil;
+        //        [_audioEngine startAndReturnError:&error];
         
         [[AVAudioSession sharedInstance] setActive:YES error:&error];
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -127,8 +130,6 @@ float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min
 //}
 
 //
-typedef void (^PlayToneCompletionBlock)(void);
-typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock);
 
 - (void)createAudioBufferWithCompletionBlock:(CreateAudioBufferCompletionBlock)createAudioBufferCompletionBlock
 {
@@ -165,7 +166,7 @@ typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer1, AVAu
     block = ^void(void)
     {
         createAudioBufferCompletionBlock(createAudioBuffer(1), createAudioBuffer(2), ^{
-            if ([self->_playerOneNode isPlaying] || [self->_playerTwoNode isPlaying])
+            if ([self->_audioEngine isRunning])
             {
                 block();
             }
@@ -205,7 +206,7 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
 //    });
 //}
 
-//// To-Do: Use dispatch_io to read buffers instead
+/// / To-Do: Use dispatch_io to read buffers instead
 - (void)start
 {
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
@@ -215,28 +216,43 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
         NSError *error = nil;
         [_audioEngine startAndReturnError:&error];
         NSLog(@"error: %@", error);
-    }
-    
-    if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
-    {
-        [self->_playerOneNode play];
-        [self->_playerTwoNode play];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
-    }
-    
-    if (self->_playerOneNode)
-    {
-        [self createAudioBufferWithCompletionBlock:^(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
-            [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
-                //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-                //                    NSLog(@"Calling playToneCompletionBlock 1...");
+        
+        if (![self->_playerOneNode isPlaying] || ![self->_playerTwoNode isPlaying])
+        {
+            [self->_playerOneNode play];
+            [self->_playerTwoNode play];
+        }
+        
+        if (self->_playerOneNode)
+        {
+            //        [self createAudioBufferWithCompletionBlock:^(AVAudioPCMBuffer *buffer1, AVAudioPCMBuffer *buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
+            //            [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
+            //                //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+            //                //                    NSLog(@"Calling playToneCompletionBlock 1...");
+            //            }];
+            //            [self->_playerTwoNode scheduleBuffer:buffer2 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
+            //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+            //                    playToneCompletionBlock();
+            //                //                NSLog(@"Calling playToneCompletionBlock 2...");
+            //            }];
+            //        }];
+            ToneBarrierPlayerContext *player = [[ToneBarrierPlayerContext alloc] init];
+            ClicklessTones *tones = [[ClicklessTones alloc] init];
+            
+            [player setPlayer:(id<ToneBarrierPlayerDelegate> _Nonnull)tones];
+            [player createAudioBufferWithFormat:[self->_mixerNode outputFormatForBus:0] completionBlock:^(AVAudioPCMBuffer * _Nonnull buffer1, AVAudioPCMBuffer * _Nonnull buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
+                [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
+                    //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+                    //                    NSLog(@"Calling playToneCompletionBlock 1...");
+                }];
+                [self->_playerTwoNode scheduleBuffer:buffer2 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
+                    if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
+                        playToneCompletionBlock();
+                    //                NSLog(@"Calling playToneCompletionBlock 2...");
+                }];
             }];
-            [self->_playerTwoNode scheduleBuffer:buffer2 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
-                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
-                    playToneCompletionBlock();
-                //                NSLog(@"Calling playToneCompletionBlock 2...");
-            }];
-        }];
+        }
     }
 }
 
@@ -528,12 +544,13 @@ typedef void (^AudioBufferCompletionBlock)(AVAudioPCMBuffer *buffer, ToneComplet
 {
     //    dispatch_source_cancel(self->_timer);
     //    self->_timer = nil;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];\
-        [self->_playerOneNode stop];
-        [self->_playerTwoNode stop];
-        [self->_audioEngine stop];
-    });
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+//    [self->_playerOneNode stop];
+//    [self->_playerTwoNode stop];
+    if (self.audioEngine.isRunning == YES) [self->_audioEngine pause];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ToneBarrierPlayingNotification" object:nil userInfo:nil];
+    //    });
 }
 
 //- (void)alarm

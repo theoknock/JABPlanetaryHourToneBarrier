@@ -14,6 +14,14 @@ typedef NS_ENUM(NSUInteger, StereoChannels) {
     StereoChannelL
 };
 
+typedef void (^PlayToneCompletionBlock)(void);
+typedef void (^CreateAudioBufferCompletionBlock)(AVAudioPCMBuffer * _Nonnull buffer1, AVAudioPCMBuffer * _Nonnull buffer2, PlayToneCompletionBlock playToneCompletionBlock);
+
+@protocol ToneBarrierPlayerDelegate <NSObject>
+
+- (void)createAudioBufferWithFormat:(AVAudioFormat *)audioFormat completionBlock:(CreateAudioBufferCompletionBlock)createAudioBufferCompletionBlock;
+
+@end
 
 @protocol ToneWaveRendererDelegate <NSObject>
 

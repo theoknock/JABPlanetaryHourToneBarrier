@@ -72,6 +72,7 @@
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     NSLog(@"%s", __PRETTY_FUNCTION__);
 //    [self scheduleAppRefresh];
+//    [ToneGenerator.sharedGenerator stop];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -83,14 +84,14 @@
     MPRemoteCommandCenter *remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     [[remoteCommandCenter togglePlayPauseCommand] addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"Event %@", [[event command] description]);
             if (![ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
                     [ToneGenerator.sharedGenerator start];
             } else if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying]) {
                 [ToneGenerator.sharedGenerator stop];
             }
-        });
+//        });
         return MPRemoteCommandHandlerStatusSuccess;
     }];
 }
