@@ -28,5 +28,8 @@
 
 @interface ViewController : UIViewController <WCSessionDelegate, DeviceStatusInterfaceDelegate, ToneWaveRendererDelegate, UIGestureRecognizerDelegate>
 
+@property (strong, nonatomic) UIDevice *device;
+@property (strong, nonatomic) WCSession *watchConnectivitySession;
+
 @end
 

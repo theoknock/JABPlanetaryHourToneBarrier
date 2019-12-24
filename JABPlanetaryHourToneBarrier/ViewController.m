@@ -16,10 +16,9 @@
 
 @interface ViewController ()
 {
-    WCSession *watchConnectivitySession;
-    UIDevice *device;
     CAShapeLayer *pathLayerChannelR;
     CAShapeLayer *pathLayerChannelL;
+    BOOL wasPlaying;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -238,9 +237,9 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
 
 - (void)setupDeviceMonitoring
 {
-    device = [UIDevice currentDevice];
-    [device setBatteryMonitoringEnabled:TRUE];
-    [device setProximityMonitoringEnabled:TRUE];
+    self->_device = [UIDevice currentDevice];
+    [self->_device setBatteryMonitoringEnabled:TRUE];
+    [self->_device setProximityMonitoringEnabled:TRUE];
 }
 
 - (void)addStatusObservers
@@ -251,18 +250,19 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryLevelDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceBatteryStateDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus) name:UIDeviceProximityStateDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceStatus:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(togglePlayButton) name:@"ToneBarrierPlayingNotification" object:nil];
     
 }
 
 - (void)activateWatchConnectivitySession
 {
-    if ([WCSession isSupported] || !watchConnectivitySession)
+    if ([WCSession isSupported] || !self.watchConnectivitySession)
     {
-        watchConnectivitySession = [WCSession defaultSession];
-        [watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
+        self.watchConnectivitySession = [WCSession defaultSession];
+        [self.watchConnectivitySession setDelegate:(id<WCSessionDelegate> _Nullable)self];
     }
-    [watchConnectivitySession activateSession];
+    [self.watchConnectivitySession activateSession];
 }
 
 - (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError *)error
@@ -301,7 +301,7 @@ static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColo
 {
     [self toggleToneGenerator:nil];
     [self updateDeviceStatus];
-    replyHandler(deviceStatus(device));
+    replyHandler(deviceStatus(self->_device));
 }
 
 static NSProcessInfoThermalState(^thermalState)(void) = ^NSProcessInfoThermalState(void)
@@ -322,139 +322,145 @@ static float(^batteryLevel)(UIDevice *) = ^float(UIDevice * device)
     return batteryLevel;
 };
 
+static bool(^powerState)(void) = ^bool(void)
+{
+    return [[NSProcessInfo processInfo] isLowPowerModeEnabled];
+};
+
 static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionary<NSString *, id> * (UIDevice * device)
 {
     NSDictionary<NSString *, id> * status =
     @{@"NSProcessInfoThermalStateDidChangeNotification" : @(thermalState()),
       @"UIDeviceBatteryLevelDidChangeNotification"      : @(batteryLevel(device)),
       @"UIDeviceBatteryStateDidChangeNotification"      : @(batteryState(device)),
-      @"ToneBarrierPlayingNotification"                           : @([ToneGenerator.sharedGenerator.audioEngine isRunning])};
+      @"NSProcessInfoPowerStateDidChangeNotification"   : @(powerState()),
+      @"ToneBarrierPlayingNotification"                 : @([ToneGenerator.sharedGenerator.audioEngine isRunning])};
     
     return status;
 };
 
 - (void)updateDeviceStatus
 {
-        dispatch_async(dispatch_get_main_queue(), ^{
-    NSDictionary<NSString *, id> * status = deviceStatus(device);
-    if (watchConnectivitySession.reachable) {
-        __autoreleasing NSError *error;
-        [watchConnectivitySession updateApplicationContext:status error:&error];
-        //            [watchConnectivitySession sendMessage:status replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-        //            } errorHandler:^(NSError * _Nonnull error) {
-        //                NSLog(@"Error sending message: %@", error.description);
-        //            }];
-    }
-    else {
-        if (watchConnectivitySession.activationState == WCSessionActivationStateActivated)
-        {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSDictionary<NSString *, id> * status = deviceStatus(self->_device);
+        if (self.watchConnectivitySession.reachable) {
             __autoreleasing NSError *error;
-            [watchConnectivitySession updateApplicationContext:status error:&error];
-        } else {
-            [watchConnectivitySession activateSession];
+            [self.watchConnectivitySession updateApplicationContext:status error:&error];
+            //            [watchConnectivitySession sendMessage:status replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+            //            } errorHandler:^(NSError * _Nonnull error) {
+            //                NSLog(@"Error sending message: %@", error.description);
+            //            }];
         }
-    }
-    
-    switch (thermalState()) {
-        case NSProcessInfoThermalStateNominal:
-        {
-            [self.thermometerImageView setTintColor:[UIColor greenColor]];
-            break;
-        }
-            
-        case NSProcessInfoThermalStateFair:
-        {
-            [self.thermometerImageView setTintColor:[UIColor yellowColor]];
-            break;
-        }
-            
-        case NSProcessInfoThermalStateSerious:
-        {
-            [self.thermometerImageView setTintColor:[UIColor redColor]];
-            break;
-        }
-            
-        case NSProcessInfoThermalStateCritical:
-        {
-            [self.thermometerImageView setTintColor:[UIColor whiteColor]];
-            break;
-        }
-            
-        default:
-        {
-            [self.thermometerImageView setTintColor:[UIColor grayColor]];
-        }
-            break;
-    }
-    
-    switch (batteryState(self->device)) {
-        case UIDeviceBatteryStateUnknown:
-        {
-            [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
-            [self.batteryImageView setTintColor:[UIColor grayColor]];
-            break;
-        }
-            
-        case UIDeviceBatteryStateUnplugged:
-        {
-            [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
-            [self.batteryImageView setTintColor:[UIColor redColor]];
-            break;
-        }
-            
-        case UIDeviceBatteryStateCharging:
-        {
-            [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt"]];
-            [self.batteryImageView setTintColor:[UIColor greenColor]];
-            break;
-        }
-            
-        case UIDeviceBatteryStateFull:
-        {
-            [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.fill"]];
-            [self.batteryImageView setTintColor:[UIColor greenColor]];
-            break;
-        }
-            
-        default:
-        {
-            [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
-            [self.batteryImageView setTintColor:[UIColor grayColor]];
-            break;
-        }
-    }
-    
-    float level = batteryLevel(self->device);
-    if (level <= 1.0 || level > .66)
-    {
-        [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.100"]];
-        [self.batteryLevelImageView setTintColor:[UIColor greenColor]];
-    } else
-        if (level <= .66 || level > .33)
-        {
-            [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.25"]];
-            [self.batteryLevelImageView setTintColor:[UIColor yellowColor]];
-        } else
-            if (level <= .33)
+        else {
+            if (self.watchConnectivitySession.activationState == WCSessionActivationStateActivated)
             {
-                [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
-                [self.batteryLevelImageView setTintColor:[UIColor redColor]];
+                __autoreleasing NSError *error;
+                [self.watchConnectivitySession updateApplicationContext:status error:&error];
+            } else {
+                [self.watchConnectivitySession activateSession];
+            }
+        }
+        
+        switch (thermalState()) {
+            case NSProcessInfoThermalStateNominal:
+            {
+                [self.thermometerImageView setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateFair:
+            {
+                [self.thermometerImageView setTintColor:[UIColor yellowColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateSerious:
+            {
+                [self.thermometerImageView setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case NSProcessInfoThermalStateCritical:
+            {
+                [self.thermometerImageView setTintColor:[UIColor whiteColor]];
+                break;
+            }
+                
+            default:
+            {
+                [self.thermometerImageView setTintColor:[UIColor grayColor]];
+            }
+                break;
+        }
+        
+        switch (batteryState(self->_device)) {
+            case UIDeviceBatteryStateUnknown:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryImageView setTintColor:[UIColor grayColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateUnplugged:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash.fill"]];
+                [self.batteryImageView setTintColor:[UIColor redColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateCharging:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt"]];
+                [self.batteryImageView setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            case UIDeviceBatteryStateFull:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.fill"]];
+                [self.batteryImageView setTintColor:[UIColor greenColor]];
+                break;
+            }
+                
+            default:
+            {
+                [self.batteryImageView setImage:[UIImage systemImageNamed:@"bolt.slash"]];
+                [self.batteryImageView setTintColor:[UIColor grayColor]];
+                break;
+            }
+        }
+        
+        float level = batteryLevel(self->_device);
+        if (level <= 1.0 || level > .66)
+        {
+            [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.100"]];
+            [self.batteryLevelImageView setTintColor:[UIColor greenColor]];
+        } else
+            if (level <= .66 || level > .33)
+            {
+                [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.25"]];
+                [self.batteryLevelImageView setTintColor:[UIColor yellowColor]];
             } else
-                if (level <= .125)
+                if (level <= .33)
                 {
                     [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
                     [self.batteryLevelImageView setTintColor:[UIColor redColor]];
-                    //                        [ToneGenerator.sharedGenerator alarm];
-                }
-        });
+                } else
+                    if (level <= .125)
+                    {
+                        [self.batteryLevelImageView setImage:[UIImage systemImageNamed:@"battery.0"]];
+                        [self.batteryLevelImageView setTintColor:[UIColor redColor]];
+                        //                        [ToneGenerator.sharedGenerator alarm];
+                    }
+    });
 }
 
 - (void)updateWatchConnectivityStatus
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        WCSessionActivationState activationState = watchConnectivitySession.activationState;
-        BOOL reachable = watchConnectivitySession.isReachable;
-        if (activationState != WCSessionActivationStateActivated) [watchConnectivitySession activateSession];
+        WCSessionActivationState activationState = self.watchConnectivitySession.activationState;
+        BOOL reachable = self.watchConnectivitySession.isReachable;
+        if (activationState != WCSessionActivationStateActivated) [self.watchConnectivitySession activateSession];
         switch (activationState) {
             case WCSessionActivationStateInactive:
             {
@@ -514,8 +520,7 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
 {
     [self updateWatchConnectivityStatus];
     [self updateDeviceStatus];
-    
-    BOOL wasPlaying = FALSE;
+    wasPlaying = [ToneGenerator.sharedGenerator.audioEngine isRunning];
     NSDictionary *userInfo = [notification userInfo];
     NSInteger typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
     AVAudioSessionInterruptionType type = (AVAudioSessionInterruptionType)typeValue;
@@ -523,17 +528,12 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     {
         if (type == AVAudioSessionInterruptionTypeBegan)
         {
-            if ([ToneGenerator.sharedGenerator.playerOneNode isPlaying])
+            if (wasPlaying) [self toggleToneGenerator:nil];
+        } else if (type == AVAudioSessionInterruptionTypeEnded)
             {
-                [self toggleToneGenerator:nil];
-                wasPlaying = TRUE;
-            }
-        } else
-            if (type == AVAudioSessionInterruptionTypeEnded)
-            {
-                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
-                if (options == AVAudioSessionInterruptionOptionShouldResume && wasPlaying)
+//                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+//                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
+                if (wasPlaying)
                 {
                     [self toggleToneGenerator:nil];
                 }
