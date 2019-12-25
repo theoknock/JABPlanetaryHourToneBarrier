@@ -492,7 +492,6 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     });
 }
 
-// TO-DO: Only send isPlaying after calling start or stop; do not "test" for it
 - (IBAction)toggleToneGenerator:(UIButton *)sender {
     NSLog(@"Toggling tone generator...");
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -520,24 +519,25 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
 {
     [self updateWatchConnectivityStatus];
     [self updateDeviceStatus];
-    wasPlaying = [ToneGenerator.sharedGenerator.audioEngine isRunning];
-    NSDictionary *userInfo = [notification userInfo];
-    NSInteger typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
-    AVAudioSessionInterruptionType type = (AVAudioSessionInterruptionType)typeValue;
-    if (type)
+    
+    if ([ToneGenerator.sharedGenerator.audioEngine isRunning])
     {
-        if (type == AVAudioSessionInterruptionTypeBegan)
+        
+        NSDictionary *userInfo = [notification userInfo];
+        NSInteger typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+        AVAudioSessionInterruptionType type = (AVAudioSessionInterruptionType)typeValue;
+        if (type)
         {
-            if (wasPlaying) [self toggleToneGenerator:nil];
-        } else if (type == AVAudioSessionInterruptionTypeEnded)
+            if (type == AVAudioSessionInterruptionTypeBegan)
             {
-//                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-//                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
-                if (wasPlaying)
+                [self toggleToneGenerator:nil];
+            } else if (type == AVAudioSessionInterruptionTypeEnded) {
+                if (type == AVAudioSessionInterruptionOptionShouldResume)
                 {
                     [self toggleToneGenerator:nil];
                 }
             }
+        }
     }
 }
 
