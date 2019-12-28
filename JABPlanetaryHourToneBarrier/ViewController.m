@@ -18,7 +18,6 @@
 {
     CAShapeLayer *pathLayerChannelR;
     CAShapeLayer *pathLayerChannelL;
-    BOOL wasPlaying;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -492,8 +491,8 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     });
 }
 
-- (IBAction)toggleToneGenerator:(UIButton *)sender {
-    NSLog(@"Toggling tone generator...");
+- (IBAction)toggleToneGenerator:(UIButton *)sender
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         if (![ToneGenerator.sharedGenerator.audioEngine isRunning]) {
             [ToneGenerator.sharedGenerator start];
@@ -520,10 +519,10 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
     [self updateWatchConnectivityStatus];
     [self updateDeviceStatus];
     
+    NSDictionary *userInfo = [notification userInfo];
+    
     if ([ToneGenerator.sharedGenerator.audioEngine isRunning])
     {
-        
-        NSDictionary *userInfo = [notification userInfo];
         NSInteger typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
         AVAudioSessionInterruptionType type = (AVAudioSessionInterruptionType)typeValue;
         if (type)
@@ -532,7 +531,9 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
             {
                 [self toggleToneGenerator:nil];
             } else if (type == AVAudioSessionInterruptionTypeEnded) {
-                if (type == AVAudioSessionInterruptionOptionShouldResume)
+                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
+                if (options == AVAudioSessionInterruptionOptionShouldResume)
                 {
                     [self toggleToneGenerator:nil];
                 }
