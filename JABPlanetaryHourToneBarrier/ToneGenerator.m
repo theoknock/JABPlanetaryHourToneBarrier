@@ -95,11 +95,6 @@ static ToneGenerator *sharedGenerator = NULL;
 }
 
 
-float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
-    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
-}
-
-
 
 //- (AVAudioPCMBuffer *)createAudioBufferWithLoopableSineWaveFrequency:(NSUInteger)frequency
 //{

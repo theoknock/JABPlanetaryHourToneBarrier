@@ -24,10 +24,10 @@ double LinearEaseInOut(double x)
     return (x <= 0.5) ? x : 1.0 - x;
 }
 
-double NormalizedSineEaseInOut(double x, int ordinary_frequency, int gamma)
+double NormalizedSineEaseInOut(double x, int ordinary_frequency)
 {
 //    return pow(-(cos(x * ((2 * M_PI) * ordinary_frequency))), gamma);
-    return pow(sinf(x * M_PI * ((ordinary_frequency > 0) ? ordinary_frequency : 1)), gamma);
+    return sinf(x * M_PI * ((ordinary_frequency > 0) ? ordinary_frequency : 1));
 }
 
 // Sine-pi easing

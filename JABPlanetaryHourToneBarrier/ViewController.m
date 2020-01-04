@@ -131,9 +131,9 @@ typedef NS_ENUM(NSUInteger, HeartRateMonitorStatus) {
     });
 }
 
-float scaleBetween(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
-    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
-}
+//float scaleBetween(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
+//    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
+//}
 
 
 static void (^drawPathToChannelPathLayer)(CAShapeLayer *, UIBezierPath *, UIColor *) = ^(CAShapeLayer *channelPathLayer, UIBezierPath *path, UIColor *hue)
