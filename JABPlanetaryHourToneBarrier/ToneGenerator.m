@@ -10,7 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "ToneGenerator.h"
-#import "ToneBarrierPlayerContext.h"
+#import "ToneBarrierPlayer.h"
 #import "ClicklessTones.h"
 
 #include "easing.h"
@@ -184,11 +184,11 @@ static ToneGenerator *sharedGenerator = NULL;
             //                //                NSLog(@"Calling playToneCompletionBlock 2...");
             //            }];
             //        }];
-            ToneBarrierPlayerContext *player = [[ToneBarrierPlayerContext alloc] init];
+//            ToneBarrierPlayer *player = [[ToneBarrierPlayer alloc] init];
             ClicklessTones *tones = [[ClicklessTones alloc] init];
             
-            [player setPlayer:(id<ToneBarrierPlayerDelegate> _Nonnull)tones];
-            [player createAudioBufferWithFormat:[self->_mixerNode outputFormatForBus:0] completionBlock:^(AVAudioPCMBuffer * _Nonnull buffer1, AVAudioPCMBuffer * _Nonnull buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
+            [ToneBarrierPlayer.context setPlayer:(id<ToneBarrierPlayerDelegate> _Nonnull)tones];
+            [ToneBarrierPlayer.context createAudioBufferWithFormat:[self->_mixerNode outputFormatForBus:0] completionBlock:^(AVAudioPCMBuffer * _Nonnull buffer1, AVAudioPCMBuffer * _Nonnull buffer2, PlayToneCompletionBlock playToneCompletionBlock) {
                 [self->_playerOneNode scheduleBuffer:buffer1 atTime:nil options:AVAudioPlayerNodeBufferInterruptsAtLoop completionCallbackType:AVAudioPlayerNodeCompletionDataPlayedBack completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType) {
                     //                if (callbackType == AVAudioPlayerNodeCompletionDataPlayedBack)
                     //                    NSLog(@"Calling playToneCompletionBlock 1...");

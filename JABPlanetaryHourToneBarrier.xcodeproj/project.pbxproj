@@ -36,7 +36,7 @@
 		B904CDEC22D3CA350086CAF8 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B904CDEB22D3CA350086CAF8 /* ComplicationController.m */; };
 		B904CDEE22D3CA360086CAF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B904CDED22D3CA360086CAF8 /* Assets.xcassets */; };
 		B968BA0A23A9E303005C6653 /* ClicklessTones.m in Sources */ = {isa = PBXBuildFile; fileRef = B968BA0923A9E303005C6653 /* ClicklessTones.m */; };
-		B968BA0D23A9E40F005C6653 /* ToneBarrierPlayerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B968BA0C23A9E40F005C6653 /* ToneBarrierPlayerContext.m */; };
+		B968BA0D23A9E40F005C6653 /* ToneBarrierPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B968BA0C23A9E40F005C6653 /* ToneBarrierPlayer.m */; };
 		B969248F22F6923A002440CE /* WatchToneGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B969248E22F6923A002440CE /* WatchToneGenerator.m */; };
 		B969249122F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */; };
 		B969249222F696B3002440CE /* JABPlanetaryHourWatchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -167,8 +167,8 @@
 		B954D8D022D4A42C001AF97D /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		B968BA0823A9E303005C6653 /* ClicklessTones.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClicklessTones.h; sourceTree = "<group>"; wrapsLines = 0; };
 		B968BA0923A9E303005C6653 /* ClicklessTones.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClicklessTones.m; sourceTree = "<group>"; wrapsLines = 0; };
-		B968BA0B23A9E40F005C6653 /* ToneBarrierPlayerContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToneBarrierPlayerContext.h; sourceTree = "<group>"; wrapsLines = 0; };
-		B968BA0C23A9E40F005C6653 /* ToneBarrierPlayerContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToneBarrierPlayerContext.m; sourceTree = "<group>"; wrapsLines = 0; };
+		B968BA0B23A9E40F005C6653 /* ToneBarrierPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToneBarrierPlayer.h; sourceTree = "<group>"; wrapsLines = 0; };
+		B968BA0C23A9E40F005C6653 /* ToneBarrierPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToneBarrierPlayer.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B969248D22F6923A002440CE /* WatchToneGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WatchToneGenerator.h; sourceTree = "<group>"; };
 		B969248E22F6923A002440CE /* WatchToneGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WatchToneGenerator.m; sourceTree = "<group>"; };
 		B969249022F696B3002440CE /* JABPlanetaryHourWatchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourWatchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,8 +287,8 @@
 				B98CF2C722D583CB00661419 /* ToneGenerator.m */,
 				B968BA0823A9E303005C6653 /* ClicklessTones.h */,
 				B968BA0923A9E303005C6653 /* ClicklessTones.m */,
-				B968BA0B23A9E40F005C6653 /* ToneBarrierPlayerContext.h */,
-				B968BA0C23A9E40F005C6653 /* ToneBarrierPlayerContext.m */,
+				B968BA0B23A9E40F005C6653 /* ToneBarrierPlayer.h */,
+				B968BA0C23A9E40F005C6653 /* ToneBarrierPlayer.m */,
 				B9A17FAE2396003A009F5926 /* easing.h */,
 				B9A17FAF2396003A009F5926 /* easing.c */,
 				B904CDC022D3CA340086CAF8 /* Main.storyboard */,
@@ -574,7 +574,7 @@
 				B904CDBF22D3CA340086CAF8 /* ViewController.m in Sources */,
 				B9E0231623126ADE00035A41 /* GraphView.m in Sources */,
 				B98CF2C922D583CB00661419 /* ToneGenerator.m in Sources */,
-				B968BA0D23A9E40F005C6653 /* ToneBarrierPlayerContext.m in Sources */,
+				B968BA0D23A9E40F005C6653 /* ToneBarrierPlayer.m in Sources */,
 				B904CDCA22D3CA350086CAF8 /* main.m in Sources */,
 				B904CDBC22D3CA340086CAF8 /* AppDelegate.m in Sources */,
 				B968BA0A23A9E303005C6653 /* ClicklessTones.m in Sources */,

@@ -11,7 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ToneBarrierPlayerContext : NSObject
+@interface ToneBarrierPlayer : NSObject
+
++ (nonnull ToneBarrierPlayer *)context;
 
 @property (assign) id<ToneBarrierPlayerDelegate> player;
 

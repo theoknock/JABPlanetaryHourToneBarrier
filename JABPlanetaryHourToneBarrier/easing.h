@@ -14,7 +14,7 @@
 // Linear interpolation (no easing)
 double LinearInterpolation(double a, double b);
 
-// Normalized sine curve with frequency
+// Normalized sine curve for amplitude
 double NormalizedSineEaseInOut(double x, int ordinary_frequency);
 
 // Linear easing

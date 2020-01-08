@@ -18,6 +18,7 @@
 {
     CAShapeLayer *pathLayerChannelR;
     CAShapeLayer *pathLayerChannelL;
+    BOOL _wasPlaying;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *activationImageView;
@@ -516,8 +517,7 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
 
 - (void)handleInterruption:(NSNotification *)notification
 {
-    [self updateWatchConnectivityStatus];
-    [self updateDeviceStatus];
+    _wasPlaying = ([ToneGenerator.sharedGenerator.audioEngine isRunning]) ? TRUE : FALSE;
     
     NSDictionary *userInfo = [notification userInfo];
     
@@ -529,17 +529,29 @@ static NSDictionary<NSString *, id> * (^deviceStatus)(UIDevice *) = ^NSDictionar
         {
             if (type == AVAudioSessionInterruptionTypeBegan)
             {
-                [self toggleToneGenerator:nil];
-            } else if (type == AVAudioSessionInterruptionTypeEnded) {
-                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
-                if (options == AVAudioSessionInterruptionOptionShouldResume)
+                if (_wasPlaying)
                 {
-                    [self toggleToneGenerator:nil];
+                    [ToneGenerator.sharedGenerator stop];
+                    [self.playButton setImage:[UIImage systemImageNamed:@"pause"] forState:UIControlStateNormal];
                 }
+            } else if (type == AVAudioSessionInterruptionTypeEnded)
+            {
+//                NSInteger optionsValue = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+//                AVAudioSessionInterruptionOptions options = (AVAudioSessionInterruptionOptions)optionsValue;
+//                if (options == AVAudioSessionInterruptionOptionShouldResume)
+//                {
+                if (_wasPlaying)
+                {
+                    [ToneGenerator.sharedGenerator start];
+                    [self.playButton setImage:[UIImage systemImageNamed:@"play"] forState:UIControlStateNormal];
+                }
+//                }
             }
         }
     }
+    
+    [self updateWatchConnectivityStatus];
+    [self updateDeviceStatus];
 }
 
 @end

@@ -6,9 +6,24 @@
 //  Copyright © 2019 The Life of a Demoniac. All rights reserved.
 //
 
-#import "ToneBarrierPlayerContext.h"
+#import "ToneBarrierPlayer.h"
 
-@implementation ToneBarrierPlayerContext
+@implementation ToneBarrierPlayer
+
+static ToneBarrierPlayer *context = NULL;
++ (nonnull ToneBarrierPlayer *)context
+{
+    static dispatch_once_t onceSecurePredicate;
+    dispatch_once(&onceSecurePredicate,^
+                  {
+        if (!context)
+        {
+            context = [[self alloc] init];
+        }
+    });
+    
+    return context;
+}
 
 - (void)createAudioBufferWithFormat:(AVAudioFormat *)audioFormat completionBlock:(CreateAudioBufferCompletionBlock)createAudioBufferCompletionBlock;
 {
